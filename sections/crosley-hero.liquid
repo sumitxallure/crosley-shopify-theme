@@ -1,0 +1,301 @@
+{% comment %}
+  Crosley homepage hero with a merchant-selected image and campaign content.
+  @example
+  Add to the home template and configure the media, copy, and call to action.
+{% endcomment %}
+
+{% liquid
+  assign hero_alt = section.settings.image.alt | default: section.settings.heading
+  assign fetch_priority = 'auto'
+  if section.index == 1
+    assign fetch_priority = 'high'
+  endif
+%}
+
+<section
+  class="crosley-hero crosley-hero--{{ section.settings.content_position }}"
+  style="
+    --crosley-hero-height: {{ section.settings.desktop_height }}px;
+    --crosley-hero-mobile-height: {{ section.settings.mobile_height }}px;
+    --crosley-hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --crosley-hero-text: {{ section.settings.text_color }};
+  "
+>
+  <div class="crosley-hero__media">
+    {% if section.settings.image != blank %}
+      {{
+        section.settings.image
+        | image_url: width: 3200
+        | image_tag:
+          widths: '750, 1100, 1500, 2000, 2600, 3200',
+          sizes: '100vw',
+          loading: 'eager',
+          fetchpriority: fetch_priority,
+          alt: hero_alt
+      }}
+    {% else %}
+      <img
+        src="{{ 'crosley-home-hero.jpg' | asset_url }}"
+        alt="{{ hero_alt | escape }}"
+        width="2000"
+        height="800"
+        loading="eager"
+        fetchpriority="{{ fetch_priority }}"
+      >
+    {% endif %}
+  </div>
+  <div class="crosley-hero__overlay"></div>
+
+  <div class="crosley-hero__content">
+    <div class="crosley-hero__copy">
+      {% if section.settings.eyebrow != blank %}
+        <p class="crosley-hero__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {% endif %}
+      {% if section.settings.heading != blank %}
+        <h1>{{ section.settings.heading | escape }}</h1>
+      {% endif %}
+      {% if section.settings.text != blank %}
+        <div class="crosley-hero__text rte">{{ section.settings.text }}</div>
+      {% endif %}
+      {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+        <a class="crosley-hero__button" href="{{ section.settings.button_link }}">
+          {{ section.settings.button_label | escape }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .crosley-hero {
+    position: relative;
+    min-height: var(--crosley-hero-height);
+    display: grid;
+    overflow: hidden;
+    color: var(--crosley-hero-text);
+    background: #171f26;
+  }
+
+  .crosley-hero__media,
+  .crosley-hero__overlay,
+  .crosley-hero__content {
+    grid-area: 1 / 1;
+  }
+
+  .crosley-hero__media,
+  .crosley-hero__media img {
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+  }
+
+  .crosley-hero__media img {
+    display: block;
+    object-fit: cover;
+  }
+
+  .crosley-hero__overlay {
+    z-index: 1;
+    background: rgb(0 0 0 / var(--crosley-hero-overlay));
+  }
+
+  .crosley-hero__content {
+    z-index: 2;
+    width: 100%;
+    max-width: 1600px;
+    margin-inline: auto;
+    display: flex;
+    align-items: flex-end;
+    padding-inline: clamp(24px, 4vw, 64px);
+    padding-block: clamp(44px, 7vw, 92px);
+  }
+
+  .crosley-hero--center .crosley-hero__content {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .crosley-hero--right .crosley-hero__content {
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  .crosley-hero__copy {
+    width: min(100%, 620px);
+  }
+
+  .crosley-hero__eyebrow {
+    margin: 0 0 12px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .crosley-hero h1 {
+    max-width: 12ch;
+    margin: 0;
+    color: inherit;
+    font-size: clamp(2.5rem, 5.8vw, 5.75rem);
+    line-height: 0.96;
+    text-transform: uppercase;
+    letter-spacing: 0;
+  }
+
+  .crosley-hero--center h1 {
+    margin-inline: auto;
+  }
+
+  .crosley-hero--right h1 {
+    margin-inline-start: auto;
+  }
+
+  .crosley-hero__text {
+    max-width: 48ch;
+    margin-block-start: 18px;
+    font-size: 1.05rem;
+  }
+
+  .crosley-hero__button {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    margin-block-start: 28px;
+    padding-inline: 30px;
+    color: #171f26;
+    background: #ffffff;
+    border: 1px solid #ffffff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: color 180ms ease, background 180ms ease;
+  }
+
+  .crosley-hero__button:hover {
+    color: #ffffff;
+    background: transparent;
+  }
+
+  @media (max-width: 749px) {
+    .crosley-hero {
+      min-height: var(--crosley-hero-mobile-height);
+    }
+
+    .crosley-hero__content {
+      align-items: flex-end;
+      padding-inline: 20px;
+      padding-block: 40px;
+    }
+
+    .crosley-hero h1 {
+      font-size: clamp(2.35rem, 13vw, 4rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .crosley-hero__button {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Crosley hero",
+  "tag": "section",
+  "class": "crosley-home-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "info": "Uses the bundled Crosley campaign image when left blank."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Made for the moment"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The C65"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Room-filling sound with unmistakable Crosley character.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop record players"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Desktop height",
+      "min": 520,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 720
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Mobile height",
+      "min": 480,
+      "max": 760,
+      "step": 20,
+      "unit": "px",
+      "default": 620
+    }
+  ],
+  "presets": [
+    {
+      "name": "Crosley hero"
+    }
+  ]
+}
+{% endschema %}

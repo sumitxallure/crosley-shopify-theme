@@ -1,0 +1,253 @@
+{% comment %}
+  Crosley newsletter banner using Shopify's customer form.
+  @example
+  Configure campaign copy and optionally replace the bundled background image.
+{% endcomment %}
+
+{% assign newsletter_alt = section.settings.image.alt | default: section.settings.heading %}
+
+<section class="crosley-newsletter" style="--crosley-newsletter-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};">
+  <div class="crosley-newsletter__media">
+    {% if section.settings.image != blank %}
+      {{
+        section.settings.image
+        | image_url: width: 2600
+        | image_tag:
+          widths: '750, 1100, 1500, 2000, 2600',
+          sizes: '100vw',
+          loading: 'lazy',
+          alt: newsletter_alt
+      }}
+    {% else %}
+      <img
+        src="{{ 'crosley-newsletter.jpg' | asset_url }}"
+        alt="{{ newsletter_alt | escape }}"
+        width="2000"
+        height="800"
+        loading="lazy"
+      >
+    {% endif %}
+  </div>
+  <div class="crosley-newsletter__overlay"></div>
+
+  <div class="crosley-newsletter__content">
+    {% if section.settings.eyebrow != blank %}
+      <p>{{ section.settings.eyebrow | escape }}</p>
+    {% endif %}
+    {% if section.settings.heading != blank %}
+      <h2>{{ section.settings.heading | escape }}</h2>
+    {% endif %}
+    {% if section.settings.text != blank %}
+      <div class="rte">{{ section.settings.text }}</div>
+    {% endif %}
+
+    {% form 'customer', class: 'crosley-newsletter__form' %}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <label class="visually-hidden" for="CrosleyNewsletter-{{ section.id }}">
+        Email address
+      </label>
+      <input
+        id="CrosleyNewsletter-{{ section.id }}"
+        type="email"
+        name="contact[email]"
+        value="{{ form.email }}"
+        autocomplete="email"
+        autocapitalize="off"
+        spellcheck="false"
+        placeholder="{{ section.settings.placeholder | escape }}"
+        required
+      >
+      <button type="submit">{{ section.settings.button_label | escape }}</button>
+
+      {% if form.posted_successfully? %}
+        <p class="crosley-newsletter__status" role="status">Thanks for subscribing.</p>
+      {% elsif form.errors %}
+        <div class="crosley-newsletter__status" role="alert">{{ form.errors | default_errors }}</div>
+      {% endif %}
+    {% endform %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .crosley-newsletter {
+    position: relative;
+    display: grid;
+    min-height: 520px;
+    overflow: hidden;
+    color: #ffffff;
+    background: #171f26;
+  }
+
+  .crosley-newsletter__media,
+  .crosley-newsletter__overlay,
+  .crosley-newsletter__content {
+    grid-area: 1 / 1;
+  }
+
+  .crosley-newsletter__media,
+  .crosley-newsletter__media img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .crosley-newsletter__media img {
+    display: block;
+    object-fit: cover;
+  }
+
+  .crosley-newsletter__overlay {
+    z-index: 1;
+    background: rgb(0 0 0 / var(--crosley-newsletter-overlay));
+  }
+
+  .crosley-newsletter__content {
+    z-index: 2;
+    display: flex;
+    width: min(100%, 680px);
+    margin-inline: auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-inline: auto;
+    padding-block: 72px;
+    text-align: center;
+  }
+
+  .crosley-newsletter__content > p {
+    margin: 0 0 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .crosley-newsletter h2 {
+    margin: 0;
+    color: inherit;
+    font-size: clamp(2rem, 4vw, 3.6rem);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .crosley-newsletter .rte {
+    max-width: 48ch;
+    margin-block-start: 18px;
+  }
+
+  .crosley-newsletter__form {
+    display: grid;
+    width: min(100%, 540px);
+    grid-template-columns: minmax(0, 1fr) auto;
+    margin-block-start: 30px;
+  }
+
+  .crosley-newsletter__form input,
+  .crosley-newsletter__form button {
+    min-height: 52px;
+    border: 1px solid rgb(255 255 255 / 70%);
+    border-radius: 0;
+  }
+
+  .crosley-newsletter__form input {
+    min-width: 0;
+    padding-inline: 18px;
+    color: #ffffff;
+    background: transparent;
+  }
+
+  .crosley-newsletter__form input::placeholder {
+    color: rgb(255 255 255 / 75%);
+  }
+
+  .crosley-newsletter__form button {
+    padding-inline: 28px;
+    color: #171f26;
+    background: #ffffff;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .crosley-newsletter__status {
+    grid-column: 1 / -1;
+    margin-block: 12px 0;
+  }
+
+  @media (max-width: 749px) {
+    .crosley-newsletter {
+      min-height: 560px;
+    }
+
+    .crosley-newsletter__content {
+      padding-block: 56px;
+    }
+
+    .crosley-newsletter__form {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Crosley newsletter",
+  "tag": "section",
+  "class": "crosley-home-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "info": "Uses the bundled Crosley image when left blank."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Keep me updated"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Save 10% on your first order"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Subscribe to hear about new turntables, restocks, and the occasional sale.</p>"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Email placeholder",
+      "default": "Email address"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 45
+    }
+  ],
+  "presets": [
+    {
+      "name": "Crosley newsletter"
+    }
+  ]
+}
+{% endschema %}

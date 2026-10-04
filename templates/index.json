@@ -8,87 +8,64 @@
  * ------------------------------------------------------------
  */{
   "sections": {
-    "hero_jVaWmY": {
-      "type": "hero",
+    "crosley_hero": {
+      "type": "crosley-hero",
+      "settings": {
+        "eyebrow": "Built for the ritual",
+        "heading": "The C65",
+        "text": "<p>Warm analog sound, clean modern lines, and everything you need to start listening.</p>",
+        "button_label": "Shop record players",
+        "button_link": "shopify://collections/record-players",
+        "content_position": "left",
+        "text_color": "#ffffff",
+        "overlay_opacity": 25,
+        "desktop_height": 720,
+        "mobile_height": 620
+      }
+    },
+    "crosley_categories": {
+      "type": "crosley-category-grid",
       "blocks": {
-        "text_YLPk4p": {
-          "type": "text",
-          "name": "t:names.heading",
+        "record_players": {
+          "type": "collection",
           "settings": {
-            "text": "<p>Browse our latest products</p>",
-            "text_color": "{{ settings.color_palette.background }}",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h2",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+            "collection": "record-players",
+            "label": "Record players"
+          }
         },
-        "button_H9gpTf": {
-          "type": "button",
-          "name": "t:names.button",
+        "speakers": {
+          "type": "collection",
           "settings": {
-            "label": "Shop all",
-            "link": "shopify://collections/all",
-            "open_in_new_tab": false,
-            "style_class": "button-custom",
-            "custom_button_background": "rgba(0,0,0,0)",
-            "custom_button_text": "{{ settings.color_palette.background }}",
-            "custom_button_border": "{{ settings.color_palette.background }}",
-            "width": "fit-content",
-            "custom_width": 100,
-            "width_mobile": "fit-content",
-            "custom_width_mobile": 100
-          },
-          "blocks": {}
+            "collection": "speakers",
+            "label": "Speakers"
+          }
+        },
+        "accessories": {
+          "type": "collection",
+          "settings": {
+            "collection": "accessories",
+            "label": "Accessories"
+          }
+        },
+        "radios_phones": {
+          "type": "collection",
+          "settings": {
+            "collection": "radios-phones",
+            "label": "Radios & phones"
+          }
         }
       },
       "block_order": [
-        "text_YLPk4p",
-        "button_H9gpTf"
+        "record_players",
+        "speakers",
+        "accessories",
+        "radios_phones"
       ],
-      "name": "t:names.hero",
       "settings": {
-        "media_type_1": "image",
-        "media_type_2": "image",
-        "stack_media_on_mobile": false,
-        "custom_mobile_media": false,
-        "media_type_1_mobile": "image",
-        "media_type_2_mobile": "image",
-        "open_in_new_tab": false,
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "space-between",
-        "vertical_alignment": "flex-end",
-        "align_baseline": true,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "flex-end",
-        "gap": 24,
-        "section_width": "page-width",
-        "section_height": "medium",
-        "section_height_custom": 50,
-        "background_color": "rgba(0,0,0,0)",
-        "toggle_overlay": true,
-        "overlay_color": "#12121266",
-        "overlay_style": "solid",
-        "gradient_direction": "to bottom",
-        "blurred_reflection": false,
-        "reflection_opacity": 75,
-        "padding-block-start": 100,
-        "padding-block-end": 72
+        "eyebrow": "Find your sound",
+        "heading": "Featured categories",
+        "gap": 16,
+        "background_color": "#ffffff"
       }
     },
     "product_list_fa6P9H": {
@@ -130,7 +107,7 @@
               "type": "_product-list-text",
               "name": "t:names.collection_title",
               "settings": {
-                "text": "<h3>{{ closest.collection.title }}</h3>",
+                "text": "<h2>Featured products</h2>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -258,10 +235,10 @@
       },
       "name": "t:names.product_list",
       "settings": {
-        "collection": "all",
+        "collection": "best-sellers",
         "layout_type": "grid",
         "carousel_on_mobile": false,
-        "max_products": 8,
+        "max_products": 4,
         "columns": 4,
         "mobile_columns": "2",
         "mobile_card_size": "60cqw",
@@ -273,13 +250,56 @@
         "horizontal_alignment": "flex-start",
         "gap": 28,
         "background_color": "{{ settings.color_palette.background }}",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "padding-block-start": 72,
+        "padding-block-end": 88
+      }
+    },
+    "crosley_audioengine": {
+      "type": "crosley-split-promo",
+      "settings": {
+        "default_image": "audioengine",
+        "image_position": "right",
+        "eyebrow": "A new way to listen",
+        "heading": "Crosley x Audioengine",
+        "text": "<p>Pair iconic Crosley design with the clarity and room-filling power of Audioengine speakers.</p>",
+        "button_label": "Explore the collaboration",
+        "button_link": "shopify://collections/speakers",
+        "background_color": "#f3d3dc",
+        "text_color": "#171f26"
+      }
+    },
+    "crosley_gift_guide": {
+      "type": "crosley-split-promo",
+      "settings": {
+        "default_image": "gift",
+        "image_position": "left",
+        "eyebrow": "For every kind of listener",
+        "heading": "Need a gift for the music fan in your life?",
+        "text": "<p>From first records to full-room setups, find something they will keep spinning.</p>",
+        "button_label": "Shop the gift guide",
+        "button_link": "shopify://collections/best-sellers",
+        "background_color": "#d6e6df",
+        "text_color": "#171f26"
+      }
+    },
+    "crosley_newsletter": {
+      "type": "crosley-newsletter",
+      "settings": {
+        "eyebrow": "Keep me updated",
+        "heading": "Save 10% on your first order",
+        "text": "<p>Subscribe to hear about new turntables, restocks, and the occasional sale.</p>",
+        "placeholder": "Email address",
+        "button_label": "Subscribe",
+        "overlay_opacity": 50
       }
     }
   },
   "order": [
-    "hero_jVaWmY",
-    "product_list_fa6P9H"
+    "crosley_hero",
+    "crosley_categories",
+    "product_list_fa6P9H",
+    "crosley_audioengine",
+    "crosley_gift_guide",
+    "crosley_newsletter"
   ]
 }
