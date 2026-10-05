@@ -105,6 +105,7 @@
   "tag": "section",
   "class": "crosley-home-section",
   "settings": [
+    { "type": "header", "content": "Content" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Join us" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "@CrosleyRadio" }
   ],
@@ -113,8 +114,11 @@
       "type": "post",
       "name": "Social image",
       "settings": [
+        { "type": "header", "content": "Image" },
         { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "header", "content": "Link" },
         { "type": "url", "id": "link", "label": "Link" },
+        { "type": "header", "content": "Accessibility" },
         { "type": "text", "id": "label", "label": "Accessible label", "default": "View social post" }
       ]
     }

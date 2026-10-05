@@ -301,8 +301,10 @@
   "class": "crosley-home-section",
   "disabled_on": { "groups": ["header", "footer"] },
   "settings": [
+    { "type": "header", "content": "Behavior" },
     { "type": "checkbox", "id": "autoplay", "label": "Auto-rotate slides", "default": true },
     { "type": "range", "id": "autoplay_seconds", "label": "Time per slide", "min": 4, "max": 10, "step": 1, "unit": "s", "default": 7 },
+    { "type": "header", "content": "Size" },
     { "type": "range", "id": "desktop_height", "label": "Desktop height", "min": 600, "max": 900, "step": 20, "unit": "px", "default": 860 },
     { "type": "range", "id": "mobile_height", "label": "Mobile height", "min": 520, "max": 760, "step": 20, "unit": "px", "default": 640 }
   ],
@@ -311,6 +313,7 @@
       "type": "slide",
       "name": "Slide",
       "settings": [
+        { "type": "header", "content": "Media" },
         { "type": "image_picker", "id": "image", "label": "Background image" },
         {
           "type": "select",
@@ -322,10 +325,13 @@
           ],
           "default": "c65"
         },
+        { "type": "header", "content": "Content" },
         { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Designed to be seen. Built to be heard" },
         { "type": "text", "id": "heading", "label": "Heading", "default": "The C65" },
+        { "type": "header", "content": "Button" },
         { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop" },
         { "type": "url", "id": "button_link", "label": "Button link" },
+        { "type": "header", "content": "Layout" },
         {
           "type": "select",
           "id": "content_position",
@@ -337,6 +343,7 @@
           ],
           "default": "left"
         },
+        { "type": "header", "content": "Style" },
         { "type": "checkbox", "id": "framed_content", "label": "Show frame around content", "default": false },
         { "type": "range", "id": "overlay_opacity", "label": "Overlay opacity", "min": 0, "max": 70, "step": 5, "unit": "%", "default": 35 }
       ]
