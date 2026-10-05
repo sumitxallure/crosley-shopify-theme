@@ -244,10 +244,19 @@ body {
 }
 
 @media screen and (max-width: 749px) {
+  #header-component .header__row--top {
+    width: 100vw;
+    max-width: 100vw;
+    margin-inline: 0;
+  }
+
   #header-component .header__row--top .header__columns {
     grid-template-areas: 'left center right' !important;
-    grid-template-columns: 44px minmax(0, 1fr) 88px !important;
-    position: relative;
+    grid-template-columns: 44px minmax(0, 1fr) 44px !important;
+    width: 100vw;
+    max-width: 100vw;
+    margin-inline: 0;
+    box-sizing: border-box;
   }
 
   #header-component .search-action--hidden-on-drawer {
@@ -264,12 +273,13 @@ body {
   }
 
   #header-component header-actions {
-    position: absolute;
-    top: 50%;
-    right: max(8px, calc((100% - 100vw) + 8px));
+    position: fixed;
+    top: 36px;
+    right: 12px;
     width: 44px;
-    transform: translate(-104px, -50%);
-    z-index: 2;
+    min-width: 44px;
+    transform: none;
+    z-index: 5;
   }
 
   #header-component .account-button {
