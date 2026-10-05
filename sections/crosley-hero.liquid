@@ -1,300 +1,355 @@
 {% comment %}
-  Crosley homepage hero with a merchant-selected image and campaign content.
-  @example
-  Add to the home template and configure the media, copy, and call to action.
+  Merchant-editable Crosley campaign slider based on the supplied homepage reference.
 {% endcomment %}
 
-{% liquid
-  assign hero_alt = section.settings.image.alt | default: section.settings.heading
-  assign fetch_priority = 'auto'
-  if section.index == 1
-    assign fetch_priority = 'high'
-  endif
-%}
-
 <section
-  class="crosley-hero crosley-hero--{{ section.settings.content_position }}"
-  style="
-    --crosley-hero-height: {{ section.settings.desktop_height }}px;
-    --crosley-hero-mobile-height: {{ section.settings.mobile_height }}px;
-    --crosley-hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
-    --crosley-hero-text: {{ section.settings.text_color }};
-  "
+  class="crosley-hero-slider"
+  data-crosley-hero
+  data-autoplay="{{ section.settings.autoplay }}"
+  data-interval="{{ section.settings.autoplay_seconds | times: 1000 }}"
+  style="--hero-height: {{ section.settings.desktop_height }}px; --hero-mobile-height: {{ section.settings.mobile_height }}px;"
 >
-  <div class="crosley-hero__media">
-    {% if section.settings.image != blank %}
-      {{
-        section.settings.image
-        | image_url: width: 3200
-        | image_tag:
-          widths: '750, 1100, 1500, 2000, 2600, 3200',
-          sizes: '100vw',
-          loading: 'eager',
-          fetchpriority: fetch_priority,
-          alt: hero_alt
-      }}
-    {% else %}
-      <img
-        src="{{ 'crosley-home-hero.jpg' | asset_url }}"
-        alt="{{ hero_alt | escape }}"
-        width="2000"
-        height="800"
-        loading="eager"
-        fetchpriority="{{ fetch_priority }}"
+  <div class="crosley-hero-slider__slides">
+    {% for block in section.blocks %}
+      {% liquid
+        assign fallback_asset = 'crosley-home-hero.jpg'
+        if block.settings.fallback_image == 'cd'
+          assign fallback_asset = 'crosley-hero-cd.jpg'
+        endif
+        assign image_alt = block.settings.image.alt | default: block.settings.heading
+      %}
+      <article
+        class="crosley-hero-slide crosley-hero-slide--{{ block.settings.content_position }}{% if forloop.first %} is-active{% endif %}"
+        data-hero-slide
+        data-block-id="{{ block.id }}"
+        aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+        {{ block.shopify_attributes }}
       >
-    {% endif %}
+        <div class="crosley-hero-slide__media">
+          {% if block.settings.image != blank %}
+            {{
+              block.settings.image
+              | image_url: width: 3200
+              | image_tag:
+                widths: '750, 1100, 1500, 2000, 2600, 3200',
+                sizes: '100vw',
+                loading: 'eager',
+                alt: image_alt
+            }}
+          {% else %}
+            <img
+              src="{{ fallback_asset | asset_url }}"
+              alt="{{ image_alt | escape }}"
+              width="2000"
+              height="1000"
+              loading="eager"
+            >
+          {% endif %}
+        </div>
+        <div class="crosley-hero-slide__overlay" style="opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+        <div class="crosley-hero-slide__content">
+          <div class="crosley-hero-slide__copy{% if block.settings.framed_content %} crosley-hero-slide__copy--framed{% endif %}">
+            {% if block.settings.eyebrow != blank %}
+              <p>{{ block.settings.eyebrow | escape }}</p>
+            {% endif %}
+            {% if block.settings.heading != blank %}
+              <h1>{{ block.settings.heading | escape }}</h1>
+            {% endif %}
+            {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+              <a href="{{ block.settings.button_link }}">{{ block.settings.button_label | escape }}</a>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+    {% endfor %}
   </div>
-  <div class="crosley-hero__overlay"></div>
 
-  <div class="crosley-hero__content">
-    <div class="crosley-hero__copy">
-      {% if section.settings.eyebrow != blank %}
-        <p class="crosley-hero__eyebrow">{{ section.settings.eyebrow | escape }}</p>
-      {% endif %}
-      {% if section.settings.heading != blank %}
-        <h1>{{ section.settings.heading | escape }}</h1>
-      {% endif %}
-      {% if section.settings.text != blank %}
-        <div class="crosley-hero__text rte">{{ section.settings.text }}</div>
-      {% endif %}
-      {% if section.settings.button_label != blank and section.settings.button_link != blank %}
-        <a class="crosley-hero__button" href="{{ section.settings.button_link }}">
-          {{ section.settings.button_label | escape }}
-        </a>
-      {% endif %}
+  {% if section.blocks.size > 1 %}
+    <div class="crosley-hero-slider__dots" role="tablist" aria-label="Hero slides">
+      {% for block in section.blocks %}
+        <button
+          type="button"
+          class="crosley-hero-slider__dot{% if forloop.first %} is-active{% endif %}"
+          data-hero-dot="{{ forloop.index0 }}"
+          aria-label="Show slide {{ forloop.index }}"
+          aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+        ></button>
+      {% endfor %}
     </div>
-  </div>
+  {% endif %}
 </section>
 
 {% stylesheet %}
-  .crosley-hero {
+  .crosley-hero-slider {
     position: relative;
-    min-height: var(--crosley-hero-height);
-    display: grid;
+    height: var(--hero-height);
     overflow: hidden;
-    color: var(--crosley-hero-text);
+    color: #ffffff;
     background: #171f26;
   }
 
-  .crosley-hero__media,
-  .crosley-hero__overlay,
-  .crosley-hero__content {
-    grid-area: 1 / 1;
-  }
-
-  .crosley-hero__media,
-  .crosley-hero__media img {
+  .crosley-hero-slider__slides,
+  .crosley-hero-slide,
+  .crosley-hero-slide__media,
+  .crosley-hero-slide__media img {
     width: 100%;
     height: 100%;
-    min-height: inherit;
   }
 
-  .crosley-hero__media img {
+  .crosley-hero-slide {
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 600ms ease, visibility 600ms ease;
+  }
+
+  .crosley-hero-slide.is-active {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .crosley-hero-slide__media img {
     display: block;
     object-fit: cover;
   }
 
-  .crosley-hero__overlay {
+  .crosley-hero-slide__overlay {
+    position: absolute;
+    inset: 0;
+    background: #171f26;
+  }
+
+  .crosley-hero-slide__content {
+    position: absolute;
     z-index: 1;
-    background: rgb(0 0 0 / var(--crosley-hero-overlay));
-  }
-
-  .crosley-hero__content {
-    z-index: 2;
-    width: 100%;
-    max-width: 1600px;
-    margin-inline: auto;
+    inset: 0;
     display: flex;
-    align-items: flex-end;
-    padding-inline: clamp(24px, 4vw, 64px);
-    padding-block: clamp(44px, 7vw, 92px);
+    width: min(100%, 1600px);
+    align-items: center;
+    margin-inline: auto;
+    padding: 64px;
+    pointer-events: none;
   }
 
-  .crosley-hero--center .crosley-hero__content {
+  .crosley-hero-slide--center .crosley-hero-slide__content {
     justify-content: center;
     text-align: center;
   }
 
-  .crosley-hero--right .crosley-hero__content {
+  .crosley-hero-slide--right .crosley-hero-slide__content {
     justify-content: flex-end;
     text-align: right;
   }
 
-  .crosley-hero__copy {
-    width: min(100%, 620px);
+  .crosley-hero-slide__copy {
+    width: min(100%, 500px);
+    pointer-events: auto;
   }
 
-  .crosley-hero__eyebrow {
-    margin: 0 0 12px;
-    font-size: 0.82rem;
+  .crosley-hero-slide__copy--framed {
+    padding: clamp(40px, 4vw, 64px) 56px;
+    border: 1px solid rgb(255 255 255 / 70%);
+  }
+
+  .crosley-hero-slide__copy p {
+    margin: 0 0 18px;
+    color: rgb(255 255 255 / 85%);
+    font-size: 0.9rem;
     font-weight: 700;
-    text-transform: uppercase;
   }
 
-  .crosley-hero h1 {
-    max-width: 12ch;
+  .crosley-hero-slide__copy h1 {
     margin: 0;
     color: inherit;
-    font-size: clamp(2.5rem, 5.8vw, 5.75rem);
-    line-height: 0.96;
+    font-size: clamp(2.6rem, 5vw, 4rem);
+    line-height: 1;
     text-transform: uppercase;
-    letter-spacing: 0;
   }
 
-  .crosley-hero--center h1 {
-    margin-inline: auto;
-  }
-
-  .crosley-hero--right h1 {
-    margin-inline-start: auto;
-  }
-
-  .crosley-hero__text {
-    max-width: 48ch;
-    margin-block-start: 18px;
-    font-size: 1.05rem;
-  }
-
-  .crosley-hero__button {
+  .crosley-hero-slide__copy a {
     display: inline-flex;
-    min-height: 48px;
+    min-height: 50px;
     align-items: center;
     justify-content: center;
-    margin-block-start: 28px;
-    padding-inline: 30px;
-    color: #171f26;
+    margin-block-start: 32px;
+    padding-inline: 40px;
+    color: #383637;
     background: #ffffff;
     border: 1px solid #ffffff;
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     font-weight: 700;
     text-transform: uppercase;
     transition: color 180ms ease, background 180ms ease;
   }
 
-  .crosley-hero__button:hover {
+  .crosley-hero-slide__copy a:hover {
     color: #ffffff;
     background: transparent;
   }
 
+  .crosley-hero-slider__dots {
+    position: absolute;
+    z-index: 2;
+    right: 40px;
+    bottom: 28px;
+    display: flex;
+    gap: 8px;
+  }
+
+  .crosley-hero-slider__dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    background: rgb(255 255 255 / 50%);
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .crosley-hero-slider__dot.is-active {
+    background: #ffffff;
+  }
+
   @media (max-width: 749px) {
-    .crosley-hero {
-      min-height: var(--crosley-hero-mobile-height);
+    .crosley-hero-slider {
+      height: var(--hero-mobile-height);
     }
 
-    .crosley-hero__content {
+    .crosley-hero-slide__content {
       align-items: flex-end;
-      padding-inline: 20px;
-      padding-block: 40px;
+      padding: 32px 20px 56px;
     }
 
-    .crosley-hero h1 {
-      font-size: clamp(2.35rem, 13vw, 4rem);
+    .crosley-hero-slide__copy--framed {
+      padding: 28px 22px;
+    }
+
+    .crosley-hero-slide__copy h1 {
+      font-size: clamp(2.25rem, 12vw, 3.6rem);
+    }
+
+    .crosley-hero-slider__dots {
+      right: 20px;
+      bottom: 24px;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .crosley-hero__button {
+    .crosley-hero-slide,
+    .crosley-hero-slide__copy a {
       transition: none;
     }
   }
 {% endstylesheet %}
 
+{% javascript %}
+  function initializeCrosleyHero(hero) {
+    if (hero.dataset.initialized === 'true') return;
+    hero.dataset.initialized = 'true';
+
+    const slides = Array.from(hero.querySelectorAll('[data-hero-slide]'));
+    const dots = Array.from(hero.querySelectorAll('[data-hero-dot]'));
+    let activeIndex = 0;
+    let timer;
+
+    const showSlide = (index) => {
+      activeIndex = (index + slides.length) % slides.length;
+      slides.forEach((slide, slideIndex) => {
+        const active = slideIndex === activeIndex;
+        slide.classList.toggle('is-active', active);
+        slide.setAttribute('aria-hidden', String(!active));
+      });
+      dots.forEach((dot, dotIndex) => {
+        const active = dotIndex === activeIndex;
+        dot.classList.toggle('is-active', active);
+        dot.setAttribute('aria-selected', String(active));
+      });
+    };
+
+    const startTimer = () => {
+      window.clearInterval(timer);
+      if (hero.dataset.autoplay === 'true' && slides.length > 1) {
+        timer = window.setInterval(() => showSlide(activeIndex + 1), Number(hero.dataset.interval));
+      }
+    };
+
+    dots.forEach((dot) => dot.addEventListener('click', () => {
+      showSlide(Number(dot.dataset.heroDot));
+      startTimer();
+    }));
+
+    document.addEventListener('shopify:block:select', (event) => {
+      const index = slides.findIndex((slide) => slide.dataset.blockId === event.detail.blockId);
+      if (index >= 0) showSlide(index);
+    });
+
+    startTimer();
+  }
+
+  document.querySelectorAll('[data-crosley-hero]').forEach(initializeCrosleyHero);
+  document.addEventListener('shopify:section:load', (event) => {
+    event.target.querySelectorAll('[data-crosley-hero]').forEach(initializeCrosleyHero);
+  });
+{% endjavascript %}
+
 {% schema %}
 {
-  "name": "Crosley hero",
+  "name": "Crosley hero slider",
   "tag": "section",
   "class": "crosley-home-section",
-  "disabled_on": {
-    "groups": ["header", "footer"]
-  },
+  "disabled_on": { "groups": ["header", "footer"] },
   "settings": [
+    { "type": "checkbox", "id": "autoplay", "label": "Auto-rotate slides", "default": true },
+    { "type": "range", "id": "autoplay_seconds", "label": "Time per slide", "min": 4, "max": 10, "step": 1, "unit": "s", "default": 7 },
+    { "type": "range", "id": "desktop_height", "label": "Desktop height", "min": 600, "max": 900, "step": 20, "unit": "px", "default": 860 },
+    { "type": "range", "id": "mobile_height", "label": "Mobile height", "min": 520, "max": 760, "step": 20, "unit": "px", "default": 640 }
+  ],
+  "blocks": [
     {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Background image",
-      "info": "Uses the bundled Crosley campaign image when left blank."
-    },
-    {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "Eyebrow",
-      "default": "Made for the moment"
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "The C65"
-    },
-    {
-      "type": "richtext",
-      "id": "text",
-      "label": "Text",
-      "default": "<p>Room-filling sound with unmistakable Crosley character.</p>"
-    },
-    {
-      "type": "text",
-      "id": "button_label",
-      "label": "Button label",
-      "default": "Shop record players"
-    },
-    {
-      "type": "url",
-      "id": "button_link",
-      "label": "Button link"
-    },
-    {
-      "type": "select",
-      "id": "content_position",
-      "label": "Content alignment",
-      "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "right", "label": "Right" }
-      ],
-      "default": "left"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "range",
-      "id": "overlay_opacity",
-      "label": "Overlay opacity",
-      "min": 0,
-      "max": 80,
-      "step": 5,
-      "unit": "%",
-      "default": 20
-    },
-    {
-      "type": "range",
-      "id": "desktop_height",
-      "label": "Desktop height",
-      "min": 520,
-      "max": 900,
-      "step": 20,
-      "unit": "px",
-      "default": 720
-    },
-    {
-      "type": "range",
-      "id": "mobile_height",
-      "label": "Mobile height",
-      "min": 480,
-      "max": 760,
-      "step": 20,
-      "unit": "px",
-      "default": 620
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Background image" },
+        {
+          "type": "select",
+          "id": "fallback_image",
+          "label": "Bundled image",
+          "options": [
+            { "value": "cd", "label": "CD player campaign" },
+            { "value": "c65", "label": "C65 campaign" }
+          ],
+          "default": "c65"
+        },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Designed to be seen. Built to be heard" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "The C65" },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop" },
+        { "type": "url", "id": "button_link", "label": "Button link" },
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Content position",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        },
+        { "type": "checkbox", "id": "framed_content", "label": "Show frame around content", "default": false },
+        { "type": "range", "id": "overlay_opacity", "label": "Overlay opacity", "min": 0, "max": 70, "step": 5, "unit": "%", "default": 35 }
+      ]
     }
   ],
+  "max_blocks": 5,
   "presets": [
     {
-      "name": "Crosley hero"
+      "name": "Crosley hero slider",
+      "blocks": [
+        { "type": "slide", "settings": { "fallback_image": "cd", "eyebrow": "The CD comeback, done right", "heading": "Find your next CD player", "button_label": "Shop now", "content_position": "center", "framed_content": true } },
+        { "type": "slide", "settings": { "fallback_image": "c65", "eyebrow": "Designed to be seen. Built to be heard", "heading": "The C65", "button_label": "Shop", "content_position": "left", "framed_content": false } }
+      ]
     }
   ]
 }

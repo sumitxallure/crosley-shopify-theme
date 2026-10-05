@@ -11,65 +11,48 @@
   "type": "footer",
   "name": "t:names.footer",
   "sections": {
-    "footer_m9NzUG": {
-      "type": "footer",
+    "crosley_footer": {
+      "type": "crosley-footer",
       "blocks": {
-        "brand_text": {
-          "type": "text",
-          "settings": {
-            "text": "<h2>Crosley</h2><p>Sound and style for every kind of listener.</p>",
-            "width": "100%",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "rte",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
-        "shop_menu": {
+        "shop": {
           "type": "menu",
           "settings": {
-            "menu": "main-menu",
-            "heading": "Explore",
-            "menu_spacing": 10,
-            "show_as_accordion": true,
-            "accordion_icon": "plus",
-            "accordion_dividers": true,
-            "heading_preset": "h5",
-            "link_preset": "paragraph"
-          },
-          "blocks": {}
+            "heading": "Shop",
+            "menu": "main-menu"
+          }
+        },
+        "company": {
+          "type": "menu",
+          "settings": {
+            "heading": "Our company"
+          }
+        },
+        "care": {
+          "type": "menu",
+          "settings": {
+            "heading": "Customer care"
+          }
+        },
+        "resources": {
+          "type": "menu",
+          "settings": {
+            "heading": "Resources"
+          }
         }
       },
-      "block_order": [
-        "brand_text",
-        "shop_menu"
-      ],
-      "name": "t:names.footer",
+      "block_order": ["shop", "company", "care", "resources"],
       "settings": {
-        "section_width": "page-width",
-        "gap": 48,
-        "background_color": "#171f26",
-        "padding-block-start": 56,
-        "padding-block-end": 56
+        "newsletter_heading": "Newsletter",
+        "newsletter_text": "Subscribe to receive updates, access to exclusive deals, and more.",
+        "instagram_url": "https://www.instagram.com/",
+        "facebook_url": "https://www.facebook.com/",
+        "youtube_url": "https://www.youtube.com/"
       }
     },
-    "footer_utilities_jLGE8U": {
+    "footer_utilities": {
       "type": "footer-utilities",
       "blocks": {
-        "footer_copyright_jweRK8": {
+        "copyright": {
           "type": "footer-copyright",
           "settings": {
             "show_powered_by": false,
@@ -78,7 +61,7 @@
           },
           "blocks": {}
         },
-        "footer_policy_list_VCdnpa": {
+        "policies": {
           "type": "footer-policy-list",
           "settings": {
             "font_size": "0.75rem",
@@ -86,37 +69,29 @@
           },
           "blocks": {}
         },
-        "social_links_Ew63Kq": {
+        "social": {
           "type": "social-links",
           "settings": {
             "facebook_url": "https://www.facebook.com/",
             "instagram_url": "https://www.instagram.com/",
             "youtube_url": "https://www.youtube.com/",
-            "tiktok_url": "https://www.tiktok.com/",
+            "tiktok_url": "",
             "twitter_url": "https://x.com/"
           },
           "blocks": {}
         }
       },
-      "block_order": [
-        "footer_copyright_jweRK8",
-        "footer_policy_list_VCdnpa",
-        "social_links_Ew63Kq"
-      ],
-      "name": "t:names.utilities",
+      "block_order": ["copyright", "policies", "social"],
       "settings": {
         "section_width": "page-width",
         "gap": 24,
         "divider_thickness": 1,
-        "divider_color": "#ffffff33",
-        "background_color": "#171f26",
+        "divider_color": "#ededed",
+        "background_color": "#ffffff",
         "padding-block-start": 20,
-        "padding-block-end": 48
+        "padding-block-end": 32
       }
     }
   },
-  "order": [
-    "footer_m9NzUG",
-    "footer_utilities_jLGE8U"
-  ]
+  "order": ["crosley_footer", "footer_utilities"]
 }
