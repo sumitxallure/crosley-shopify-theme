@@ -1,0 +1,223 @@
+<footer class="crosley-footer">
+  <div class="crosley-footer__inner">
+    <div class="crosley-footer__newsletter">
+      <h2>{{ section.settings.newsletter_heading | escape }}</h2>
+      <p>{{ section.settings.newsletter_text | escape }}</p>
+      {% form 'customer', class: 'crosley-footer__form' %}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <label class="visually-hidden" for="FooterEmail-{{ section.id }}">Email address</label>
+        <input id="FooterEmail-{{ section.id }}" type="email" name="contact[email]" placeholder="E-mail" required>
+        <button type="submit">Subscribe</button>
+      {% endform %}
+      <div class="crosley-footer__social">
+        {% if section.settings.instagram_url != blank %}<a href="{{ section.settings.instagram_url }}">Instagram</a>{% endif %}
+        {% if section.settings.facebook_url != blank %}<a href="{{ section.settings.facebook_url }}">Facebook</a>{% endif %}
+        {% if section.settings.youtube_url != blank %}<a href="{{ section.settings.youtube_url }}">YouTube</a>{% endif %}
+      </div>
+    </div>
+
+    {% for block in section.blocks %}
+      <details class="crosley-footer__menu" {% if forloop.first %}open{% endif %} {{ block.shopify_attributes }}>
+        <summary>{{ block.settings.heading | escape }}</summary>
+        {% if block.settings.menu != blank %}
+          <nav aria-label="{{ block.settings.heading | escape }}">
+            {% for link in block.settings.menu.links %}
+              <a href="{{ link.url }}">{{ link.title | escape }}</a>
+            {% endfor %}
+          </nav>
+        {% endif %}
+      </details>
+    {% endfor %}
+  </div>
+</footer>
+
+{% stylesheet %}
+  .crosley-footer {
+    padding: 82px 40px 64px;
+    color: #171f26;
+    background: #ffffff;
+  }
+
+  .crosley-footer__inner {
+    display: grid;
+    width: min(100%, 1400px);
+    grid-template-columns: minmax(240px, 1.5fr) repeat(4, minmax(120px, 0.75fr));
+    gap: 48px;
+    margin-inline: auto;
+  }
+
+  .crosley-footer h2,
+  .crosley-footer summary {
+    margin: 0 0 20px;
+    color: #383637;
+    font-size: clamp(1rem, 1.3vw, 1.25rem);
+    font-weight: 700;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+  }
+
+  .crosley-footer__newsletter > p {
+    max-width: 34ch;
+    margin: 0 0 20px;
+    color: #676767;
+    font-size: clamp(0.6875rem, 0.85vw, 0.8125rem);
+    line-height: 1.6;
+  }
+
+  .crosley-footer__form {
+    display: grid;
+    gap: 14px;
+    max-width: 300px;
+  }
+
+  .crosley-footer__form input {
+    width: 100%;
+    height: 48px;
+    padding-inline: 16px;
+    color: #171f26;
+    background: #ffffff;
+    border: 1px solid #dadada;
+  }
+
+  .crosley-footer__form button {
+    width: max-content;
+    min-height: 46px;
+    padding-inline: 32px;
+    color: #ffffff;
+    background: #383637;
+    border: 0;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .crosley-footer__social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-block-start: 24px;
+  }
+
+  .crosley-footer__social a,
+  .crosley-footer__menu nav a {
+    color: #676767;
+    text-decoration: none;
+    font-size: clamp(0.75rem, 0.95vw, 0.9375rem);
+  }
+
+  .crosley-footer__social a:hover,
+  .crosley-footer__menu nav a:hover {
+    color: #171f26;
+    text-decoration: underline;
+  }
+
+  .crosley-footer__menu summary {
+    list-style: none;
+    cursor: default;
+  }
+
+  .crosley-footer__menu summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .crosley-footer__menu nav {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  @media (max-width: 989px) {
+    .crosley-footer__inner {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .crosley-footer__newsletter {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .crosley-footer {
+      padding: 48px 20px 36px;
+    }
+
+    .crosley-footer__inner {
+      display: block;
+    }
+
+    .crosley-footer__newsletter {
+      margin-block-end: 32px;
+    }
+
+    .crosley-footer__menu {
+      border-bottom: 1px solid #ededed;
+    }
+
+    .crosley-footer__menu summary {
+      position: relative;
+      margin: 0;
+      padding: 18px 28px 18px 0;
+      cursor: pointer;
+    }
+
+    .crosley-footer__menu summary::after {
+      position: absolute;
+      top: 16px;
+      right: 2px;
+      content: '+';
+      font-size: 1.25rem;
+      font-weight: 400;
+    }
+
+    .crosley-footer__menu[open] summary::after {
+      content: '-';
+    }
+
+    .crosley-footer__menu nav {
+      padding-block-end: 20px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Crosley footer",
+  "tag": "section",
+  "class": "crosley-footer-section",
+  "enabled_on": { "groups": ["footer"] },
+  "settings": [
+    { "type": "header", "content": "Newsletter" },
+    { "type": "text", "id": "newsletter_heading", "label": "Newsletter heading", "default": "Newsletter" },
+    { "type": "text", "id": "newsletter_text", "label": "Newsletter text", "default": "Subscribe to receive updates, access to exclusive deals, and more." },
+    { "type": "header", "content": "Social links" },
+    { "type": "url", "id": "instagram_url", "label": "Instagram URL" },
+    { "type": "url", "id": "facebook_url", "label": "Facebook URL" },
+    { "type": "url", "id": "youtube_url", "label": "YouTube URL" }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        { "type": "header", "content": "Menu" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Shop" },
+        { "type": "link_list", "id": "menu", "label": "Menu" }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Crosley footer",
+      "blocks": [
+        { "type": "menu", "settings": { "heading": "Shop" } },
+        { "type": "menu", "settings": { "heading": "Our company" } },
+        { "type": "menu", "settings": { "heading": "Customer care" } },
+        { "type": "menu", "settings": { "heading": "Resources" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

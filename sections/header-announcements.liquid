@@ -42,6 +42,9 @@
 
 {% stylesheet %}
   .announcement-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-block-end: var(--border-bottom-width) solid var(--color-border);
   }
 
@@ -49,7 +52,9 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
     position: relative;
+    width: 100%;
 
     @media screen and (max-width: 749px) {
       grid-column: 1 / -1;
@@ -112,11 +117,18 @@
   }
 
   .announcement-bar__slide {
+    display: grid;
     place-content: center;
+    text-align: center;
   }
 
   .announcement-bar__text:first-child {
     margin: 0;
+  }
+
+  .announcement-bar__text {
+    width: 100%;
+    text-align: center;
   }
 
   .announcement-bar__link {

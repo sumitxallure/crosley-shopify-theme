@@ -1,0 +1,339 @@
+<section class="crosley-product-tabs" data-crosley-tabs>
+  <div class="crosley-product-tabs__inner">
+    {% if section.settings.eyebrow != blank %}
+      <p class="crosley-product-tabs__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {% endif %}
+
+    <div class="crosley-product-tabs__nav" role="tablist" aria-label="Product categories">
+      {% for block in section.blocks %}
+        {% assign tab_collection = block.settings.collection %}
+        <button
+          type="button"
+          class="crosley-product-tabs__tab{% if forloop.first %} is-active{% endif %}"
+          data-tab-button="{{ forloop.index0 }}"
+          aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+          {{ block.shopify_attributes }}
+        >
+          {{ block.settings.label | default: tab_collection.title | escape }}
+        </button>
+      {% endfor %}
+    </div>
+
+    {% for block in section.blocks %}
+      {% assign tab_collection = block.settings.collection %}
+      <div
+        class="crosley-product-tabs__panel{% if forloop.first %} is-active{% endif %}"
+        data-tab-panel="{{ forloop.index0 }}"
+        {% unless forloop.first %}hidden{% endunless %}
+      >
+        <div class="crosley-product-tabs__products">
+          {% for product in tab_collection.products limit: 4 %}
+            <article class="crosley-product-card">
+              <a class="crosley-product-card__media" href="{{ product.url }}">
+                {% if product.featured_image != blank %}
+                  {{ product.featured_image | image_url: width: 900 | image_tag: widths: '350, 550, 750, 900', sizes: '(min-width: 990px) 25vw, 70vw', loading: 'lazy', alt: product.title }}
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'crosley-product-card__placeholder' }}
+                {% endif %}
+                {% if product.compare_at_price_max > product.price %}
+                  <span class="crosley-product-card__badge">Sale</span>
+                {% elsif forloop.index == 2 %}
+                  <span class="crosley-product-card__badge">New</span>
+                {% endif %}
+              </a>
+              <div class="crosley-product-card__details">
+                <a href="{{ product.url }}">{{ product.title | escape }}</a>
+                <div class="crosley-product-card__price">
+                  {% if product.compare_at_price_max > product.price %}
+                    <s>{{ product.compare_at_price_max | money }}</s>
+                  {% endif %}
+                  <span>{{ product.price | money }}</span>
+                </div>
+                {% if product.variants.size > 1 %}
+                  <div class="crosley-product-card__swatches" aria-label="Available variants">
+                    {% for variant in product.variants limit: 4 %}
+                      <span
+                        title="{{ variant.title | escape }}"
+                        {% if variant.featured_image %}
+                          style="background-image: url('{{ variant.featured_image | image_url: width: 80 }}');"
+                        {% endif %}
+                      ></span>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            </article>
+          {% else %}
+            {% for index in (1..4) %}
+              <article class="crosley-product-card">
+                <div class="crosley-product-card__media">{{ 'product-' | append: index | placeholder_svg_tag: 'crosley-product-card__placeholder' }}</div>
+                <div class="crosley-product-card__details"><strong>Select a collection</strong></div>
+              </article>
+            {% endfor %}
+          {% endfor %}
+        </div>
+
+        {% if tab_collection != blank %}
+          <a class="crosley-product-tabs__cta" href="{{ tab_collection.url }}">
+            {{ block.settings.button_label | default: 'Shop collection' | escape }}
+          </a>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .crosley-product-tabs {
+    padding: clamp(56px, 6vw, 82px) 50px;
+    text-align: center;
+    background: #ffffff;
+  }
+
+  .crosley-product-tabs__inner {
+    width: min(100%, 1600px);
+    margin-inline: auto;
+  }
+
+  .crosley-product-tabs__eyebrow {
+    margin: 0 0 20px;
+    color: #676767;
+    font-size: clamp(0.75rem, 0.95vw, 0.9375rem);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .crosley-product-tabs__nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    margin-block-end: 64px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .crosley-product-tabs__nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .crosley-product-tabs__tab {
+    flex: 0 0 auto;
+    padding: 0 0 8px;
+    color: #676767;
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    font-size: clamp(1.125rem, 1.55vw, 1.5rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .crosley-product-tabs__tab.is-active {
+    color: #171f26;
+    border-bottom-color: #383637;
+  }
+
+  .crosley-product-tabs__panel[hidden] {
+    display: none;
+  }
+
+  .crosley-product-tabs__products {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+    text-align: left;
+  }
+
+  .crosley-product-card__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #f5f5f4;
+  }
+
+  .crosley-product-card__media img,
+  .crosley-product-card__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 260ms ease;
+  }
+
+  .crosley-product-card__media:hover img {
+    transform: scale(1.03);
+  }
+
+  .crosley-product-card__badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    padding: 6px 9px;
+    color: #ffffff;
+    background: #383637;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .crosley-product-card__details {
+    padding-block-start: 18px;
+  }
+
+  .crosley-product-card__details > a,
+  .crosley-product-card__details > strong {
+    color: #171f26;
+    text-decoration: none;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .crosley-product-card__price {
+    display: flex;
+    gap: 8px;
+    margin-block-start: 8px;
+    color: #676767;
+    font-size: 1.125rem;
+    font-weight: 700;
+  }
+
+  .crosley-product-card__swatches {
+    display: flex;
+    gap: 7px;
+    margin-block-start: 14px;
+  }
+
+  .crosley-product-card__swatches span {
+    width: 22px;
+    height: 22px;
+    background-color: #d8d4cc;
+    background-position: center;
+    background-size: cover;
+    border: 1px solid #d2d2d2;
+    border-radius: 50%;
+  }
+
+  .crosley-product-tabs__cta {
+    display: inline-flex;
+    min-height: 52px;
+    align-items: center;
+    justify-content: center;
+    margin-block-start: 42px;
+    padding-inline: 44px;
+    color: #ffffff;
+    background: #383637;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 749px) {
+    .crosley-product-tabs {
+      padding: 52px 20px;
+    }
+
+    .crosley-product-tabs__nav {
+      justify-content: flex-start;
+      gap: 24px;
+      margin-inline: -20px;
+      margin-block-end: 36px;
+      padding-inline: 20px;
+    }
+
+    .crosley-product-tabs__products {
+      display: flex;
+      gap: 16px;
+      margin-inline-end: -20px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+
+    .crosley-product-tabs__products::-webkit-scrollbar {
+      display: none;
+    }
+
+    .crosley-product-card {
+      flex: 0 0 72vw;
+      scroll-snap-align: start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .crosley-product-card__media img {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  function initializeCrosleyTabs(section) {
+    if (section.dataset.initialized === 'true') return;
+    section.dataset.initialized = 'true';
+    const buttons = Array.from(section.querySelectorAll('[data-tab-button]'));
+    const panels = Array.from(section.querySelectorAll('[data-tab-panel]'));
+
+    buttons.forEach((button) => button.addEventListener('click', () => {
+      const activeIndex = button.dataset.tabButton;
+      buttons.forEach((item) => {
+        const active = item.dataset.tabButton === activeIndex;
+        item.classList.toggle('is-active', active);
+        item.setAttribute('aria-selected', String(active));
+      });
+      panels.forEach((panel) => {
+        const active = panel.dataset.tabPanel === activeIndex;
+        panel.classList.toggle('is-active', active);
+        panel.hidden = !active;
+      });
+    }));
+  }
+
+  document.querySelectorAll('[data-crosley-tabs]').forEach(initializeCrosleyTabs);
+  document.addEventListener('shopify:section:load', (event) => {
+    event.target.querySelectorAll('[data-crosley-tabs]').forEach(initializeCrosleyTabs);
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Crosley product tabs",
+  "tag": "section",
+  "class": "crosley-home-section",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Amplify your style with Crosley's" }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection tab",
+      "settings": [
+        { "type": "header", "content": "Collection" },
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "text", "id": "label", "label": "Tab label" },
+        { "type": "header", "content": "Button" },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop collection" }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Crosley product tabs",
+      "blocks": [
+        { "type": "collection", "settings": { "label": "Record players" } },
+        { "type": "collection", "settings": { "label": "Speakers" } },
+        { "type": "collection", "settings": { "label": "Radios" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

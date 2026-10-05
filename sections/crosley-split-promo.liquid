@@ -1,0 +1,271 @@
+{% comment %}
+  Crosley editorial campaign band with swappable media and orientation.
+  @example
+  Add multiple instances to highlight collaborations, products, or gift guides.
+{% endcomment %}
+
+{% liquid
+  case section.settings.default_image
+    when 'contest'
+      assign fallback_asset = 'crosley-contest.jpg'
+    when 'miller'
+      assign fallback_asset = 'crosley-miller.jpg'
+    when 'c65'
+      assign fallback_asset = 'crosley-c65-promo.webp'
+    when 'gift'
+      assign fallback_asset = 'crosley-gift-guide.jpg'
+    else
+      assign fallback_asset = 'crosley-audioengine.webp'
+  endcase
+  assign promo_alt = section.settings.image.alt | default: section.settings.heading
+%}
+
+<section
+  class="crosley-promo crosley-promo--image-{{ section.settings.image_position }}"
+  style="--crosley-promo-bg: {{ section.settings.background_color }}; --crosley-promo-text: {{ section.settings.text_color }};"
+>
+  <div class="crosley-promo__media">
+    {% if section.settings.image != blank %}
+      {{
+        section.settings.image
+        | image_url: width: 2000
+        | image_tag:
+          widths: '600, 900, 1200, 1600, 2000',
+          sizes: '(min-width: 750px) 50vw, 100vw',
+          loading: 'lazy',
+          alt: promo_alt
+      }}
+    {% else %}
+      <img
+        src="{{ fallback_asset | asset_url }}"
+        alt="{{ promo_alt | escape }}"
+        width="1600"
+        height="1200"
+        loading="lazy"
+      >
+    {% endif %}
+  </div>
+
+  <div class="crosley-promo__content">
+    {% if section.settings.eyebrow != blank %}
+      <p class="crosley-promo__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {% endif %}
+    {% if section.settings.heading != blank %}
+      <h2>{{ section.settings.heading | escape }}</h2>
+    {% endif %}
+    {% if section.settings.text != blank %}
+      <div class="crosley-promo__text rte">{{ section.settings.text }}</div>
+    {% endif %}
+    {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+      <a class="crosley-promo__link" href="{{ section.settings.button_link }}">
+        {{ section.settings.button_label | escape }}
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .crosley-promo {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-height: 700px;
+    color: var(--crosley-promo-text);
+    background: var(--crosley-promo-bg);
+  }
+
+  .crosley-promo--image-right .crosley-promo__media {
+    order: 2;
+  }
+
+  .crosley-promo__media {
+    min-width: 0;
+    min-height: 700px;
+  }
+
+  .crosley-promo__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .crosley-promo__content {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 80px;
+  }
+
+  .crosley-promo__eyebrow {
+    margin: 0 0 20px;
+    color: #676767;
+    font-size: clamp(0.75rem, 0.95vw, 0.9375rem);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .crosley-promo h2 {
+    max-width: none;
+    margin: 0;
+    color: inherit;
+    font-size: clamp(1.5rem, 2.1vw, 2rem);
+    line-height: 1.25;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .crosley-promo__text {
+    max-width: 440px;
+    margin-block-start: 24px;
+    color: #676767;
+    font-size: clamp(0.875rem, 1.05vw, 1rem);
+    line-height: 1.6;
+  }
+
+  .crosley-promo__link {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    margin-block-start: 30px;
+    padding-inline: 40px;
+    color: #ffffff;
+    background: #383637;
+    border: 1px solid #383637;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .crosley-promo__link:hover {
+    background: #171f26;
+    border-color: #171f26;
+  }
+
+  @media (max-width: 749px) {
+    .crosley-promo {
+      grid-template-columns: minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .crosley-promo--image-right .crosley-promo__media {
+      order: 0;
+    }
+
+    .crosley-promo__media {
+      min-height: 280px;
+    }
+
+    .crosley-promo__content {
+      padding: 32px 24px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Crosley split promotion",
+  "tag": "section",
+  "class": "crosley-home-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "default_image",
+      "label": "Bundled campaign image",
+      "info": "Used only when no custom image is selected.",
+      "options": [
+        { "value": "contest", "label": "Cruiser contest" },
+        { "value": "audioengine", "label": "Crosley x Audioengine" },
+        { "value": "miller", "label": "Miller High Life" },
+        { "value": "c65", "label": "C65" },
+        { "value": "gift", "label": "Gift guide" }
+      ],
+      "default": "audioengine"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "A new way to listen"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Crosley x Audioengine"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Pair iconic Crosley design with room-filling powered sound.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f5f5f4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Heading color",
+      "default": "#171f26"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Crosley split promotion"
+    }
+  ]
+}
+{% endschema %}
