@@ -25,3 +25,172 @@ body {
 .crosley-footer-section :where(button, input, a) {
   font-family: inherit;
 }
+
+#header-group .announcement-bar.section {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  min-height: 35px;
+  padding: 11px 40px !important;
+}
+
+#header-group .announcement-bar__slider,
+#header-group .announcement-bar__slides,
+#header-group .announcement-bar__slide {
+  width: 100%;
+}
+
+#header-group .announcement-bar__slider {
+  justify-content: center;
+}
+
+#header-group .announcement-bar__slides {
+  max-width: none;
+  margin-inline: 0;
+}
+
+#header-group .announcement-bar__slide {
+  display: grid !important;
+  place-content: center;
+  text-align: center;
+}
+
+#header-group .announcement-bar__text {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(0.6875rem, 0.65rem + 0.13vw, 0.8125rem) !important;
+  font-weight: 700;
+  letter-spacing: 0.06em !important;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+#header-component .header__row--top .header__columns {
+  min-height: 90px;
+  padding: 23px 40px !important;
+}
+
+#header-component .header-logo__brand-fallback {
+  width: 200px;
+  height: 20px;
+}
+
+@media screen and (min-width: 861px) {
+  #header-component[data-menu-style='menu'] .header__row--top .header__columns {
+    grid-template-areas: 'logo nav actions' !important;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  #header-component[data-menu-style='menu'] .header__column--left {
+    display: contents;
+  }
+
+  #header-component[data-menu-style='menu'] .header-logo {
+    grid-area: logo;
+    justify-self: start;
+    width: 200px;
+  }
+
+  #header-component[data-menu-style='menu'] header-menu {
+    grid-area: nav;
+    justify-self: center;
+  }
+
+  #header-component[data-menu-style='menu'] .header__column--right {
+    grid-area: actions;
+    gap: 22px;
+  }
+
+  #header-component[data-menu-style='menu'] .dropdown-localization {
+    display: none !important;
+  }
+
+  #header-component[data-menu-style='menu'] .header__column--right header-actions {
+    display: contents;
+  }
+
+  #header-component[data-menu-style='menu'] .header__column--right .account-button {
+    order: 1;
+  }
+
+  #header-component[data-menu-style='menu'] .header__column--right .search-action--hidden-on-drawer {
+    order: 2;
+  }
+
+  #header-component[data-menu-style='menu'] .header__column--right [data-testid='cart-drawer-trigger'] {
+    order: 3;
+  }
+
+  #header-component[data-menu-style='menu'] .menu-list {
+    --menu-horizontal-gap: 16px;
+  }
+
+  #header-component[data-menu-style='menu'] .menu-list__link {
+    font-size: clamp(0.875rem, 0.84rem + 0.13vw, 1rem) !important;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  #header-component[data-menu-style='menu'] .menu-list__link-title {
+    padding-inline: 0;
+  }
+}
+
+@media screen and (max-width: 860px) {
+  #header-group .announcement-bar.section {
+    min-height: 29px;
+    padding: 8px 16px !important;
+  }
+
+  #header-component .header__row--top .header__columns {
+    grid-template-areas: 'burger logo icons' !important;
+    grid-template-columns: auto 1fr auto !important;
+    min-height: 52px;
+    gap: 16px !important;
+    padding: 16px !important;
+  }
+
+  #header-component .header__drawer {
+    grid-area: burger;
+    min-height: 20px;
+  }
+
+  #header-component .header-logo {
+    grid-area: logo;
+    justify-self: center;
+    width: min(200px, 52vw);
+  }
+
+  #header-component .search-action--hidden-on-menu,
+  #header-component header-menu,
+  #header-component .dropdown-localization {
+    display: none !important;
+  }
+
+  #header-component .header__column--right {
+    display: flex !important;
+    grid-area: icons;
+    gap: 22px;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  #header-component .search-action--hidden-on-drawer {
+    display: flex !important;
+  }
+
+  #header-component header-actions {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  #header-component .header-actions__action {
+    width: 20px;
+    min-width: 20px;
+    height: 20px;
+  }
+}
