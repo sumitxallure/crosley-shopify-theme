@@ -155,22 +155,38 @@ body {
   }
 
   #header-component .header__row--top .header__columns {
-    grid-template-areas: 'burger logo icons' !important;
-    grid-template-columns: auto 1fr auto !important;
-    min-height: 52px;
-    gap: 16px !important;
-    padding: 16px !important;
+    --header-mobile-bookend: 44px;
+    --header-template-columns: var(--header-mobile-bookend) var(--header-mobile-bookend) minmax(0, 1fr)
+      var(--header-mobile-bookend) var(--header-mobile-bookend);
+
+    grid-template-areas: 'leftA leftB center rightA rightB' !important;
+    grid-template-columns: var(--header-template-columns) !important;
+    column-gap: 0 !important;
+    min-height: 58px;
+    padding: 0 16px !important;
   }
 
-  #header-component .header__drawer {
-    grid-area: burger;
-    min-height: 20px;
+  #header-component .header__column {
+    display: contents !important;
+  }
+
+  #header-component .header__drawer,
+  #header-component .header__icon--menu {
+    grid-area: leftA;
+    justify-content: flex-start;
+    min-height: 44px;
+    padding-inline: 0;
+  }
+
+  #header-component[data-menu-style='menu'] .header__drawer {
+    display: flex;
   }
 
   #header-component .header-logo {
-    grid-area: logo;
+    grid-area: center;
     justify-self: center;
-    width: min(200px, 52vw);
+    width: min(180px, 44vw);
+    min-width: 0;
   }
 
   #header-component .search-action--hidden-on-menu,
@@ -180,27 +196,118 @@ body {
   }
 
   #header-component .header__column--right {
-    display: flex !important;
-    grid-area: icons;
-    gap: 22px;
-    align-items: center;
-    justify-content: flex-end;
+    display: contents !important;
   }
 
   #header-component .search-action--hidden-on-drawer {
     display: flex !important;
+    grid-area: leftB;
+    justify-content: center;
   }
 
   #header-component header-actions {
+    grid-column: 4 / 6;
+    grid-row: 1;
     display: flex;
-    gap: 22px;
+    min-width: max-content;
+    gap: 0;
     align-items: center;
     justify-content: flex-end;
+    justify-self: end;
   }
 
   #header-component .header-actions__action {
-    width: 20px;
-    min-width: 20px;
-    height: 20px;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    align-items: center;
+  }
+
+  #header-component .header-actions__action .svg-wrapper,
+  #header-component .search-action .svg-wrapper {
+    width: 22px;
+    height: 22px;
+  }
+
+  #header-component .header-actions__action svg,
+  #header-component .search-action svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  #header-component .header__row--top .header__columns {
+    padding-inline: 12px !important;
+  }
+
+  #header-component .header-logo {
+    width: min(142px, 36vw);
+  }
+
+}
+
+@media screen and (max-width: 749px) {
+  #header-component .header__row--top {
+    width: 100vw;
+    max-width: 100vw;
+    margin-inline: 0;
+  }
+
+  #header-component .header__row--top .header__columns {
+    grid-template-areas: 'left center right' !important;
+    grid-template-columns: 44px minmax(0, 1fr) 44px !important;
+    width: 100vw;
+    max-width: 100vw;
+    margin-inline: 0;
+    box-sizing: border-box;
+  }
+
+  #header-component .search-action--hidden-on-drawer {
+    display: none !important;
+  }
+
+  #header-component .header__drawer,
+  #header-component .header__icon--menu {
+    grid-area: left;
+  }
+
+  #header-component .header-logo {
+    grid-area: center;
+  }
+
+  #header-component .header__column--right {
+    display: flex !important;
+    grid-area: right;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #header-component header-actions {
+    position: static;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    margin-inline-start: 0;
+  }
+
+  #header-component header-actions [data-testid='cart-drawer-trigger'],
+  #header-component header-actions .action__cart {
+    display: flex;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #header-component .account-button {
+    display: none !important;
   }
 }

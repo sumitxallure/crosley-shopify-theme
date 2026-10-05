@@ -4,19 +4,21 @@
       <p class="crosley-product-tabs__eyebrow">{{ section.settings.eyebrow | escape }}</p>
     {% endif %}
 
-    <div class="crosley-product-tabs__nav" role="tablist" aria-label="Product categories">
-      {% for block in section.blocks %}
-        {% assign tab_collection = block.settings.collection %}
-        <button
-          type="button"
-          class="crosley-product-tabs__tab{% if forloop.first %} is-active{% endif %}"
-          data-tab-button="{{ forloop.index0 }}"
-          aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
-          {{ block.shopify_attributes }}
-        >
-          {{ block.settings.label | default: tab_collection.title | escape }}
-        </button>
-      {% endfor %}
+    <div class="crosley-product-tabs__nav">
+      <div class="crosley-product-tabs__nav-list" role="tablist" aria-label="Product categories">
+        {% for block in section.blocks %}
+          {% assign tab_collection = block.settings.collection %}
+          <button
+            type="button"
+            class="crosley-product-tabs__tab{% if forloop.first %} is-active{% endif %}"
+            data-tab-button="{{ forloop.index0 }}"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.label | default: tab_collection.title | escape }}
+          </button>
+        {% endfor %}
+      </div>
     </div>
 
     {% for block in section.blocks %}
@@ -105,13 +107,18 @@
   }
 
   .crosley-product-tabs__nav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 40px;
     margin-block-end: 64px;
     overflow-x: auto;
     scrollbar-width: none;
+  }
+
+  .crosley-product-tabs__nav-list {
+    display: flex;
+    width: max-content;
+    min-width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
   }
 
   .crosley-product-tabs__nav::-webkit-scrollbar {
@@ -241,11 +248,19 @@
     }
 
     .crosley-product-tabs__nav {
-      justify-content: flex-start;
-      gap: 24px;
-      margin-inline: -20px;
       margin-block-end: 36px;
-      padding-inline: 20px;
+      width: 100%;
+      padding-inline: 0;
+    }
+
+    .crosley-product-tabs__nav-list {
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .crosley-product-tabs__tab {
+      font-size: 0.875rem;
+      letter-spacing: 0;
     }
 
     .crosley-product-tabs__products {
