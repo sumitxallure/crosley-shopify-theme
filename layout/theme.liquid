@@ -7,6 +7,9 @@
   dir="{{ request.locale.direction | default: 'ltr' }}"
 >
   <head>
+    <link rel="preconnect" href="https://use.typekit.net">
+    <link rel="stylesheet" href="https://use.typekit.net/ywm4jwh.css">
+
     {%- if settings.favicon != blank -%}
       <link
         rel="icon"
@@ -24,6 +27,7 @@
     {%- render 'scripts' -%}
     {%- render 'theme-styles-variables' -%}
     {%- render 'color-palette' -%}
+    {{ 'crosley-brand.css' | asset_url | stylesheet_tag }}
 
     {% if request.design_mode %}
       {%- render 'theme-editor' -%}

@@ -98,8 +98,9 @@
   .crosley-product-tabs__eyebrow {
     margin: 0 0 20px;
     color: #676767;
-    font-size: 0.9rem;
+    font-size: clamp(0.75rem, 0.95vw, 0.9375rem);
     font-weight: 700;
+    letter-spacing: 0.03em;
     text-transform: uppercase;
   }
 
@@ -124,8 +125,9 @@
     background: transparent;
     border: 0;
     border-bottom: 2px solid transparent;
-    font-size: clamp(1.15rem, 2vw, 1.5rem);
+    font-size: clamp(1.25rem, 2.1vw, 2rem);
     font-weight: 700;
+    letter-spacing: 0.02em;
     text-transform: uppercase;
     cursor: pointer;
   }
@@ -187,8 +189,9 @@
   .crosley-product-card__details > strong {
     color: #171f26;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 1.125rem;
     font-weight: 700;
+    line-height: 1.3;
   }
 
   .crosley-product-card__price {
@@ -196,6 +199,8 @@
     gap: 8px;
     margin-block-start: 8px;
     color: #676767;
+    font-size: 1.125rem;
+    font-weight: 700;
   }
 
   .crosley-product-card__swatches {
@@ -226,6 +231,7 @@
     text-decoration: none;
     font-size: 0.88rem;
     font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 

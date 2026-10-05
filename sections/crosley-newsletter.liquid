@@ -72,7 +72,7 @@
   .crosley-newsletter {
     position: relative;
     display: grid;
-    min-height: 520px;
+    min-height: 480px;
     overflow: hidden;
     color: #ffffff;
     background: #171f26;
@@ -103,41 +103,47 @@
   .crosley-newsletter__content {
     z-index: 2;
     display: flex;
-    width: min(100%, 680px);
+    width: min(100%, 560px);
     margin-inline: auto;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     margin-inline: auto;
-    padding-block: 72px;
+    padding: 56px 40px;
     text-align: center;
   }
 
   .crosley-newsletter__content > p {
-    margin: 0 0 12px;
-    font-size: 0.8rem;
+    margin: 0 0 18px;
+    color: rgb(255 255 255 / 85%);
+    font-size: clamp(0.75rem, 0.95vw, 0.9375rem);
     font-weight: 700;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 
   .crosley-newsletter h2 {
-    margin: 0;
+    margin: 0 0 20px;
     color: inherit;
-    font-size: clamp(2rem, 4vw, 3.6rem);
-    line-height: 1;
+    font-size: clamp(1.25rem, 2.1vw, 1.75rem);
+    line-height: 1.15;
+    letter-spacing: 0.02em;
     text-transform: uppercase;
   }
 
   .crosley-newsletter .rte {
     max-width: 48ch;
-    margin-block-start: 18px;
+    margin-block-start: 0;
+    color: rgb(255 255 255 / 90%);
+    font-size: clamp(0.875rem, 1.05vw, 1rem);
+    line-height: 1.6;
   }
 
   .crosley-newsletter__form {
     display: grid;
-    width: min(100%, 540px);
+    width: min(100%, 460px);
     grid-template-columns: minmax(0, 1fr) auto;
-    margin-block-start: 30px;
+    margin-block-start: 32px;
   }
 
   .crosley-newsletter__form input,
@@ -163,6 +169,7 @@
     color: #171f26;
     background: #ffffff;
     font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     cursor: pointer;
   }

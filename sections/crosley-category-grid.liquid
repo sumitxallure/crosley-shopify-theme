@@ -50,8 +50,12 @@
           {% else %}
             {{ 'collection-apparel-1' | placeholder_svg_tag: 'crosley-category-card__placeholder' }}
           {% endif %}
+          <span class="crosley-category-card__shade"></span>
+          <span class="crosley-category-card__content">
+            <strong>{{ card_title | escape }}</strong>
+            <span>{{ section.settings.button_label | escape }}</span>
+          </span>
         </div>
-        <span class="crosley-category-card__title">{{ card_title | escape }}</span>
       </a>
     {% endfor %}
   </div>
@@ -59,18 +63,14 @@
 
 {% stylesheet %}
   .crosley-categories {
-    width: min(calc(100% - 48px), 1600px);
-    margin-inline: auto;
-    padding-block: clamp(54px, 7vw, 96px);
+    width: 100%;
+    padding: clamp(40px, 5.75vw, 82px) clamp(16px, 3.5vw, 50px);
     background: var(--crosley-category-bg);
   }
 
   .crosley-categories__header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 24px;
-    margin-block-end: 32px;
+    margin-block-end: 48px;
+    text-align: center;
   }
 
   .crosley-categories__header p {
@@ -84,8 +84,9 @@
   .crosley-categories__header h2 {
     margin: 0;
     color: #171f26;
-    font-size: clamp(1.8rem, 3vw, 3rem);
-    line-height: 1;
+    font-size: clamp(1.5rem, 2.1vw, 2rem);
+    line-height: 1.15;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
   }
 
@@ -93,6 +94,8 @@
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: var(--crosley-category-gap);
+    width: min(100%, 1600px);
+    margin-inline: auto;
   }
 
   .crosley-category-card {
@@ -102,7 +105,8 @@
   }
 
   .crosley-category-card__media {
-    aspect-ratio: 4 / 5;
+    position: relative;
+    aspect-ratio: 1;
     overflow: hidden;
     background: #ececeb;
   }
@@ -120,11 +124,45 @@
     transform: scale(1.025);
   }
 
-  .crosley-category-card__title {
-    display: block;
-    margin-block-start: 15px;
-    font-size: 1rem;
+  .crosley-category-card__shade {
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / 25%);
+    pointer-events: none;
+  }
+
+  .crosley-category-card__content {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 28px;
+    color: #ffffff;
+    text-align: left;
+  }
+
+  .crosley-category-card__content strong {
+    font-size: clamp(1.25rem, 1.9vw, 1.75rem);
     font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .crosley-category-card__content > span {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    padding-inline: 24px;
+    color: #383637;
+    background: #ffffff;
+    border: 1px solid #ffffff;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
@@ -136,8 +174,7 @@
 
   @media (max-width: 749px) {
     .crosley-categories {
-      width: min(calc(100% - 40px), 1600px);
-      padding-block: 52px;
+      padding: 52px 20px;
     }
 
     .crosley-categories__header {
@@ -153,8 +190,19 @@
       gap: 20px 12px;
     }
 
-    .crosley-category-card__title {
-      font-size: 0.86rem;
+    .crosley-category-card__content {
+      gap: 10px;
+      padding: 16px;
+    }
+
+    .crosley-category-card__content strong {
+      font-size: 1rem;
+    }
+
+    .crosley-category-card__content > span {
+      min-height: 38px;
+      padding-inline: 14px;
+      font-size: 0.75rem;
     }
   }
 
@@ -196,6 +244,12 @@
       "step": 4,
       "unit": "px",
       "default": 16
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "View products"
     },
     {
       "type": "color",

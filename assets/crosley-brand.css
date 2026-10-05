@@ -1,0 +1,27 @@
+:root {
+  --font-body--family: "acumin-pro-condensed", Arial, sans-serif;
+  --font-subheading--family: "acumin-pro-condensed", Arial, sans-serif;
+  --font-heading--family: "acumin-pro-condensed", Arial, sans-serif;
+}
+
+body {
+  color: #171f26;
+  font-family: var(--font-body--family);
+}
+
+.crosley-home-section,
+.crosley-footer-section {
+  font-family: "acumin-pro-condensed", Arial, sans-serif;
+}
+
+.crosley-home-section :where(h1, h2, h3),
+.crosley-footer-section :where(h1, h2, h3) {
+  font-family: "acumin-pro-condensed", Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.crosley-home-section :where(button, input, a),
+.crosley-footer-section :where(button, input, a) {
+  font-family: inherit;
+}
