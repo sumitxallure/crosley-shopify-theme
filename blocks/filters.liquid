@@ -105,6 +105,71 @@
   section_id: block.id
 %}
 
+{% if template.suffix == 'crosley' %}
+  <div class="crosley-collection-toolbar">
+    {% if block_settings.enable_filtering %}
+      <button
+        class="crosley-collection-toolbar__filter button-unstyled"
+        on:click="#filters-drawer/open"
+        type="button"
+        aria-haspopup="dialog"
+      >
+        <span class="svg-wrapper" aria-hidden="true">
+          {{ 'icon-filter.svg' | inline_asset_content }}
+        </span>
+        {{ 'actions.show_filters' | t }}
+        {% if total_active_values > 0 %}
+          <span class="crosley-collection-toolbar__count" aria-hidden="true">{{ total_active_values }}</span>
+          <span class="visually-hidden">{{ 'accessibility.filter_count' | t: count: total_active_values }}</span>
+        {% endif %}
+      </button>
+    {% endif %}
+
+    <div class="crosley-collection-toolbar__results products-count-wrapper" data-testid="products-count">
+      <span role="status">
+        {% if products_count > 25000 %}
+          {{- 'content.item_count_cutoff' | t: count: 25000 -}}
+        {% else %}
+          {{- 'content.item_count' | t: count: products_count -}}
+        {% endif %}
+      </span>
+    </div>
+
+    {% if block_settings.enable_sorting %}
+      <facets-form-component
+        class="crosley-collection-toolbar__sorting"
+        section-id="{{ section.id }}"
+        {{ collection_id_attribute }}
+        {{ collection_handle_attribute }}
+        {{ page_type_attribute }}
+        {{ results_count_attribute }}
+      >
+        <form
+          action="{{ results_url }}"
+          id="FacetFiltersForm--{{ section.id }}-crosley"
+          ref="facetsForm"
+        >
+          {% render 'sorting',
+            results: results,
+            sort_by: sort_by,
+            filter_style: 'horizontal',
+            suffix: 'crosley',
+            sort_position: 'desktop',
+            should_use_select_on_mobile: true,
+            section_id: section.id
+          %}
+        </form>
+      </facets-form-component>
+    {% endif %}
+
+    {% if block_settings.enable_grid_density %}
+      <div class="crosley-collection-toolbar__density">
+        {% render 'grid-density-controls', viewport: 'desktop' %}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}
+
 {% if block_settings.enable_filtering or block_settings.enable_sorting or block_settings.enable_grid_density %}
   {% if block_settings.filter_style == 'vertical' %}
     {% # These elements are always rendered in the horizontal bar that's why we apply the .facets--horizontal class %}
