@@ -87,14 +87,35 @@
 }
 
 .crosley-main-collection .crosley-collection-toolbar {
+  position: relative;
+  z-index: var(--layer-raised);
   grid-column: var(--full-width);
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   min-height: 66px;
   padding-inline: max(32px, calc((100vw - 1280px) / 2));
-  border-block: 1px solid rgb(var(--color-foreground-rgb) / 0.16);
   background: rgb(var(--color-background-rgb));
+}
+
+.crosley-main-collection .crosley-collection-toolbar::before,
+.crosley-main-collection .crosley-collection-toolbar::after {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: rgb(var(--color-foreground-rgb) / 0.16);
+  content: '';
+  pointer-events: none;
+}
+
+.crosley-main-collection .crosley-collection-toolbar::before {
+  top: 0;
+}
+
+.crosley-main-collection .crosley-collection-toolbar::after {
+  bottom: 0;
 }
 
 .crosley-collection-toolbar__filter,
@@ -133,7 +154,8 @@
   display: flex;
   justify-content: center;
   color: rgb(var(--color-foreground-rgb) / 0.62);
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 700;
   letter-spacing: 0;
   text-transform: uppercase;
 }
@@ -156,8 +178,27 @@
 }
 
 .crosley-collection-toolbar__sorting .sorting-filter__options {
+  z-index: var(--layer-heightened);
   inset-inline: auto 0;
-  min-width: 230px;
+  width: max-content;
+  min-width: min(230px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+  max-height: min(420px, calc(100vh - 110px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.crosley-collection-toolbar__sorting .sorting-filter__options-inner {
+  overflow-y: auto;
+}
+
+.crosley-collection-toolbar__sorting .sorting-filter__label,
+.crosley-collection-toolbar__sorting
+  .sorting-filter__input:checked
+  + .sorting-filter__checkmark
+  + .sorting-filter__label {
+  color: rgb(var(--color-foreground-rgb) / 0.62);
+  font-weight: 700;
 }
 
 .crosley-main-collection .main-collection-grid {
@@ -185,7 +226,19 @@
 }
 
 .crosley-main-collection .product-grid__card {
-  gap: 7px;
+  gap: 9px;
+  height: 100%;
+  padding: 12px;
+  border: 1px solid rgb(var(--color-foreground-rgb) / 0.14);
+  border-radius: 4px;
+  background: rgb(var(--color-background-rgb));
+  box-shadow: 0 3px 14px rgb(var(--color-foreground-rgb) / 0.07);
+}
+
+.crosley-main-collection .product-grid__card .card-gallery,
+.crosley-main-collection .product-grid__card .product-media-container {
+  border-radius: 2px;
+  overflow: hidden;
 }
 
 .crosley-main-collection .product-grid__card :is(h3, .text-block, .price) {
@@ -320,6 +373,7 @@
 
   .crosley-main-collection .product-grid__card {
     gap: 5px;
+    padding: 8px;
   }
 
   .crosley-main-collection .product-grid__card h3,
