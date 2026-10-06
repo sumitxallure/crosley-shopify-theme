@@ -1,0 +1,159 @@
+{% comment %}
+  Collection-aware hero for the Crosley collection template.
+  Uses Shopify collection data first and a merchant-selected or bundled fallback image.
+{% endcomment %}
+
+{{ 'crosley-collection.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign hero_image = collection.image
+  if hero_image == blank
+    assign hero_image = section.settings.fallback_image
+  endif
+
+  assign image_alt = hero_image.alt | default: collection.title
+  assign has_description = false
+  if section.settings.show_description and collection.description != blank
+    assign has_description = true
+  endif
+%}
+
+<section
+  class="crosley-collection-hero crosley-collection-hero--{{ section.settings.content_alignment }}"
+  style="
+    --crosley-collection-hero-height: {{ section.settings.desktop_height }}px;
+    --crosley-collection-hero-height-mobile: {{ section.settings.mobile_height }}px;
+    --crosley-collection-hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --crosley-collection-hero-position: {{ section.settings.image_position }};
+  "
+>
+  <div class="crosley-collection-hero__media" aria-hidden="true">
+    {% if hero_image != blank %}
+      {{
+        hero_image
+        | image_url: width: 2800
+        | image_tag:
+          widths: '600, 900, 1200, 1600, 2200, 2800',
+          sizes: '100vw',
+          loading: 'eager',
+          fetchpriority: 'high',
+          alt: image_alt
+      }}
+    {% else %}
+      <img
+        src="{{ 'crosley-collection-hero.jpg' | asset_url }}"
+        alt=""
+        width="3000"
+        height="1000"
+        loading="eager"
+        fetchpriority="high"
+      >
+    {% endif %}
+  </div>
+
+  <div class="crosley-collection-hero__overlay"></div>
+
+  <div class="crosley-collection-hero__content">
+    <h1>{{ collection.title | escape }}</h1>
+    {% if has_description %}
+      <div class="crosley-collection-hero__description rte">
+        {{ collection.description }}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Crosley collection hero",
+  "tag": "section",
+  "class": "crosley-collection-hero-section",
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show collection description",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_image",
+      "label": "Fallback image",
+      "info": "Used only when the current collection has no collection image."
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "center center", "label": "Center" },
+        { "value": "center top", "label": "Top" },
+        { "value": "center bottom", "label": "Bottom" },
+        { "value": "left center", "label": "Left" },
+        { "value": "right center", "label": "Right" }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "default": 35
+    },
+    {
+      "type": "header",
+      "content": "Size"
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Desktop height",
+      "min": 280,
+      "max": 520,
+      "step": 20,
+      "unit": "px",
+      "default": 380
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Mobile height",
+      "min": 220,
+      "max": 380,
+      "step": 20,
+      "unit": "px",
+      "default": 260
+    }
+  ],
+  "presets": [
+    {
+      "name": "Crosley collection hero"
+    }
+  ]
+}
+{% endschema %}

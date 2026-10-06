@@ -243,13 +243,22 @@
     --cart-bubble-right: 2.5px;
 
     position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .header-actions__cart-icon .cart-bubble {
     position: absolute;
+    z-index: 1;
     width: var(--cart-bubble-size, 20px);
     top: var(--cart-bubble-top);
     inset-inline-end: var(--cart-bubble-right);
+  }
+
+  .header-actions__action.action__cart,
+  .header-actions__action[data-testid='cart-drawer-trigger'] {
+    overflow: visible;
   }
 
   @media screen and (min-width: 750px) {
@@ -265,23 +274,24 @@
   }
 
   .header-actions__cart-icon.header-actions__cart-icon--has-cart svg {
-    /* Create donut mask where the cart bubble sits */
-    mask: radial-gradient(
-      calc(var(--cart-bubble-size) + 2px) at calc(100% - var(--cart-bubble-right)) var(--cart-bubble-top),
-      transparent 45.45%,
-      #fff 45.45%,
-      #fff 100%
-    );
+    mask: none;
   }
 
-  /* Mask positions are physical; the bubble sits at the inline-end (left in RTL) */
-  [dir='rtl'] .header-actions__cart-icon.header-actions__cart-icon--has-cart svg {
-    mask: radial-gradient(
-      calc(var(--cart-bubble-size) + 2px) at var(--cart-bubble-right) var(--cart-bubble-top),
-      transparent 45.45%,
-      #fff 45.45%,
-      #fff 100%
-    );
+  @media screen and (max-width: 749px) {
+    header-actions .account-button {
+      display: none;
+    }
+
+    header-actions .header-actions__action {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+    }
+
+    .header-actions__cart-icon {
+      width: 44px;
+      height: 44px;
+    }
   }
 
   .cart-bubble.cart-bubble--animating .cart-bubble__background {

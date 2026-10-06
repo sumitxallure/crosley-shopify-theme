@@ -1,0 +1,172 @@
+{
+  "sections": {
+    "crosley_hero": {
+      "type": "crosley-collection-hero",
+      "settings": {
+        "show_description": true,
+        "content_alignment": "center",
+        "image_position": "center center",
+        "overlay_opacity": 35,
+        "desktop_height": 380,
+        "mobile_height": 260
+      }
+    },
+    "main": {
+      "type": "main-collection",
+      "blocks": {
+        "filters": {
+          "type": "filters",
+          "static": true,
+          "settings": {
+            "enable_filtering": true,
+            "filter_style": "horizontal",
+            "filter_width": "centered",
+            "text_label_case": "uppercase",
+            "show_swatch_label": false,
+            "show_filter_label": false,
+            "enable_sorting": true,
+            "enable_grid_density": false,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "facets_margin_bottom": 0,
+            "facets_margin_right": 0
+          },
+          "blocks": {}
+        },
+        "product-card": {
+          "type": "_product-card",
+          "static": true,
+          "settings": {
+            "product_card_gap": 4,
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "card-gallery": {
+              "type": "_product-card-gallery",
+              "settings": {
+                "image_ratio": "square",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "swatches": {
+              "type": "swatches",
+              "settings": {
+                "product_swatches_alignment": "flex-start",
+                "product_swatches_alignment_mobile": "flex-start",
+                "hide_padding": false,
+                "product_swatches_padding_top": 4,
+                "product_swatches_padding_bottom": 0,
+                "product_swatches_padding_left": 0,
+                "product_swatches_padding_right": 0
+              },
+              "blocks": {}
+            },
+            "product_title": {
+              "type": "product-title",
+              "name": "Product title",
+              "settings": {
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "uppercase",
+                "wrap": "pretty",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 4,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "price": {
+              "type": "price",
+              "settings": {
+                "show_sale_price_first": true,
+                "show_installments": false,
+                "show_tax_info": false,
+                "type_preset": "h6",
+                "width": "100%",
+                "alignment": "left",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": ["card-gallery", "swatches", "product_title", "price"]
+        }
+      },
+      "settings": {
+        "layout_type": "grid",
+        "product_card_size": "medium",
+        "mobile_product_card_size": "small",
+        "enable_infinite_scroll": false,
+        "products_per_page": 12,
+        "product_grid_width": "full-width",
+        "full_width_on_mobile": true,
+        "columns_gap_horizontal": 24,
+        "columns_gap_vertical": 44,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0,
+        "background_color": "{{ settings.color_palette.background }}",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "crosley_social": {
+      "type": "crosley-social-gallery",
+      "blocks": {
+        "post_1": { "type": "post", "settings": { "label": "View Crosley social post" } },
+        "post_2": { "type": "post", "settings": { "label": "View Crosley social post" } },
+        "post_3": { "type": "post", "settings": { "label": "View Crosley social post" } },
+        "post_4": { "type": "post", "settings": { "label": "View Crosley social post" } },
+        "post_5": { "type": "post", "settings": { "label": "View Crosley social post" } }
+      },
+      "block_order": ["post_1", "post_2", "post_3", "post_4", "post_5"],
+      "settings": { "eyebrow": "Join us", "heading": "@CrosleyRadio" }
+    },
+    "crosley_benefits": {
+      "type": "crosley-benefits",
+      "blocks": {
+        "delivery": { "type": "benefit", "settings": { "icon": "delivery", "heading": "Free delivery", "text": "Every order ships for free to the continental U.S." } },
+        "payments": { "type": "benefit", "settings": { "icon": "payments", "heading": "Buy now pay later", "text": "Split your order into four payments with Sezzle." } },
+        "support": { "type": "benefit", "settings": { "icon": "support", "heading": "Technical support", "text": "Have a problem? We are here to help." } },
+        "warranty": { "type": "benefit", "settings": { "icon": "warranty", "heading": "One-year warranty", "text": "Our products are covered for an entire year." } }
+      },
+      "block_order": ["delivery", "payments", "support", "warranty"],
+      "settings": {}
+    }
+  },
+  "order": ["crosley_hero", "main", "crosley_social", "crosley_benefits"]
+}
