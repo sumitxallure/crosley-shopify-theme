@@ -587,6 +587,11 @@ body {
     color: #171f26 !important;
   }
 
+  #header-component:has(.menu-drawer-container.menu-open) .header-actions__cart-icon {
+    --cart-bubble-background: #171f26;
+    --cart-bubble-text: #fff;
+  }
+
   #header-component .menu-drawer-container--content-height.menu-open .header__icon--menu .header-drawer-icon--open {
     display: block;
     background-size: 0 1.6px;
