@@ -45,7 +45,7 @@
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
     gap: 4px;
-    padding: 50px 50px 82px;
+    padding: clamp(40px, calc(37.45px + 0.6536vw), 50px) clamp(16px, calc(7.33px + 2.2222vw), 50px) clamp(40px, calc(29.29px + 2.7451vw), 82px);
     background: #ffffff;
   }
 
@@ -93,21 +93,23 @@
 
   .crosley-gift-mosaic__content strong {
     max-width: 24ch;
-    font-size: clamp(1.25rem, 2.1vw, 1.75rem);
+    font-size: clamp(20px, calc(17.96px + 0.5229vw), 28px);
     letter-spacing: 0.025em;
     line-height: 1.2;
     text-transform: uppercase;
   }
 
   .crosley-gift-mosaic__content > span {
-    max-width: 42ch;
+    max-width: 320px;
     margin-block-start: 16px;
     color: rgb(255 255 255 / 85%);
+    font-size: clamp(14px, calc(13.49px + 0.1307vw), 16px);
+    line-height: 1.6;
   }
 
   .crosley-gift-mosaic__content u {
     margin-block-start: 18px;
-    font-size: 0.88rem;
+    font-size: 14px;
     font-weight: 400;
     text-transform: uppercase;
   }
@@ -131,10 +133,10 @@
     background: linear-gradient(180deg, rgb(0 0 0 / 12%), rgb(0 0 0 / 26%));
   }
 
-  @media (max-width: 749px) {
+  @media (max-width: 600px) {
     .crosley-gift-mosaic {
       grid-template-columns: 1fr;
-      padding: 20px 20px 52px;
+      gap: 8px;
     }
 
     .crosley-gift-mosaic__main {

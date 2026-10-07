@@ -10,6 +10,7 @@
   @param {number} [content_aspect_ratio] - Aspect ratio for content images.
   @param {number} [image_border_radius] - Border radius for content images.
   @param {object} [section] - The section object.
+  @param {object} [block_settings] - Header menu settings, including custom promotional cards.
 
   @example
   {% render 'mega-menu-list', parent_link: link, id: 'MegaMenuList-1', grid_columns_count: 6, menu_content_type: 'featured_products' %}
@@ -25,6 +26,25 @@
   assign links_before_wrap = 10
   assign max_menu_columns = grid_columns_count | default: 6
   assign max_menu_columns_tablet = grid_columns_count_tablet | default: 4
+  assign custom_promo_set = 0
+
+  if menu_content_type == 'custom_promotions'
+    for promo_set_index in (1..4)
+      assign menu_item_key = 'promo_' | append: promo_set_index | append: '_menu_item'
+      assign configured_menu_handle = block_settings[menu_item_key] | handleize
+      if configured_menu_handle != blank and configured_menu_handle == parent_link.handle
+        assign custom_promo_set = promo_set_index
+        break
+      endif
+    endfor
+
+    if custom_promo_set > 0
+      assign max_menu_columns = 4
+      assign max_menu_columns_tablet = 2
+    else
+      assign menu_content_type = 'text'
+    endif
+  endif
 
   ##
   # We only eager load heavy elements of the page when rendering this template
@@ -73,10 +93,13 @@
 %}
 <ul
   data-menu-list-id="{{ id }}"
-  class="mega-menu__list list-unstyled"
+  class="mega-menu__list list-unstyled{% if custom_promo_set > 0 %} crosley-mega-menu__navigation{% endif %}"
   style="--menu-image-border-radius: {{ image_border_radius }}px;"
 >
-  {% for link in parent_link.links %}
+  {% if custom_promo_set > 0 and parent_link.links == blank %}
+    {% render 'crosley-mega-menu-navigation', parent_link: parent_link %}
+  {% else %}
+    {% for link in parent_link.links %}
     {% liquid
       # Decide whether to open a column span, and how many columns of the grid to span
       if forloop.first or open_column_span == false
@@ -179,7 +202,8 @@
         echo '</li>'
       endif
     %}
-  {% endfor %}
+    {% endfor %}
+  {% endif %}
 </ul>
 
 {% liquid
@@ -343,4 +367,10 @@
         {% endfor %}
       </ul>
     </span>
+  {% when 'custom_promotions' %}
+    {% render 'crosley-mega-menu-promos',
+      block_settings: block_settings,
+      promo_set: custom_promo_set,
+      parent_link: parent_link
+    %}
 {% endcase %}

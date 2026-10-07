@@ -1,0 +1,57 @@
+{%- doc -%}
+  Renders the Crosley reference navigation when the configured top-level menu item has no Shopify child links.
+
+  @param {object} parent_link - Parent navigation link used as the Record Players destination.
+{%- enddoc -%}
+
+{% assign record_players_url = parent_link.url | default: '/collections/record-players' %}
+{% assign accessories_url = '/collections/accessories' %}
+
+<li class="mega-menu__column mega-menu__column--span-1">
+  <div>
+    <a href="{{ record_players_url }}" class="mega-menu__link mega-menu__link--parent">
+      <span class="wrap-text">Best For</span>
+    </a>
+    <ul class="list-unstyled">
+      <li><a href="{{ record_players_url }}" class="mega-menu__link"><span class="wrap-text">New to Vinyl</span></a></li>
+      <li><a href="{{ record_players_url }}" class="mega-menu__link"><span class="wrap-text">Step-Up Models</span></a></li>
+      <li><a href="{{ record_players_url }}" class="mega-menu__link"><span class="wrap-text">Seasoned Listeners</span></a></li>
+    </ul>
+  </div>
+</li>
+
+<li class="mega-menu__column mega-menu__column--span-1">
+  <div>
+    <a href="{{ record_players_url }}" class="mega-menu__link mega-menu__link--parent">
+      <span class="wrap-text">By Type</span>
+    </a>
+    <ul class="list-unstyled">
+      <li><a href="{{ record_players_url }}" class="mega-menu__link"><span class="wrap-text">Suitcases &amp; Portables</span></a></li>
+      <li><a href="{{ record_players_url }}" class="mega-menu__link"><span class="wrap-text">Entertainment Centers</span></a></li>
+      <li><a href="{{ record_players_url }}" class="mega-menu__link"><span class="wrap-text">Record Player &amp; Speaker Sets</span></a></li>
+      <li><a href="{{ record_players_url }}" class="mega-menu__link"><span class="wrap-text">Component Turntables</span></a></li>
+    </ul>
+  </div>
+</li>
+
+<li class="mega-menu__column mega-menu__column--span-1">
+  <div>
+    <a href="{{ accessories_url }}" class="mega-menu__link mega-menu__link--parent">
+      <span class="wrap-text">Accessories</span>
+    </a>
+    <ul class="list-unstyled">
+      <li><a href="{{ accessories_url }}" class="mega-menu__link"><span class="wrap-text">Needle Replacements</span></a></li>
+      <li><a href="{{ accessories_url }}" class="mega-menu__link"><span class="wrap-text">Cleaning Kits</span></a></li>
+      <li><a href="{{ accessories_url }}" class="mega-menu__link"><span class="wrap-text">Storage &amp; Display</span></a></li>
+      <li><a href="{{ accessories_url }}" class="mega-menu__link"><span class="wrap-text">Shop All Accessories</span></a></li>
+    </ul>
+  </div>
+</li>
+
+<li class="mega-menu__column mega-menu__column--span-1">
+  <div>
+    <a href="{{ record_players_url }}" class="mega-menu__link mega-menu__link--parent">
+      <span class="wrap-text">Shop All Record Players</span>
+    </a>
+  </div>
+</li>

@@ -72,7 +72,8 @@
   .crosley-newsletter {
     position: relative;
     display: grid;
-    min-height: 390px;
+    grid-template-rows: minmax(0, 1fr);
+    height: 480px;
     overflow: hidden;
     color: #ffffff;
     background: #171f26;
@@ -82,6 +83,7 @@
   .crosley-newsletter__overlay,
   .crosley-newsletter__content {
     grid-area: 1 / 1;
+    min-height: 0;
   }
 
   .crosley-newsletter__media,
@@ -109,23 +111,23 @@
     align-items: center;
     justify-content: center;
     margin-inline: auto;
-    padding: 42px 40px;
+    padding: 0 40px;
     text-align: center;
   }
 
   .crosley-newsletter__content > p {
-    margin: 0 0 12px;
+    margin: 0 0 18px;
     color: rgb(255 255 255 / 85%);
-    font-size: clamp(0.75rem, 0.95vw, 0.9375rem);
+    font-size: clamp(12px, calc(11.235px + 0.1961vw), 15px);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 
   .crosley-newsletter h2 {
-    margin: 0 0 14px;
+    margin: 0 0 20px;
     color: inherit;
-    font-size: clamp(1.25rem, 2.1vw, 1.75rem);
+    font-size: clamp(20px, calc(17.96px + 0.5229vw), 28px);
     line-height: 1.15;
     letter-spacing: 0.02em;
     text-transform: uppercase;
@@ -135,7 +137,7 @@
     max-width: 48ch;
     margin-block: 0;
     color: rgb(255 255 255 / 90%);
-    font-size: clamp(0.875rem, 1.05vw, 1rem);
+    font-size: clamp(14px, calc(13.49px + 0.1307vw), 16px);
     line-height: 1.6;
   }
 
@@ -143,12 +145,12 @@
     display: grid;
     width: min(100%, 460px);
     grid-template-columns: minmax(0, 1fr) auto;
-    margin-block-start: 22px;
+    margin-block-start: 32px;
   }
 
   .crosley-newsletter__form input,
   .crosley-newsletter__form button {
-    min-height: 46px;
+    height: 52px;
     border: 1px solid rgb(255 255 255 / 70%);
     border-radius: 0;
   }
@@ -179,18 +181,32 @@
     margin-block: 12px 0;
   }
 
-  @media (max-width: 749px) {
+  @media (max-width: 600px) {
     .crosley-newsletter {
-      min-height: 430px;
+      height: 345px;
     }
 
     .crosley-newsletter__content {
-      padding: 38px 20px;
+      padding: 0 16px;
     }
 
     .crosley-newsletter__form {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 10px;
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .crosley-newsletter__form input,
+    .crosley-newsletter__form button {
+      height: 44px;
+      min-height: 44px;
+    }
+
+    .crosley-newsletter__form input {
+      padding-inline: 12px;
+    }
+
+    .crosley-newsletter__form button {
+      padding-inline: 20px;
+      font-size: 12px;
     }
   }
 {% endstylesheet %}
