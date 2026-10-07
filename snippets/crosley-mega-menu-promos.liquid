@@ -1,0 +1,54 @@
+{%- doc -%}
+  Renders the two merchant-configurable promotional cards for a Crosley mega menu.
+
+  @param {object} block_settings - Header menu block settings.
+  @param {number} promo_set - Matching custom promotion set index.
+  @param {object} parent_link - Parent navigation link used as the fallback destination.
+{%- enddoc -%}
+
+<span class="mega-menu__content crosley-mega-menu__promos">
+  {% for promo_index in (1..2) %}
+    {% liquid
+      assign image_key = 'promo_' | append: promo_set | append: '_image_' | append: promo_index
+      assign label_key = 'promo_' | append: promo_set | append: '_label_' | append: promo_index
+      assign link_key = 'promo_' | append: promo_set | append: '_link_' | append: promo_index
+      assign promo_image = block_settings[image_key]
+      assign promo_label = block_settings[label_key]
+      assign promo_link = block_settings[link_key] | default: parent_link.url
+
+      assign fallback_asset = blank
+      if promo_set == 1 and promo_index == 1
+        assign fallback_asset = 'crosley-mega-menu-portables.webp'
+      elsif promo_set == 1 and promo_index == 2
+        assign fallback_asset = 'crosley-mega-menu-audiophiles.webp'
+      endif
+    %}
+
+    {% if promo_label != blank and promo_image != blank or promo_label != blank and fallback_asset != blank %}
+      <a class="crosley-mega-menu__promo" href="{{ promo_link }}" aria-label="Shop {{ promo_label | escape }}">
+        <span class="crosley-mega-menu__promo-media">
+          {% if promo_image != blank %}
+            {{
+              promo_image
+              | image_url: width: 600
+              | image_tag:
+                widths: '200, 320, 400, 600',
+                sizes: '200px',
+                loading: 'lazy',
+                alt: promo_label
+            }}
+          {% else %}
+            <img
+              src="{{ fallback_asset | asset_url }}"
+              alt="{{ promo_label | escape }}"
+              width="400"
+              height="400"
+              loading="lazy"
+            >
+          {% endif %}
+        </span>
+        <span class="crosley-mega-menu__promo-label">{{ promo_label | escape }}</span>
+      </a>
+    {% endif %}
+  {% endfor %}
+</span>

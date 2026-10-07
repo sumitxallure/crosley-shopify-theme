@@ -94,13 +94,27 @@
 
     {% capture children %}
       {% for link in block_settings.menu.links %}
+        {% liquid
+          assign has_custom_mega_menu = false
+
+          if menu_content_type == 'custom_promotions'
+            for promo_set_index in (1..4)
+              assign menu_item_key = 'promo_' | append: promo_set_index | append: '_menu_item'
+              assign configured_menu_handle = block_settings[menu_item_key] | handleize
+              if configured_menu_handle != blank and configured_menu_handle == link.handle
+                assign has_custom_mega_menu = true
+                break
+              endif
+            endfor
+          endif
+        %}
         <li
           class="menu-list__list-item"
           on:blur="/deactivate"
           on:pointerenter="/activate"
           on:pointerleave="/deactivate"
         >
-          {%- if link.links != blank -%}
+          {%- if link.links != blank or has_custom_mega_menu -%}
             <span class="menu-list__trigger">
           {%- endif -%}
           <a
@@ -114,7 +128,7 @@
           >
             <span class="menu-list__link-title">{{- link.title -}}</span>
           </a>
-          {%- if link.links != blank -%}
+          {%- if link.links != blank or has_custom_mega_menu -%}
             <button
               type="button"
               class="menu-list__disclosure button-unstyled"
@@ -155,6 +169,7 @@
                       parent_link: link,
                       id: list_id,
                       section: section,
+                      block_settings: block_settings,
                       grid_columns_count: 6,
                       grid_columns_count_tablet: 4,
                       grid_columns_count_collection_images: 8,
@@ -963,6 +978,10 @@
         {
           "value": "featured_collections",
           "label": "t:options.featured_collections"
+        },
+        {
+          "value": "custom_promotions",
+          "label": "Custom promotional cards"
         }
       ],
       "default": "collection_images"
@@ -1019,6 +1038,194 @@
       "unit": "px",
       "default": 0,
       "visible_if": "{{ block.settings.menu_style != 'text' }}"
+    },
+    {
+      "type": "header",
+      "content": "Custom promotion set 1"
+    },
+    {
+      "type": "text",
+      "id": "promo_1_menu_item",
+      "label": "Top-level menu item",
+      "info": "Must match the menu label, for example Record Players.",
+      "default": "Record Players",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_1_image_1",
+      "label": "First image",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "text",
+      "id": "promo_1_label_1",
+      "label": "First label",
+      "default": "Suitcases & Portables",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "url",
+      "id": "promo_1_link_1",
+      "label": "First link",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_1_image_2",
+      "label": "Second image",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "text",
+      "id": "promo_1_label_2",
+      "label": "Second label",
+      "default": "For Seasoned Listeners",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "url",
+      "id": "promo_1_link_2",
+      "label": "Second link",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "header",
+      "content": "Custom promotion set 2"
+    },
+    {
+      "type": "text",
+      "id": "promo_2_menu_item",
+      "label": "Top-level menu item",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_2_image_1",
+      "label": "First image",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "text",
+      "id": "promo_2_label_1",
+      "label": "First label",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "url",
+      "id": "promo_2_link_1",
+      "label": "First link",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_2_image_2",
+      "label": "Second image",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "text",
+      "id": "promo_2_label_2",
+      "label": "Second label",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "url",
+      "id": "promo_2_link_2",
+      "label": "Second link",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "header",
+      "content": "Custom promotion set 3"
+    },
+    {
+      "type": "text",
+      "id": "promo_3_menu_item",
+      "label": "Top-level menu item",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_3_image_1",
+      "label": "First image",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "text",
+      "id": "promo_3_label_1",
+      "label": "First label",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "url",
+      "id": "promo_3_link_1",
+      "label": "First link",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_3_image_2",
+      "label": "Second image",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "text",
+      "id": "promo_3_label_2",
+      "label": "Second label",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "url",
+      "id": "promo_3_link_2",
+      "label": "Second link",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "header",
+      "content": "Custom promotion set 4"
+    },
+    {
+      "type": "text",
+      "id": "promo_4_menu_item",
+      "label": "Top-level menu item",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_4_image_1",
+      "label": "First image",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "text",
+      "id": "promo_4_label_1",
+      "label": "First label",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "url",
+      "id": "promo_4_link_1",
+      "label": "First link",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_4_image_2",
+      "label": "Second image",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "text",
+      "id": "promo_4_label_2",
+      "label": "Second label",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
+    },
+    {
+      "type": "url",
+      "id": "promo_4_link_2",
+      "label": "Second link",
+      "visible_if": "{{ block.settings.menu_style == 'custom_promotions' }}"
     },
     {
       "type": "header",

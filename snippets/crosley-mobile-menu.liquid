@@ -1,0 +1,69 @@
+{%- doc -%}
+  Renders the Crosley reference mobile navigation for the custom promotional menu style.
+
+  @param {object} linklist - Shopify navigation menu.
+  @param {object} block - Header menu block containing the promotional-menu trigger settings.
+{%- enddoc -%}
+
+{% liquid
+  assign record_players_link = blank
+  assign trigger_title = block.settings.promo_1_menu_item | default: 'Record Players'
+  assign trigger_handle = trigger_title | handleize
+
+  for link in linklist.links
+    if link.handle == trigger_handle
+      assign record_players_link = link
+      break
+    endif
+  endfor
+
+  assign record_players_url = record_players_link.url | default: '/collections/record-players'
+  assign accessories_url = '/collections/accessories'
+%}
+
+{% for link in linklist.links %}
+  {% if link.handle == trigger_handle %}
+    <li class="crosley-mobile-menu__item crosley-mobile-menu__item--accordion">
+      <details class="crosley-mobile-menu__details">
+        <summary class="crosley-mobile-menu__summary">
+          <span>{{ link.title | escape }}</span>
+          <span class="crosley-mobile-menu__caret" aria-hidden="true">
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="crosley-mobile-menu__submenu">
+          <p class="crosley-mobile-menu__heading">Best For</p>
+          <a href="{{ record_players_url }}">New to Vinyl</a>
+          <a href="{{ record_players_url }}">Step-Up Models</a>
+          <a href="{{ record_players_url }}">Seasoned Listeners</a>
+
+          <p class="crosley-mobile-menu__heading">By Type</p>
+          <a href="{{ record_players_url }}">Suitcases &amp; Portables</a>
+          <a href="{{ record_players_url }}">Entertainment Centers</a>
+          <a href="{{ record_players_url }}">Record Player &amp; Speaker Sets</a>
+          <a href="{{ record_players_url }}">Component Turntables</a>
+
+          <p class="crosley-mobile-menu__heading">Accessories</p>
+          <a href="{{ accessories_url }}">Needle Replacements</a>
+          <a href="{{ accessories_url }}">Cleaning Kits</a>
+          <a href="{{ accessories_url }}">Storage &amp; Display</a>
+          <a href="{{ accessories_url }}">Shop All Accessories</a>
+
+          <a href="{{ record_players_url }}" class="crosley-mobile-menu__shop-all">Shop All Record Players</a>
+        </div>
+      </details>
+    </li>
+  {% else %}
+    <li class="crosley-mobile-menu__item">
+      <a
+        href="{{ link.url }}"
+        class="crosley-mobile-menu__link{% if link.current %} crosley-mobile-menu__link--active{% endif %}"
+        {% if link.current %}aria-current="page"{% endif %}
+      >
+        {{- link.title | escape -}}
+      </a>
+    </li>
+  {% endif %}
+{% endfor %}

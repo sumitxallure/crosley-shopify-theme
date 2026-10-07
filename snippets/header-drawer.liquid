@@ -56,9 +56,9 @@
   <details
     id="Details-menu-drawer-container"
     data-skip-node-update="true"
-    class="menu-drawer-container"
+    class="menu-drawer-container{% if block_settings.menu_style == 'custom_promotions' %} menu-drawer-container--content-height{% endif %}"
     ref="details"
-    scroll-lock
+    {% unless block_settings.menu_style == 'custom_promotions' %}scroll-lock{% endunless %}
   >
     <summary
       class="header__icon header__icon--menu header__icon--summary"
@@ -103,6 +103,9 @@
           class="menu-drawer__menu has-submenu"
           role="list"
         >
+          {% if block_settings.menu_style == 'custom_promotions' %}
+            {% render 'crosley-mobile-menu', linklist: linklist, block: block %}
+          {% else %}
           {%- comment -%}
             Handle menus with fewer than 3 levels of links
           {%- endcomment -%}
@@ -586,6 +589,7 @@
                 {%- endif -%}
               </li>
             {%- endfor -%}
+          {% endif %}
           {% endif %}
         </ul>
       </nav>

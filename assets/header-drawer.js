@@ -82,6 +82,11 @@ class HeaderDrawer extends Component {
         this.refs.menuDrawer.classList.add('menu-drawer--has-submenu-opened');
       }
 
+      if (details.classList.contains('menu-drawer-container--content-height')) {
+        trapFocus(details);
+        return;
+      }
+
       // Wait for the drawer animation to complete before trapping focus
       const drawer = details.querySelector('.menu-drawer, .menu-drawer__submenu');
       onAnimationEnd(drawer || details, () => trapFocus(details), { subtree: false });
@@ -121,20 +126,24 @@ class HeaderDrawer extends Component {
     // This avoids waiting for child accordion/resource-card animations which can cause issues on Firefox
     const drawer = details.querySelector('.menu-drawer, .menu-drawer__submenu');
 
-    onAnimationEnd(
-      drawer || details,
-      () => {
-        reset(details);
-        if (details === this.refs.details) {
-          removeTrapFocus();
-          const openDetails = this.querySelectorAll('details[open]:not(accordion-custom > details)');
-          openDetails.forEach(reset);
-        } else {
-          trapFocus(this.refs.details);
-        }
-      },
-      { subtree: false }
-    );
+    const finishClose = () => {
+      reset(details);
+      if (details === this.refs.details) {
+        removeTrapFocus();
+        const openDetails = this.querySelectorAll('details[open]:not(accordion-custom > details)');
+        openDetails.forEach(reset);
+      } else {
+        trapFocus(this.refs.details);
+      }
+    };
+
+    if (details.classList.contains('menu-drawer-container--content-height')) {
+      // Let the summary's native click finish toggling `open` before resetting it.
+      requestAnimationFrame(finishClose);
+      return;
+    }
+
+    onAnimationEnd(drawer || details, finishClose, { subtree: false });
   }
 
   /**

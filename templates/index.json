@@ -22,7 +22,7 @@
             "button_link": "shopify://collections/radios-phones",
             "content_position": "center",
             "framed_content": true,
-            "overlay_opacity": 30
+            "overlay_opacity": 45
           }
         },
         "c65_campaign": {
@@ -35,7 +35,7 @@
             "button_link": "shopify://collections/record-players",
             "content_position": "left",
             "framed_content": false,
-            "overlay_opacity": 35
+            "overlay_opacity": 45
           }
         }
       },
@@ -44,7 +44,7 @@
         "autoplay": true,
         "autoplay_seconds": 7,
         "desktop_height": 860,
-        "mobile_height": 640
+        "mobile_height": 645
       }
     },
     "crosley_contest": {
