@@ -5,6 +5,7 @@
   @param {string} filter_style - The filter style, can be 'horizontal' or 'vertical'.
   @param {boolean} [should_render_clear] - Whether to render the clear button.
   @param {string} [id_prefix] - Unique prefix to avoid duplicate IDs when rendered multiple times.
+  @param {boolean} [collapse_on_mobile] - Whether the vertical filter starts collapsed on mobile.
 
   @example
   {% render 'price-filter', filter: filter, filter_style: 'vertical', id_prefix: 'dialog' %}
@@ -17,6 +18,11 @@
     assign is_horizontal = true
   elsif filter_style == 'vertical'
     assign is_vertical = true
+  endif
+
+  assign open_price_on_mobile = is_vertical
+  if collapse_on_mobile
+    assign open_price_on_mobile = false
   endif
 -%}
 {% capture accordion_children %}
@@ -80,6 +86,49 @@
         data-currency="{{ localization.country.currency.iso_code }}"
         on:change="/updatePriceFilterAndResults"
       >
+        {%- liquid
+          assign range_max_value = filter.range_max | divided_by: 100.0
+          assign range_min_value = 0
+          assign range_current_max_value = range_max_value
+          if filter.min_value.value != null
+            assign range_min_value = filter.min_value.value | divided_by: 100.0
+          endif
+          if filter.max_value.value != null
+            assign range_current_max_value = filter.max_value.value | divided_by: 100.0
+          endif
+          assign min_position = range_min_value | divided_by: range_max_value | times: 100
+          assign max_position = range_current_max_value | divided_by: range_max_value | times: 100
+        -%}
+        <div
+          class="price-facet__range"
+          style="--price-min-position: {{ min_position }}%; --price-max-position: {{ max_position }}%;"
+        >
+          <span class="price-facet__range-track"></span>
+          <span class="price-facet__range-fill"></span>
+          <input
+            class="price-facet__range-input price-facet__range-input--min"
+            type="range"
+            min="0"
+            max="{{ range_max_value }}"
+            step="0.01"
+            value="{{ range_min_value }}"
+            ref="minRange"
+            on:input="/updatePriceRange"
+            aria-label="{{ 'accessibility.price_filter_low' | t }}"
+          >
+          <input
+            class="price-facet__range-input price-facet__range-input--max"
+            type="range"
+            min="0"
+            max="{{ range_max_value }}"
+            step="0.01"
+            value="{{ range_current_max_value }}"
+            ref="maxRange"
+            on:input="/updatePriceRange"
+            aria-label="{{ 'accessibility.price_filter_high' | t }}"
+          >
+        </div>
+
         <div class="facets__inputs-wrapper facets__inputs-wrapper--row">
           <div
             class="price-facet__inputs-wrapper"
@@ -179,7 +228,7 @@
   class: 'facets__item',
   open: is_vertical,
   open_by_default_on_desktop: is_vertical,
-  open_by_default_on_mobile: is_vertical,
+  open_by_default_on_mobile: open_price_on_mobile,
   disable_animation_on_desktop: is_horizontal,
   close_with_escape: is_horizontal
 %}
@@ -200,6 +249,114 @@
     flex-direction: row;
     padding: var(--style-border-width-inputs);
     gap: calc(var(--gap-sm) + (var(--style-border-width-inputs) * 2));
+  }
+
+  .price-facet__range {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .facets--drawer .price-facet__range {
+      display: block;
+      position: relative;
+      height: 20px;
+      margin: 18px 0 11px;
+    }
+
+    .facets--drawer .price-facet__range-track,
+    .facets--drawer .price-facet__range-fill {
+      position: absolute;
+      top: 9px;
+      left: 0;
+      right: 0;
+      height: 2px;
+    }
+
+    .facets--drawer .price-facet__range-track {
+      background: #dadada;
+    }
+
+    .facets--drawer .price-facet__range-fill {
+      left: var(--price-min-position, 0%);
+      right: calc(100% - var(--price-max-position, 100%));
+      background: #171f26;
+    }
+
+    .facets--drawer .price-facet__range-input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 20px;
+      padding: 0;
+      margin: 0;
+      appearance: none;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .facets--drawer .price-facet__range-input::-webkit-slider-runnable-track {
+      height: 2px;
+      background: transparent;
+    }
+
+    .facets--drawer .price-facet__range-input::-webkit-slider-thumb {
+      width: 14px;
+      height: 14px;
+      margin-top: -6px;
+      appearance: none;
+      border: 0;
+      border-radius: 50%;
+      background: #171f26;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+
+    .facets--drawer .price-facet__range-input::-moz-range-track {
+      height: 2px;
+      background: transparent;
+    }
+
+    .facets--drawer .price-facet__range-input::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border: 0;
+      border-radius: 50%;
+      background: #171f26;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+
+    .facets--drawer .price-facet__inputs-wrapper {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 12px;
+      width: 100%;
+      padding: 0;
+    }
+
+    .facets--drawer .facets__inputs-wrapper {
+      margin: 20px 0 0;
+    }
+
+    .facets--drawer .price-facet__field,
+    .facets--drawer .price-facet__input,
+    .facets--drawer .price-facet__label,
+    .facets--drawer .price-facet__separator {
+      height: 40px;
+    }
+
+    .facets--drawer .price-facet__input {
+      padding: 10px 12px 10px 28px;
+      text-align: start;
+    }
+
+    .facets--drawer .price-facet__label {
+      padding: 10px 12px;
+    }
+
+    .facets--drawer .price-facet__highest-price {
+      display: none;
+    }
   }
 
   @container (max-width: 199px) {

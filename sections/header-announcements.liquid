@@ -1,6 +1,19 @@
 
 
-{% if section.blocks.size > 1 %}
+{% liquid
+  assign is_crosley_collection = false
+  if template.name == 'collection' and template.suffix == 'crosley'
+    assign is_crosley_collection = true
+  endif
+%}
+
+{% if is_crosley_collection %}
+  <script
+    src="{{ 'crosley-plp-announcement.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% elsif section.blocks.size > 1 %}
   <script
     src="{{ 'announcement-bar.js' | asset_url }}"
     type="module"
@@ -8,37 +21,83 @@
   ></script>
 {% endif %}
 
-{% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
+{% if is_crosley_collection %}
+  <crosley-plp-announcement class="crosley-plp-announcement" data-countdown-seconds="1062292">
+    <aside class="crosley-plp-announcement__benefits" aria-label="Store benefits">
+      <div class="crosley-plp-announcement__benefits-desktop">
+        <span data-benefit>Free Delivery</span>
+        <span class="crosley-plp-announcement__separator" aria-hidden="true">|</span>
+        <span data-benefit>Buy Now Pay Later</span>
+        <span class="crosley-plp-announcement__separator" aria-hidden="true">|</span>
+        <span data-benefit>Technical Support</span>
+        <span class="crosley-plp-announcement__separator" aria-hidden="true">|</span>
+        <span data-benefit>One-Year Warranty</span>
+      </div>
+      <span class="crosley-plp-announcement__benefit-mobile" data-mobile-benefit>Free Delivery</span>
+    </aside>
 
-<div class="section-background color-custom-{{ section.id }}"></div>
-<aside
-  class="announcement-bar spacing-style section section--{{ section.settings.section_width }} color-custom-{{ section.id }}"
-  style="{% render 'spacing-padding', settings: section.settings %}; --border-bottom-width: {{ section.settings.divider_width }}px;{% if section.settings.divider_color != blank %} --color-border: {{ section.settings.divider_color }};{% endif %}"
->
-  {% liquid
-    assign autoplay = false
-    assign show_arrows = false
-    if section.blocks.size > 1
-      assign autoplay = true
-      assign show_arrows = true
-    endif
-  %}
+    <aside class="crosley-plp-announcement__promotion" aria-label="Promotion">
+      <div class="crosley-plp-announcement__offer">
+        <span>Save up to 25% on select turntables</span>
+        <a href="{{ routes.all_products_collection_url }}">Shop Now</a>
+      </div>
 
-  <announcement-bar-component
-    class="announcement-bar__slider"
-    {% if autoplay == true %}
-      autoplay="{{ section.settings.speed }}" aria-live="polite"
-    {% endif %}
+      <div class="crosley-plp-announcement__countdown" aria-label="Promotion countdown">
+        <span class="crosley-plp-announcement__time">
+          <strong data-countdown-value="days">12</strong>
+          <small>Day</small>
+        </span>
+        <span class="crosley-plp-announcement__colon" aria-hidden="true">:</span>
+        <span class="crosley-plp-announcement__time">
+          <strong data-countdown-value="hours">07</strong>
+          <small>Hrs</small>
+        </span>
+        <span class="crosley-plp-announcement__colon" aria-hidden="true">:</span>
+        <span class="crosley-plp-announcement__time">
+          <strong data-countdown-value="minutes">04</strong>
+          <small>Min</small>
+        </span>
+        <span class="crosley-plp-announcement__colon" aria-hidden="true">:</span>
+        <span class="crosley-plp-announcement__time">
+          <strong data-countdown-value="seconds">52</strong>
+          <small>Sec</small>
+        </span>
+      </div>
+    </aside>
+  </crosley-plp-announcement>
+{% else %}
+  {% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
+
+  <div class="section-background color-custom-{{ section.id }}"></div>
+  <aside
+    class="announcement-bar spacing-style section section--{{ section.settings.section_width }} color-custom-{{ section.id }}"
+    style="{% render 'spacing-padding', settings: section.settings %}; --border-bottom-width: {{ section.settings.divider_width }}px;{% if section.settings.divider_color != blank %} --color-border: {{ section.settings.divider_color }};{% endif %}"
   >
-    {% if show_arrows %}
-      {% render 'slideshow-arrows', icon_style: 'chevron' %}
-    {% endif %}
+    {% liquid
+      assign autoplay = false
+      assign show_arrows = false
+      if section.blocks.size > 1
+        assign autoplay = true
+        assign show_arrows = true
+      endif
+    %}
 
-    <div class="announcement-bar__slides">
-      {% content_for 'blocks' %}
-    </div>
-  </announcement-bar-component>
-</aside>
+    <announcement-bar-component
+      class="announcement-bar__slider"
+      {% if autoplay == true %}
+        autoplay="{{ section.settings.speed }}" aria-live="polite"
+      {% endif %}
+    >
+      {% if show_arrows %}
+        {% render 'slideshow-arrows', icon_style: 'chevron' %}
+      {% endif %}
+
+      <div class="announcement-bar__slides">
+        {% content_for 'blocks' %}
+      </div>
+    </announcement-bar-component>
+  </aside>
+{% endif %}
 
 {% stylesheet %}
   .announcement-bar {
@@ -134,6 +193,160 @@
   .announcement-bar__link {
     position: absolute;
     inset: 0;
+  }
+
+  .crosley-plp-announcement {
+    display: block;
+    color: #fff;
+    font-family: "acumin-pro-condensed", Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .crosley-plp-announcement__benefits {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 40px;
+    background: #383637;
+    font-size: 12px;
+  }
+
+  .crosley-plp-announcement__benefits-desktop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .crosley-plp-announcement__separator {
+    margin-inline: 10px;
+    color: rgb(255 255 255 / 40%);
+  }
+
+  .crosley-plp-announcement__benefit-mobile {
+    display: none;
+    font-size: 11px;
+  }
+
+  .crosley-plp-announcement__promotion {
+    display: flex;
+    min-height: 65px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 11px 40px;
+    background: #171f26;
+  }
+
+  .crosley-plp-announcement__offer {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    font-size: clamp(11px, calc(10.49px + 0.1307vw), 13px);
+  }
+
+  .crosley-plp-announcement__offer a {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .crosley-plp-announcement__countdown {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .crosley-plp-announcement__time {
+    display: flex;
+    min-width: 30px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .crosley-plp-announcement__time strong {
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  .crosley-plp-announcement__time small {
+    margin-top: 5px;
+    color: rgb(255 255 255 / 65%);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .crosley-plp-announcement__colon {
+    color: rgb(255 255 255 / 40%);
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: 860px) {
+    .crosley-plp-announcement__benefits-desktop {
+      display: none;
+    }
+
+    .crosley-plp-announcement__benefit-mobile {
+      display: block;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .crosley-plp-announcement__benefits {
+      min-height: 0;
+    }
+
+    .crosley-plp-announcement__benefit-mobile {
+      line-height: normal;
+    }
+
+    .crosley-plp-announcement__promotion {
+      min-height: 83.2px;
+      gap: 8px;
+      padding: 11px 40px;
+    }
+
+    .crosley-plp-announcement__offer {
+      flex: 0 0 100px;
+      gap: 12px;
+      min-width: 0;
+      font-size: 11px;
+    }
+
+    .crosley-plp-announcement__offer > span {
+      width: 100px;
+      line-height: normal;
+    }
+
+    .crosley-plp-announcement__countdown {
+      flex: 0 0 auto;
+      gap: 8px;
+    }
+
+    .crosley-plp-announcement__time {
+      min-width: 24px;
+    }
+
+    .crosley-plp-announcement__time strong {
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .crosley-plp-announcement__colon {
+      font-size: 14px;
+      letter-spacing: 0;
+    }
+  }
+
+  @media screen and (max-width: 374px) {
+    .crosley-plp-announcement__promotion {
+      padding-inline: 20px;
+    }
   }
 {% endstylesheet %}
 

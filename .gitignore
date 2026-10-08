@@ -1,2 +1,5 @@
 .codex-*-proof/
 .codex-proof/
+node_modules/
+test-results/
+playwright-report/

@@ -107,6 +107,95 @@
 
 {% if template.suffix == 'crosley' %}
   <div class="crosley-collection-toolbar">
+    {% if block_settings.enable_grid_density %}
+      <div class="crosley-collection-toolbar__density">
+        <fieldset class="crosley-density crosley-density--desktop">
+          <legend class="visually-hidden">{{ 'content.grid_view.grid_fieldset' | t }}</legend>
+          <label class="crosley-density__option">
+            <input
+              type="radio"
+              name="grid"
+              value="crosley-three"
+              aria-label="3 products per row"
+              on:change="results-list/updateLayout"
+              data-skip-node-update
+            >
+            <span aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="currentColor">
+                <rect x="0" y="0" width="7" height="7"/><rect x="9" y="0" width="7" height="7"/>
+                <rect x="0" y="9" width="7" height="7"/><rect x="9" y="9" width="7" height="7"/>
+              </svg>
+            </span>
+          </label>
+          <label class="crosley-density__option">
+            <input
+              type="radio"
+              name="grid"
+              value="default"
+              checked
+              aria-label="4 products per row"
+              data-grid-layout="desktop-default-option"
+              on:change="results-list/updateLayout"
+              data-skip-node-update
+            >
+            <span aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="currentColor">
+                <rect x="0" y="0" width="3.5" height="3.5"/><rect x="6.25" y="0" width="3.5" height="3.5"/><rect x="12.5" y="0" width="3.5" height="3.5"/>
+                <rect x="0" y="6.25" width="3.5" height="3.5"/><rect x="6.25" y="6.25" width="3.5" height="3.5"/><rect x="12.5" y="6.25" width="3.5" height="3.5"/>
+                <rect x="0" y="12.5" width="3.5" height="3.5"/><rect x="6.25" y="12.5" width="3.5" height="3.5"/><rect x="12.5" y="12.5" width="3.5" height="3.5"/>
+              </svg>
+            </span>
+          </label>
+          <label class="crosley-density__option">
+            <input
+              type="radio"
+              name="grid"
+              value="zoom-out"
+              aria-label="6 products per row"
+              on:change="results-list/updateLayout"
+              data-skip-node-update
+            >
+            <span aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="currentColor">
+                <rect x="0" y="0" width="16" height="3"/><rect x="0" y="6.5" width="16" height="3"/><rect x="0" y="13" width="16" height="3"/>
+              </svg>
+            </span>
+          </label>
+        </fieldset>
+
+        <fieldset class="crosley-density crosley-density--mobile">
+          <legend class="visually-hidden">{{ 'content.grid_view.grid_fieldset' | t }}</legend>
+          <label class="crosley-density__option">
+            <input
+              type="radio"
+              name="grid-mobile"
+              value="mobile-single"
+              aria-label="1 product per row"
+              on:change="results-list/updateLayout"
+            >
+            <span aria-hidden="true"><svg viewBox="0 0 16 16" fill="currentColor"><rect width="16" height="16"/></svg></span>
+          </label>
+          <label class="crosley-density__option">
+            <input
+              type="radio"
+              name="grid-mobile"
+              value="default"
+              checked
+              aria-label="2 products per row"
+              data-grid-layout="mobile-option"
+              on:change="results-list/updateLayout"
+            >
+            <span aria-hidden="true">
+              <svg viewBox="0 0 16 16" fill="currentColor">
+                <rect x="0" y="0" width="7" height="7"/><rect x="9" y="0" width="7" height="7"/>
+                <rect x="0" y="9" width="7" height="7"/><rect x="9" y="9" width="7" height="7"/>
+              </svg>
+            </span>
+          </label>
+        </fieldset>
+      </div>
+    {% endif %}
+
     {% if block_settings.enable_filtering %}
       <button
         class="crosley-collection-toolbar__filter button-unstyled"
@@ -128,9 +217,11 @@
     <div class="crosley-collection-toolbar__results products-count-wrapper" data-testid="products-count">
       <span role="status">
         {% if products_count > 25000 %}
-          {{- 'content.item_count_cutoff' | t: count: 25000 -}}
+          More than 25000 products
+        {% elsif products_count == 1 %}
+          1 product
         {% else %}
-          {{- 'content.item_count' | t: count: products_count -}}
+          {{ products_count }} products
         {% endif %}
       </span>
     </div>
@@ -155,6 +246,7 @@
             filter_style: 'horizontal',
             suffix: 'crosley',
             sort_position: 'desktop',
+            label: 'Sort by',
             should_use_select_on_mobile: true,
             section_id: section.id
           %}
@@ -162,11 +254,6 @@
       </facets-form-component>
     {% endif %}
 
-    {% if block_settings.enable_grid_density %}
-      <div class="crosley-collection-toolbar__density">
-        {% render 'grid-density-controls', viewport: 'desktop' %}
-      </div>
-    {% endif %}
   </div>
 {% endif %}
 
@@ -475,7 +562,7 @@
     id="filters-drawer"
     data-skip-node-update
     no-persist
-    class="facets-block-wrapper facets-block-wrapper--vertical color-custom-drawer"
+    class="facets-block-wrapper facets-block-wrapper--vertical color-custom-drawer{% if collection.handle == 'record-players' %} crosley-filters-drawer{% endif %}"
   >
     <dialog
       ref="panel"
@@ -500,21 +587,24 @@
           ref="facetsForm"
         >
           {% capture filter_bubble_html %}
-            <span
-              class="theme-drawer__badge"
-              aria-hidden="true"
-              id="filters-drawer-bubble"
-              {% if total_active_values == 0 %}hidden{% endif %}
-            >
-              {{ total_active_values }}
-            </span>
             {% if total_active_values > 0 %}
+              <span
+                class="theme-drawer__badge"
+                aria-hidden="true"
+                id="filters-drawer-bubble"
+              >
+                {{ total_active_values }}
+              </span>
               <span class="visually-hidden">
                 {{ 'accessibility.filter_count' | t: count: total_active_values }}
               </span>
             {% endif %}
           {% endcapture %}
-          {% assign filters_drawer_title = 'blocks.filter' | t %}
+          {% if collection.handle == 'record-players' %}
+            {% assign filters_drawer_title = 'Filters' %}
+          {% else %}
+            {% assign filters_drawer_title = 'blocks.filter' | t %}
+          {% endif %}
           {% render 'theme-drawer-header',
             title: filters_drawer_title,
             drawer_id: 'filters-drawer',
@@ -546,7 +636,12 @@
                           assign is_active = true
                         endif
 
-                        render 'price-filter', filter: filter, filter_style: 'vertical', should_render_clear: false, id_prefix: 'dialog'
+                        assign collapse_price_on_mobile = false
+                        if collection.handle == 'record-players'
+                          assign collapse_price_on_mobile = true
+                        endif
+
+                        render 'price-filter', filter: filter, filter_style: 'vertical', should_render_clear: false, id_prefix: 'dialog', collapse_on_mobile: collapse_price_on_mobile
                       -%}
                     {% else %}
                       {% liquid
@@ -556,7 +651,11 @@
 
                         assign active_value_count = filter.active_values | size
                         assign total_active_values = total_active_values | plus: active_value_count
-                        render 'list-filter', filter: filter, filter_style: 'vertical', active_value_count: active_value_count, should_render_clear: false, in_drawer: true, sectionId: section.id
+                        unless collection.handle == 'record-players'
+                          unless filter.type == 'availability' or filter.label == 'Availability'
+                            render 'list-filter', filter: filter, filter_style: 'vertical', active_value_count: active_value_count, should_render_clear: false, in_drawer: true, sectionId: section.id
+                          endunless
+                        endunless
                       %}
                   {% endcase %}
                 {%- endfor -%}
@@ -601,7 +700,11 @@
             type="button"
             on:click="#filters-drawer/close"
           >
-            {{- 'actions.see_items' | t: count: products_count -}}
+            {%- if collection.handle == 'record-players' -%}
+              View Results
+            {%- else -%}
+              {{- 'actions.see_items' | t: count: products_count -}}
+            {%- endif -%}
           </button>
         {% endif %}
       </div>
@@ -1317,6 +1420,166 @@
   /* Clear all is hidden until filters are active; its empty wrapper must not reserve gap */
   .facets__drawer-actions:not(:has(.facets__clear-all--active)) {
     gap: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .facets-block-wrapper--vertical {
+      --theme-drawer-width: 100%;
+    }
+
+    .facets-block-wrapper--vertical .theme-drawer__dialog {
+      inset-inline-start: auto;
+      inset-inline-end: 0;
+      border: 0;
+      box-shadow: -8px 0 32px rgb(0 0 0 / 15%);
+    }
+
+    .facets-block-wrapper--vertical .theme-drawer__dialog[open] {
+      inset-inline-start: auto;
+      inset-inline-end: 0;
+    }
+
+    .facets-block-wrapper--vertical .theme-drawer__dialog::backdrop {
+      background: rgb(23 31 38 / 50%);
+    }
+
+    .facets-block-wrapper--vertical .theme-drawer__dialog--opening,
+    .facets-block-wrapper--vertical .theme-drawer__dialog--closing {
+      animation: none;
+    }
+
+    .facets-block-wrapper--vertical .theme-drawer__header {
+      min-height: 87px;
+      padding: 28px 32px;
+      border-bottom: 1px solid #ededed;
+    }
+
+    .facets-block-wrapper--vertical .theme-drawer__title {
+      font-family: var(--font-heading--family);
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 28px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .facets-block-wrapper--vertical .theme-drawer__badge {
+      width: 20px;
+      min-width: 20px;
+      height: 20px;
+      font-size: 11px;
+    }
+
+    .facets-block-wrapper--vertical .theme-drawer__close-button {
+      width: 26px;
+      height: 30px;
+      padding: 4px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      color: #171f26;
+    }
+
+    .facets-block-wrapper--vertical .theme-drawer__close-button .svg-wrapper,
+    .facets-block-wrapper--vertical .theme-drawer__close-button svg {
+      display: flex;
+      flex: 0 0 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    .facets-block-wrapper--vertical .theme-drawer__close-button path {
+      transform-box: fill-box;
+      transform-origin: center;
+      transform: scale(1.48);
+    }
+
+    .facets-block-wrapper--vertical .facets-drawer__filters {
+      padding: 8px 32px 32px;
+    }
+
+    .crosley-filters-drawer .facets__item::before {
+      border-top: 0;
+    }
+
+    .facets-block-wrapper--vertical .facets__panel {
+      padding: 20px 0;
+      border-bottom: 1px solid #ededed;
+    }
+
+    .facets-block-wrapper--vertical .facets__panel[open] {
+      padding-bottom: 11px;
+    }
+
+    .facets-block-wrapper--vertical .facets__summary {
+      min-height: 18px;
+      padding: 0;
+      color: #171f26;
+      font-family: var(--font-heading--family);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: normal;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .facets-block-wrapper--vertical .facets__panel-content {
+      padding-inline: 0;
+    }
+
+    .facets-block-wrapper--vertical .facets__inputs {
+      gap: 0;
+      padding-block: 0 20px;
+    }
+
+    .facets-block-wrapper--vertical .facets__inputs-list {
+      gap: 0;
+    }
+
+    .facets-block-wrapper--vertical .facets__inputs-list > li {
+      min-height: 30px;
+    }
+
+    .facets-block-wrapper--vertical .checkbox__label,
+    .facets-block-wrapper--vertical .price-facet__highest-price {
+      font-family: var(--font-paragraph--family);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .facets-block-wrapper--vertical .sorting-filter {
+      display: none;
+    }
+
+    .crosley-filters-drawer .facets__drawer-actions {
+      display: block;
+      min-height: 94px;
+      padding: 20px 32px;
+      margin: 0;
+      background: #fff;
+    }
+
+    .crosley-filters-drawer .facets__clear-all,
+    .crosley-filters-drawer facet-remove-component {
+      display: none;
+    }
+
+    .crosley-filters-drawer .facets__see-results {
+      width: 100%;
+      min-height: 53px;
+      padding: 18px;
+      border: 0;
+      border-radius: 0;
+      background: #383637;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      line-height: normal;
+      text-transform: uppercase;
+    }
   }
 
   /* Clear all button */

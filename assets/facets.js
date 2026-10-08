@@ -325,6 +325,8 @@ if (!customElements.get('facet-inputs-component')) {
  * @typedef {Object} PriceFacetRefs
  * @property {HTMLInputElement} minInput - The minimum price input
  * @property {HTMLInputElement} maxInput - The maximum price input
+ * @property {HTMLInputElement} [minRange] - Optional minimum price range control
+ * @property {HTMLInputElement} [maxRange] - Optional maximum price range control
  */
 
 /**
@@ -344,6 +346,7 @@ class PriceFacetComponent extends Component {
     this.addEventListener('focusout', this.#onFocusOut);
     this.currency = this.dataset.currency ?? 'USD';
     this.moneyFormat = this.#extractMoneyPlaceholder(this.dataset.moneyFormat ?? '{{amount}}');
+    this.#syncRangeControls();
   }
 
   disconnectedCallback() {
@@ -412,6 +415,71 @@ class PriceFacetComponent extends Component {
     facetsForm.updateFilters();
     this.#setMinAndMaxValues();
     this.#updateSummary();
+    this.#syncRangeControls();
+  }
+
+  /**
+   * Keeps the paired range controls and text fields synchronized while dragging.
+   * The existing change handler submits the resulting text-field values.
+   * @param {InputEvent} event
+   */
+  updatePriceRange(event) {
+    const target = event.target;
+    const { minInput, maxInput, minRange, maxRange } = this.refs;
+
+    if (!(target instanceof HTMLInputElement) || !(minRange instanceof HTMLInputElement)) return;
+    if (!(maxRange instanceof HTMLInputElement) || (target !== minRange && target !== maxRange)) return;
+
+    let minValue = Number(minRange.value);
+    let maxValue = Number(maxRange.value);
+
+    if (minValue > maxValue) {
+      if (target === minRange) {
+        minValue = maxValue;
+        minRange.value = String(minValue);
+      } else {
+        maxValue = minValue;
+        maxRange.value = String(maxValue);
+      }
+    }
+
+    const rangeMaximum = Number(maxRange.max);
+    minInput.value = minValue > Number(minRange.min) ? String(minValue) : '';
+    maxInput.value = maxValue < rangeMaximum ? String(maxValue) : '';
+    this.#updateRangeVisual(minRange, maxRange);
+  }
+
+  /**
+   * Initializes optional range controls from the server-rendered price fields.
+   */
+  #syncRangeControls() {
+    const { minInput, maxInput, minRange, maxRange } = this.refs;
+    if (!(minRange instanceof HTMLInputElement) || !(maxRange instanceof HTMLInputElement)) return;
+
+    const parseValue = (value, fallback) => {
+      if (value.trim() === '') return fallback;
+
+      const parsed = Number(value.replace(/,/g, ''));
+      return Number.isFinite(parsed) ? parsed : fallback;
+    };
+
+    minRange.value = String(parseValue(minInput.value, Number(minRange.min)));
+    maxRange.value = String(parseValue(maxInput.value, Number(maxRange.max)));
+    this.#updateRangeVisual(minRange, maxRange);
+  }
+
+  /**
+   * Updates the selected portion of the visual price track.
+   * @param {HTMLInputElement} minRange
+   * @param {HTMLInputElement} maxRange
+   */
+  #updateRangeVisual(minRange, maxRange) {
+    const range = minRange.closest('.price-facet__range');
+    if (!(range instanceof HTMLElement)) return;
+
+    const maximum = Number(maxRange.max) || 1;
+    range.style.setProperty('--price-min-position', `${(Number(minRange.value) / maximum) * 100}%`);
+    range.style.setProperty('--price-max-position', `${(Number(maxRange.value) / maximum) * 100}%`);
   }
 
   /**

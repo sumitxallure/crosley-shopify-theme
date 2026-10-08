@@ -1,0 +1,27 @@
+[
+  {
+    "name": "home",
+    "path": "/",
+    "mainSelector": "#MainContent"
+  },
+  {
+    "name": "collection-record-players",
+    "path": "/collections/record-players",
+    "mainSelector": ".product-grid-container"
+  },
+  {
+    "name": "product-voyager",
+    "path": "/products/voyager-turntable",
+    "mainSelector": "main"
+  },
+  {
+    "name": "search-record",
+    "path": "/search?q=record",
+    "mainSelector": "main"
+  },
+  {
+    "name": "cart",
+    "path": "/cart",
+    "mainSelector": "main"
+  }
+]
