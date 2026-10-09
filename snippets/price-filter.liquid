@@ -6,6 +6,7 @@
   @param {boolean} [should_render_clear] - Whether to render the clear button.
   @param {string} [id_prefix] - Unique prefix to avoid duplicate IDs when rendered multiple times.
   @param {boolean} [collapse_on_mobile] - Whether the vertical filter starts collapsed on mobile.
+  @param {boolean} [start_collapsed] - Whether the vertical filter starts collapsed at every viewport.
 
   @example
   {% render 'price-filter', filter: filter, filter_style: 'vertical', id_prefix: 'dialog' %}
@@ -20,8 +21,14 @@
     assign is_vertical = true
   endif
 
+  assign open_price_on_desktop = is_vertical
   assign open_price_on_mobile = is_vertical
+  assign filter_param_name = filter.param_name | escape | replace: '.', '-'
   if collapse_on_mobile
+    assign open_price_on_mobile = false
+  endif
+  if start_collapsed
+    assign open_price_on_desktop = false
     assign open_price_on_mobile = false
   endif
 -%}
@@ -31,7 +38,7 @@
     {% if filter_style == 'horizontal' %}
       data-auto-close-details="desktop"
     {% endif %}
-    {% if filter_style == 'vertical' %}
+    {% if open_price_on_desktop %}
       open
     {% endif %}
   >
@@ -226,11 +233,12 @@
 {% render 'accordion-custom-component',
   children: accordion_children,
   class: 'facets__item',
-  open: is_vertical,
-  open_by_default_on_desktop: is_vertical,
+  open: open_price_on_desktop,
+  open_by_default_on_desktop: open_price_on_desktop,
   open_by_default_on_mobile: open_price_on_mobile,
   disable_animation_on_desktop: is_horizontal,
-  close_with_escape: is_horizontal
+  close_with_escape: is_horizontal,
+  data_filter_param_name: filter_param_name
 %}
 
 {% stylesheet %}

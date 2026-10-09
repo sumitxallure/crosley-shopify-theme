@@ -168,7 +168,19 @@
       {% if enable_infinite_scroll != false %}
         <span ref="viewMoreNext"></span>
       {% else %}
-        {% render 'pagination-controls', paginate: paginate %}
+        {% liquid
+          assign pagination_anchor = blank
+          assign pagination_click_handler = blank
+          if template.suffix == 'crosley'
+            assign pagination_anchor = 'ResultsList'
+            assign pagination_click_handler = '/paginate'
+          endif
+        %}
+        {% render 'pagination-controls',
+          paginate: paginate,
+          anchor: pagination_anchor,
+          on_click_handler: pagination_click_handler
+        %}
       {% endif %}
     {% endif %}
   </div>

@@ -637,11 +637,13 @@
                         endif
 
                         assign collapse_price_on_mobile = false
+                        assign start_price_collapsed = false
                         if collection.handle == 'record-players'
                           assign collapse_price_on_mobile = true
+                          assign start_price_collapsed = true
                         endif
 
-                        render 'price-filter', filter: filter, filter_style: 'vertical', should_render_clear: false, id_prefix: 'dialog', collapse_on_mobile: collapse_price_on_mobile
+                        render 'price-filter', filter: filter, filter_style: 'vertical', should_render_clear: false, id_prefix: 'dialog', collapse_on_mobile: collapse_price_on_mobile, start_collapsed: start_price_collapsed
                       -%}
                     {% else %}
                       {% liquid
@@ -651,10 +653,16 @@
 
                         assign active_value_count = filter.active_values | size
                         assign total_active_values = total_active_values | plus: active_value_count
-                        unless collection.handle == 'record-players'
-                          unless filter.type == 'availability' or filter.label == 'Availability'
-                            render 'list-filter', filter: filter, filter_style: 'vertical', active_value_count: active_value_count, should_render_clear: false, in_drawer: true, sectionId: section.id
-                          endunless
+                        unless filter.type == 'availability' or filter.label == 'Availability'
+                          assign start_filter_collapsed = false
+                          assign filter_label_override = blank
+                          if collection.handle == 'record-players'
+                            assign start_filter_collapsed = true
+                            if filter.label == 'Features'
+                              assign filter_label_override = 'Feature'
+                            endif
+                          endif
+                          render 'list-filter', filter: filter, filter_style: 'vertical', active_value_count: active_value_count, should_render_clear: false, in_drawer: true, sectionId: section.id, start_collapsed: start_filter_collapsed, label_override: filter_label_override
                         endunless
                       %}
                   {% endcase %}
@@ -662,7 +670,7 @@
               </div>
             {% endif %}
 
-            {% if block_settings.enable_sorting %}
+            {% if block_settings.enable_sorting and collection.handle != 'record-players' %}
               {% render 'sorting',
                 results: results,
                 sort_by: sort_by,
@@ -1420,6 +1428,163 @@
   /* Clear all is hidden until filters are active; its empty wrapper must not reserve gap */
   .facets__drawer-actions:not(:has(.facets__clear-all--active)) {
     gap: 0;
+  }
+
+  .crosley-filters-drawer {
+    --theme-drawer-width: min(440px, 100vw);
+  }
+
+  .crosley-filters-drawer .facets__filters-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .crosley-filters-drawer accordion-custom[data-filter-param-name*='option-color'] {
+    order: 1;
+  }
+
+  .crosley-filters-drawer accordion-custom[data-filter-param-name*='custom-features'] {
+    order: 2;
+  }
+
+  .crosley-filters-drawer accordion-custom[data-filter-param-name*='price'] {
+    order: 3;
+  }
+
+  .crosley-filters-drawer .theme-drawer__header {
+    min-height: 87px;
+    padding: 28px 32px;
+    border-bottom: 1px solid #ededed;
+  }
+
+  .crosley-filters-drawer .theme-drawer__title {
+    font-family: var(--font-heading--family);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 28px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .crosley-filters-drawer .theme-drawer__badge {
+    width: 20px;
+    min-width: 20px;
+    height: 20px;
+    font-size: 11px;
+  }
+
+  .crosley-filters-drawer .theme-drawer__close-button {
+    width: 26px;
+    height: 30px;
+    padding: 4px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: #171f26;
+  }
+
+  .crosley-filters-drawer .theme-drawer__close-button .svg-wrapper,
+  .crosley-filters-drawer .theme-drawer__close-button svg {
+    display: flex;
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .crosley-filters-drawer .theme-drawer__close-button path {
+    transform: scale(1.48);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .crosley-filters-drawer .facets-drawer__filters {
+    padding: 8px 32px 32px;
+  }
+
+  .crosley-filters-drawer .facets__item::before {
+    border-top: 0;
+  }
+
+  .crosley-filters-drawer .facets__panel {
+    padding: 20px 0;
+    border-bottom: 1px solid #ededed;
+  }
+
+  .crosley-filters-drawer .facets__panel[open] {
+    padding-bottom: 11px;
+  }
+
+  .crosley-filters-drawer .facets__summary {
+    min-height: 18px;
+    padding: 0;
+    color: #171f26;
+    font-family: var(--font-heading--family);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .crosley-filters-drawer .facets__panel-content {
+    padding-inline: 0;
+  }
+
+  .crosley-filters-drawer .facets__inputs {
+    gap: 0;
+    padding-block: 0 20px;
+  }
+
+  .crosley-filters-drawer .facets__inputs-list {
+    gap: 0;
+  }
+
+  .crosley-filters-drawer .facets__inputs-list > li {
+    min-height: 30px;
+  }
+
+  .crosley-filters-drawer .checkbox__label,
+  .crosley-filters-drawer .price-facet__highest-price {
+    font-family: var(--font-paragraph--family);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .crosley-filters-drawer .sorting-filter {
+    display: none;
+  }
+
+  .crosley-filters-drawer .facets__drawer-actions {
+    display: block;
+    min-height: 94px;
+    padding: 20px 32px;
+    margin: 0;
+    background: #fff;
+  }
+
+  .crosley-filters-drawer .facets__clear-all,
+  .crosley-filters-drawer facet-remove-component {
+    display: none;
+  }
+
+  .crosley-filters-drawer .facets__see-results {
+    display: flex;
+    width: 100%;
+    min-height: 53px;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    border: 0;
+    border-radius: 0;
+    background: #383637;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: normal;
+    text-transform: uppercase;
   }
 
   @media screen and (max-width: 749px) {

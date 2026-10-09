@@ -2,11 +2,22 @@
 
 {%- liquid
   assign block_settings = block.settings
+  assign allow_color_image_fallback = false
+  if template.suffix == 'crosley'
+    assign allow_color_image_fallback = true
+  endif
+
   for product_option in closest.product.options_with_values
     assign swatch_count = product_option.values | map: 'swatch' | compact | size
+    assign option_name = product_option.name | downcase
 
     if swatch_count > 0
       assign product_has_swatches = true
+      break
+    endif
+    if allow_color_image_fallback and option_name contains 'color'
+      assign product_has_swatches = true
+      break
     endif
   endfor
 -%}
@@ -38,7 +49,10 @@
     "
     {{ block.shopify_attributes }}
   >
-    {% render 'variant-swatches', product_resource: closest.product %}
+    {% render 'variant-swatches',
+      product_resource: closest.product,
+      allow_color_image_fallback: allow_color_image_fallback
+    %}
   </product-swatches>
 {% endif %}
 

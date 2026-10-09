@@ -4,6 +4,7 @@
   @param {object} paginate - The paginate object
   @param {string} [ref] - Component reference attribute for the pagination nav element
   @param {string} [on_click_handler] - Component function to handle pagination clicks.
+  @param {string} [anchor] - Optional destination anchor appended to pagination links.
 
   When provided the handler will receive URL search params as data. It extracts URL parameters from each pagination link
   and passes them through the onclick attribute in the format: "on:click='handler?params'". This allows components to
@@ -33,7 +34,7 @@
         {%- if paginate.previous -%}
           {%- assign prev_params = paginate.previous.url | split: '?' | last -%}
           <a
-            href="{{ paginate.previous.url }}"
+            href="{{ paginate.previous.url }}{% if anchor != blank %}#{{ anchor }}{% endif %}"
             aria-label="{{ 'content.pagination.previous' | t }}"
             class="pagination__link pagination__link--arrow"
             {% if on_click_handler != blank %}
@@ -106,7 +107,7 @@
           {%- if part.is_link -%}
             {%- assign part_params = part.url | split: '?' | last -%}
             <a
-              href="{{ part.url }}"
+              href="{{ part.url }}{% if anchor != blank %}#{{ anchor }}{% endif %}"
               aria-label="{{ 'content.pagination.page' | t: page: part.title }}"
               class="pagination__link pagination__link--page"
               {% if on_click_handler != blank %}
@@ -138,7 +139,7 @@
         {%- if paginate.next -%}
           {%- assign next_params = paginate.next.url | split: '?' | last -%}
           <a
-            href="{{ paginate.next.url }}"
+            href="{{ paginate.next.url }}{% if anchor != blank %}#{{ anchor }}{% endif %}"
             aria-label="{{ 'content.pagination.next' | t }}"
             class="pagination__link pagination__link--arrow"
             {% if on_click_handler != blank %}
@@ -368,6 +369,76 @@
 
     .pagination__item:has(.pagination__link--gap) {
       width: calc(var(--pagination-size) * 0.5);
+    }
+  }
+
+  .crosley-main-collection .pagination {
+    --pagination-size: auto;
+    --pagination-inset: 0;
+    --pagination-radius: 0;
+
+    padding: 0 var(--padding-sm);
+    margin-top: 56px;
+  }
+
+  .crosley-main-collection .pagination__list {
+    gap: 24px;
+  }
+
+  .crosley-main-collection .pagination__list::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    background: #dadada;
+    z-index: -1;
+  }
+
+  .crosley-main-collection .pagination__item {
+    width: auto;
+    aspect-ratio: auto;
+  }
+
+  .crosley-main-collection .pagination__link {
+    width: auto;
+    height: auto;
+    min-width: 0;
+    padding: 0 6px 10px;
+    border-radius: 0;
+    color: #171f26;
+    font-size: clamp(12px, calc(11.235px + 0.1961vw), 15px);
+    font-weight: 700;
+  }
+
+  .crosley-main-collection .pagination__link--arrow {
+    padding-inline: 0;
+  }
+
+  .crosley-main-collection .pagination__link--current {
+    color: #171f26;
+    border-bottom: 3px solid #171f26;
+  }
+
+  .crosley-main-collection .pagination__link--disabled {
+    display: none;
+  }
+
+  .crosley-main-collection .pagination__link[aria-current='page']::before,
+  .crosley-main-collection .pagination__link:not(.pagination__link--gap)::before,
+  .crosley-main-collection .pagination__list::before {
+    content: none;
+  }
+
+  .crosley-main-collection .pagination__link svg {
+    width: 8px;
+    height: 12px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .crosley-main-collection .pagination {
+      margin-top: 42px;
     }
   }
 {% endstylesheet %}

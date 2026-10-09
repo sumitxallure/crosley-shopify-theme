@@ -8,6 +8,8 @@
   @param {boolean} [should_render_clear] - Whether to render the clear button
   @param {boolean} [show_swatch_label] - Whether to show the swatch label
   @param {boolean} [in_drawer] - Whether the filter is in a drawer
+  @param {boolean} [start_collapsed] - Whether a vertical filter starts collapsed.
+  @param {string} [label_override] - Optional display label for this rendering context.
 {%- enddoc -%}
 
 {% render 'variant-picker-styles' %}
@@ -35,6 +37,11 @@
     assign is_vertical = true
   endif
   assign filter_param_name = filter.param_name | escape | replace: '.', '-'
+  assign filter_label = label_override | default: filter.label
+  assign is_initially_open = is_vertical
+  if start_collapsed
+    assign is_initially_open = false
+  endif
 -%}
 {% capture accordion_children %}
   <details
@@ -43,12 +50,12 @@
     {% if filter_style == 'horizontal' %}
       data-auto-close-details="desktop"
     {% endif %}
-    {% if filter_style == 'vertical' %}
+    {% if is_initially_open %}
       open
     {% endif %}
   >
     <summary class="facets__summary">
-      <span class="facets__label">{{ filter.label }}</span>
+      <span class="facets__label">{{ filter_label }}</span>
 
       <div class="facets__status-wrapper">
         {% if is_swatch %}
@@ -198,7 +205,7 @@
             {% if is_image %}
               style="--image-columns: {{ image_columns }};"
             {% endif %}
-            name="{{ filter.label }}"
+            name="{{ filter_label }}"
           >
             {%- for value in filter.values -%}
               {% liquid
@@ -429,9 +436,9 @@
 {% render 'accordion-custom-component',
   children: accordion_children,
   class: 'facets__item',
-  open: is_vertical,
-  open_by_default_on_desktop: is_vertical,
-  open_by_default_on_mobile: is_vertical,
+  open: is_initially_open,
+  open_by_default_on_desktop: is_initially_open,
+  open_by_default_on_mobile: is_initially_open,
   disable_animation_on_desktop: is_horizontal,
   close_with_escape: is_horizontal,
   data_filter_param_name: filter_param_name

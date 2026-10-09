@@ -53,9 +53,14 @@ class FacetsFormComponent extends Component {
    */
   createURLParameters(formData = new FormData(this.refs.facetsForm)) {
     let newParameters = new URLSearchParams(/** @type any */ (formData));
+    const currentParameters = new URL(window.location.href).searchParams;
 
     if (newParameters.get('filter.v.price.gte') === '') newParameters.delete('filter.v.price.gte');
     if (newParameters.get('filter.v.price.lte') === '') newParameters.delete('filter.v.price.lte');
+
+    if (!newParameters.has('sort_by') && currentParameters.has('sort_by')) {
+      newParameters.set('sort_by', currentParameters.get('sort_by') ?? '');
+    }
 
     newParameters.delete('page');
 

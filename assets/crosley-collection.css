@@ -198,11 +198,19 @@ body:has(.crosley-main-collection):has(#header-component[transparent])
 .crosley-collection-toolbar__sorting .facets__summary {
   width: 100%;
   padding-inline: 24px;
+  font-weight: 400;
 }
 
 .crosley-collection-toolbar__sorting .facets__label {
   margin: 0;
+  color: #6b6b6b;
+  font-family: acumin-pro-condensed, Arial, sans-serif;
   font-size: clamp(12px, calc(11.235px + 0.1961vw), 15px);
+  font-variation-settings: normal;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: normal;
+  text-transform: uppercase;
 }
 
 .crosley-collection-toolbar__sorting .sorting-filter__options {
