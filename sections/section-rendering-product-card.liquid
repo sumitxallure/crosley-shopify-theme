@@ -50,7 +50,11 @@
         {{ product.selected_or_first_available_variant | json }}
       </script>
     </variant-picker>
-    {% render 'variant-swatches', product_resource: product, has_option_selected: true %}
+    {% render 'variant-swatches',
+      product_resource: product,
+      has_option_selected: true,
+      allow_color_image_fallback: true
+    %}
 
     <product-price>
       {% render 'price', product_resource: product, show_unit_price: true %}

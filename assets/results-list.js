@@ -1,5 +1,6 @@
 import { mediaQueryLarge, requestIdleCallback, startViewTransition } from '@theme/utilities';
 import PaginatedList from '@theme/paginated-list';
+import { sectionRenderer } from '@theme/section-renderer';
 
 const PRODUCT_CARD_IMAGE_SELECTOR = '.product-media__image';
 
@@ -41,6 +42,31 @@ export default class ResultsList extends PaginatedList {
     if (!(target instanceof HTMLInputElement)) return;
 
     this.#animateLayoutChange(target.value);
+  }
+
+  /**
+   * Re-renders a numbered collection page without a full-document navigation.
+   * @param {Object<string, string>} data - Pagination link search parameters.
+   * @param {Event} event - Pagination click event.
+   */
+  async paginate(data, event) {
+    event.preventDefault();
+
+    const newURL = new URL(window.location.href);
+    newURL.search = new URLSearchParams(data).toString();
+    newURL.hash = '';
+
+    this.setAttribute('aria-busy', 'true');
+
+    try {
+      await sectionRenderer.renderSection(this.sectionId, { url: new URL(newURL) });
+      history.pushState({}, '', newURL);
+      document.getElementById('ResultsList')?.scrollIntoView({ behavior: 'instant', block: 'start' });
+    } catch (error) {
+      if (error?.name !== 'AbortError') console.warn('[results-list] Pagination update failed:', error);
+    } finally {
+      document.querySelector(`results-list[section-id="${this.sectionId}"]`)?.removeAttribute('aria-busy');
+    }
   }
 
   /**

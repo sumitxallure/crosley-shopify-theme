@@ -5,6 +5,7 @@
 
   @param {object} product_resource - The product object, which contains variants and options.
   @param {boolean} [has_option_selected] - Whether to render the swatches in a pre-selected state.
+  @param {boolean} [allow_color_image_fallback] - Use variant images when Color values have no configured swatches.
 
   @example
   {% render 'variant-swatches', product_resource: product %}
@@ -101,9 +102,18 @@
     {%- for product_option in product_resource.options_with_values -%}
       {%- liquid
         assign swatch_count = product_option.values | map: 'swatch' | compact | size
+        assign option_name = product_option.name | downcase
+        assign is_color_option = false
+        assign force_variant_image = false
+        if option_name contains 'color'
+          assign is_color_option = true
+        endif
+        if allow_color_image_fallback and is_color_option
+          assign force_variant_image = true
+        endif
       -%}
 
-      {% if swatch_count == 0 %}
+      {% if swatch_count == 0 and force_variant_image == false %}
         {% continue %}
       {% endif %}
 
@@ -202,6 +212,8 @@
                 {% render 'swatch',
                   swatch: product_option_value.swatch,
                   variant_image: featured_media,
+                  force_variant_image: force_variant_image,
+                  label: product_option_value.name,
                 %}
                 {% render 'strikethrough-variant', product_option: product_option_value %}
               </label>

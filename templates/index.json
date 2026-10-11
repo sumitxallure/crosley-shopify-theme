@@ -106,7 +106,17 @@
       "blocks": {
         "record_players": {
           "type": "collection",
-          "settings": { "collection": "record-players", "label": "Record players", "button_label": "All record players" }
+          "settings": {
+            "collection": "record-players",
+            "products": [
+              "zodiac-cruiser-plus-record-player",
+              "c6-record-player",
+              "nash-7-in-1-record-player",
+              "cruiser-plus-record-player"
+            ],
+            "label": "Record players",
+            "button_label": "All record players"
+          }
         },
         "speakers": {
           "type": "collection",

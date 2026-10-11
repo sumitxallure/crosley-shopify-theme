@@ -18,7 +18,12 @@
 
     {% for block in section.blocks %}
       <details class="crosley-footer__menu" {% if forloop.first %}open{% endif %} {{ block.shopify_attributes }}>
-        <summary>{{ block.settings.heading | escape }}</summary>
+        <summary>
+          <span>{{ block.settings.heading | escape }}</span>
+          <span class="svg-wrapper crosley-footer__menu-caret" aria-hidden="true">
+            {{- 'icon-caret.svg' | inline_asset_content -}}
+          </span>
+        </summary>
         {% if block.settings.menu != blank %}
           <nav aria-label="{{ block.settings.heading | escape }}">
             {% for link in block.settings.menu.links %}
@@ -122,6 +127,10 @@
     display: none;
   }
 
+  .crosley-footer__menu-caret {
+    display: none;
+  }
+
   .crosley-footer__menu nav {
     display: flex;
     flex-direction: column;
@@ -156,23 +165,30 @@
     }
 
     .crosley-footer__menu summary {
-      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
       margin: 0;
-      padding: 18px 28px 18px 0;
+      padding: 18px 2px 18px 0;
       cursor: pointer;
     }
 
-    .crosley-footer__menu summary::after {
-      position: absolute;
-      top: 16px;
-      right: 2px;
-      content: '+';
-      font-size: 1.25rem;
-      font-weight: 400;
+    .crosley-footer__menu-caret {
+      display: inline-flex;
+      width: 14px;
+      height: 14px;
+      flex: 0 0 14px;
+      transition: transform 180ms ease;
     }
 
-    .crosley-footer__menu[open] summary::after {
-      content: '-';
+    .crosley-footer__menu-caret svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .crosley-footer__menu[open] .crosley-footer__menu-caret {
+      transform: rotate(180deg);
     }
 
     .crosley-footer__menu nav {

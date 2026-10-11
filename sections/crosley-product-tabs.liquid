@@ -31,46 +31,100 @@
 
     {% for block in section.blocks %}
       {% assign tab_collection = block.settings.collection %}
+      {% assign tab_products = block.settings.products | default: tab_collection.products %}
       <div
         class="crosley-product-tabs__panel{% if forloop.first %} is-active{% endif %}"
         data-tab-panel="{{ forloop.index0 }}"
         {% unless forloop.first %}hidden{% endunless %}
       >
         <div class="crosley-product-tabs__products">
-          {% for product in tab_collection.products limit: 4 %}
+          {% for product in tab_products limit: 4 %}
+            {% liquid
+              assign selected_variant = product.selected_or_first_available_variant
+              assign selected_media = selected_variant.featured_media | default: product.featured_media
+              assign selected_url = selected_variant.url | default: product.url
+              assign color_option = nil
+
+              for product_option in product.options_with_values
+                assign option_name = product_option.name | downcase
+                if option_name contains 'color'
+                  assign color_option = product_option
+                  break
+                endif
+              endfor
+            %}
             <article class="crosley-product-card">
-              <a class="crosley-product-card__media" href="{{ product.url }}">
-                {% if product.featured_image != blank %}
-                  {{ product.featured_image | image_url: width: 900 | image_tag: widths: '350, 550, 750, 900', sizes: '(min-width: 990px) 25vw, 70vw', loading: 'lazy', alt: product.title }}
+              <a class="crosley-product-card__media" href="{{ selected_url }}" data-product-card-link>
+                {% if selected_media != blank %}
+                  {{ selected_media | image_url: width: 900 | image_tag: widths: '350, 550, 750, 900', sizes: '(min-width: 990px) 25vw, 70vw', loading: 'lazy', alt: product.title, class: 'crosley-product-card__image' }}
                 {% else %}
                   {{ 'product-1' | placeholder_svg_tag: 'crosley-product-card__placeholder' }}
                 {% endif %}
-                {% if product.compare_at_price_max > product.price %}
+                {% if selected_variant.compare_at_price > selected_variant.price %}
                   <span class="crosley-product-card__badge">Sale</span>
                 {% elsif forloop.index == 2 %}
                   <span class="crosley-product-card__badge">New</span>
                 {% endif %}
               </a>
               <div class="crosley-product-card__details">
-                <a href="{{ product.url }}">{{ product.title | escape }}</a>
-                <div class="crosley-product-card__price">
-                  {% if product.compare_at_price_max > product.price %}
-                    <s>{{ product.compare_at_price_max | money }}</s>
-                  {% endif %}
-                  <span>{{ product.price | money }}</span>
-                </div>
-                {% if product.variants.size > 1 %}
-                  <div class="crosley-product-card__swatches" aria-label="Available variants">
-                    {% for variant in product.variants limit: 4 %}
-                      <span
-                        title="{{ variant.title | escape }}"
-                        {% if variant.featured_image %}
-                          style="background-image: url('{{ variant.featured_image | image_url: width: 80 }}');"
-                        {% endif %}
-                      ></span>
+                {% if color_option != blank and color_option.values.size > 0 %}
+                  {% liquid
+                    assign option_key = 'option' | append: color_option.position
+                  %}
+                  <div class="crosley-product-card__swatches" aria-label="Available colors for {{ product.title | escape }}">
+                    {% for option_value in color_option.values limit: 4 %}
+                      {% liquid
+                        assign swatch_variant = option_value.variant
+                        if swatch_variant == blank
+                          for candidate_variant in product.variants
+                            if candidate_variant[option_key] == option_value.name
+                              assign swatch_variant = candidate_variant
+                              break
+                            endif
+                          endfor
+                        endif
+
+                        assign swatch_media = swatch_variant.featured_media | default: selected_media
+                        assign swatch_image = option_value.swatch.image | default: swatch_media
+                        assign is_selected = false
+                        if swatch_variant.id == selected_variant.id
+                          assign is_selected = true
+                        endif
+                      %}
+                      <button
+                        type="button"
+                        class="crosley-product-card__swatch"
+                        aria-label="Select {{ option_value.name | escape }} for {{ product.title | escape }}"
+                        aria-pressed="{% if is_selected %}true{% else %}false{% endif %}"
+                        title="{{ option_value.name | escape }}"
+                        data-product-variant-option
+                        data-variant-url="{{ swatch_variant.url }}"
+                        data-variant-price="{{ swatch_variant.price | money | escape }}"
+                        data-variant-compare-price="{% if swatch_variant.compare_at_price > swatch_variant.price %}{{ swatch_variant.compare_at_price | money | escape }}{% endif %}"
+                        data-variant-image-src="{{ swatch_media | image_url: width: 900 }}"
+                        data-variant-image-srcset="{{ swatch_media | image_url: width: 350 }} 350w, {{ swatch_media | image_url: width: 550 }} 550w, {{ swatch_media | image_url: width: 750 }} 750w, {{ swatch_media | image_url: width: 900 }} 900w"
+                        data-variant-image-alt="{{ swatch_media.alt | default: product.title | escape }}"
+                        {% unless swatch_variant.available %}disabled{% endunless %}
+                        style="
+                          {% if option_value.swatch.color %}
+                            --swatch-background: rgb({{ option_value.swatch.color.rgb }});
+                          {% elsif swatch_image != blank %}
+                            --swatch-background: url('{{ swatch_image | image_url: width: 80 }}');
+                          {% endif %}
+                        "
+                      >
+                        <span aria-hidden="true"></span>
+                      </button>
                     {% endfor %}
                   </div>
                 {% endif %}
+                <a href="{{ selected_url }}" data-product-card-link>{{ product.title | escape }}</a>
+                <div class="crosley-product-card__price">
+                  <s data-product-card-compare-price{% unless selected_variant.compare_at_price > selected_variant.price %} hidden{% endunless %}>
+                    {{ selected_variant.compare_at_price | money }}
+                  </s>
+                  <span data-product-card-price>{{ selected_variant.price | money }}</span>
+                </div>
               </div>
             </article>
           {% else %}
@@ -84,7 +138,7 @@
         </div>
 
         <div class="crosley-product-tabs__dots" aria-hidden="true">
-          {% for product in tab_collection.products limit: 4 %}
+          {% for product in tab_products limit: 4 %}
             <span{% if forloop.first %} class="is-active"{% endif %}></span>
           {% endfor %}
         </div>
@@ -256,17 +310,59 @@
   .crosley-product-card__swatches {
     display: flex;
     gap: 7px;
-    margin-block-start: 14px;
+    margin-block-end: 14px;
   }
 
-  .crosley-product-card__swatches span {
+  .crosley-product-card__swatch {
+    display: grid;
     width: 22px;
     height: 22px;
-    background-color: #d8d4cc;
-    background-position: center;
-    background-size: cover;
+    place-items: center;
+    padding: 2px;
     border: 1px solid #d2d2d2;
     border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+  }
+
+  .crosley-product-card__swatch span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--swatch-background, #d8d4cc) center / cover no-repeat;
+    border-radius: 50%;
+  }
+
+  .crosley-product-card__swatch[aria-pressed='true'] {
+    border: 2px solid #171f26;
+    padding: 1px;
+  }
+
+  .crosley-product-card__swatch:focus-visible {
+    outline: 2px solid #171f26;
+    outline-offset: -2px;
+  }
+
+  .crosley-product-card__swatch:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  .crosley-product-card__swatch:disabled span {
+    filter: grayscale(1);
+  }
+
+  .crosley-product-card__swatches + a {
+    display: inline-block;
+  }
+
+  .crosley-product-card__swatches:empty {
+    display: none;
+  }
+
+  .crosley-product-card__swatch,
+  .crosley-product-card__swatch span {
+    box-sizing: border-box;
   }
 
   .crosley-product-tabs__cta {
@@ -324,6 +420,10 @@
       display: none;
     }
 
+    .crosley-product-card__swatches {
+      padding-inline-start: 2px;
+    }
+
     .crosley-product-card {
       flex: 0 0 62%;
       scroll-snap-align: start;
@@ -377,6 +477,45 @@
     const buttons = Array.from(section.querySelectorAll('[data-tab-button]'));
     const panels = Array.from(section.querySelectorAll('[data-tab-panel]'));
     const navList = section.querySelector('.crosley-product-tabs__nav-list');
+
+    section.addEventListener('click', (event) => {
+      if (!(event.target instanceof Element)) return;
+
+      const option = event.target.closest('[data-product-variant-option]');
+      if (!(option instanceof HTMLButtonElement) || option.disabled) return;
+
+      const card = option.closest('.crosley-product-card');
+      if (!card) return;
+
+      const image = card.querySelector('.crosley-product-card__image');
+      const price = card.querySelector('[data-product-card-price]');
+      const comparePrice = card.querySelector('[data-product-card-compare-price]');
+      const variantURL = option.dataset.variantUrl;
+
+      card.querySelectorAll('[data-product-variant-option]').forEach((item) => {
+        item.setAttribute('aria-pressed', String(item === option));
+      });
+
+      if (image instanceof HTMLImageElement && option.dataset.variantImageSrc) {
+        image.src = option.dataset.variantImageSrc;
+        image.srcset = option.dataset.variantImageSrcset ?? '';
+        image.alt = option.dataset.variantImageAlt ?? image.alt;
+      }
+
+      if (price) price.textContent = option.dataset.variantPrice ?? '';
+
+      if (comparePrice) {
+        const comparePriceValue = option.dataset.variantComparePrice ?? '';
+        comparePrice.textContent = comparePriceValue;
+        comparePrice.hidden = comparePriceValue === '';
+      }
+
+      if (variantURL) {
+        card.querySelectorAll('[data-product-card-link]').forEach((link) => {
+          if (link instanceof HTMLAnchorElement) link.href = variantURL;
+        });
+      }
+    });
 
     panels.forEach((panel) => {
       const products = panel.querySelector('.crosley-product-tabs__products');
@@ -471,6 +610,7 @@
       "settings": [
         { "type": "header", "content": "Collection" },
         { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "product_list", "id": "products", "label": "Featured products", "limit": 4 },
         { "type": "text", "id": "label", "label": "Tab label" },
         { "type": "header", "content": "Button" },
         { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop collection" }

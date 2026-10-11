@@ -1,0 +1,19 @@
+{
+  "name": "crosley-shopify-theme",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "qa": "shopify theme check && playwright test",
+    "qa:smoke": "playwright test runtime.spec.mjs responsive.spec.mjs interactions.spec.mjs accessibility.spec.mjs --project=mobile-390 --project=tablet-1032 --project=desktop-1440",
+    "qa:visual": "playwright test visual.spec.mjs reference.spec.mjs",
+    "qa:visual:update": "playwright test visual.spec.mjs --update-snapshots",
+    "qa:ui": "playwright test --ui",
+    "qa:report": "playwright show-report test-results/theme-qa-report"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
+    "pixelmatch": "^8.0.0",
+    "pngjs": "^7.0.0"
+  }
+}
