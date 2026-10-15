@@ -1,5 +1,5 @@
 <section class="crosley-benefits">
-  <div class="crosley-benefits__grid">
+  <div class="crosley-benefits__grid" tabindex="0" aria-label="{{ section.settings.aria_label | escape }}">
     {% for block in section.blocks %}
       <article class="crosley-benefit" {{ block.shopify_attributes }}>
         <span class="crosley-benefit__icon" aria-hidden="true">
@@ -63,6 +63,7 @@
     margin: 0 0 10px;
     color: #171f26;
     font-size: clamp(14px, calc(13.49px + 0.1307vw), 16px);
+    line-height: normal;
     letter-spacing: 0.02em;
     text-transform: uppercase;
   }
@@ -180,6 +181,9 @@
     }
   ],
   "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "aria_label", "label": "Accessibility label", "default": "Store benefits" }
+  ],
   "presets": [
     {
       "name": "Crosley benefits",

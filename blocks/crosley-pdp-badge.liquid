@@ -1,0 +1,32 @@
+{% comment %}
+  Product badge driven by a merchant-managed product tag.
+  @example
+  Add the tag "New" to a product to show the default badge.
+{% endcomment %}
+
+{% liquid
+  assign product_resource = closest.product | default: product
+  assign badge_tag = block.settings.product_tag | strip
+  assign show_badge = false
+
+  if block.settings.text != blank
+    if badge_tag == blank or product_resource.tags contains badge_tag
+      assign show_badge = true
+    endif
+  endif
+%}
+
+{% if show_badge %}
+  <p class="crosley-pdp-badge" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</p>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Crosley product badge",
+  "settings": [
+    { "type": "text", "id": "text", "label": "Text", "default": "New" },
+    { "type": "text", "id": "product_tag", "label": "Required product tag", "default": "New" }
+  ],
+  "presets": [{ "name": "Crosley product badge" }]
+}
+{% endschema %}

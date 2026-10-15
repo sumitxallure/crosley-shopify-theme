@@ -4,6 +4,11 @@
   {{ closest.product | structured_data }}
 </script>
 
+{% if section.settings.layout_style == 'crosley-pdp' %}
+  {{ 'crosley-pdp.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'crosley-pdp.js' | asset_url }}" type="module"></script>
+{% endif %}
+
 {% capture media_gallery %}
   {%- content_for 'block',
     type: '_product-media-gallery',
@@ -121,9 +126,16 @@
         {% render 'price', product_resource: product, show_sale_price_first: true %}
       </div>
 
+      {% if section.settings.layout_style == 'crosley-pdp' %}
+        <div class="crosley-sticky-quantity">
+          {% render 'quantity-selector', product: product, variant: current_variant, class: 'crosley-sticky-quantity__control' %}
+        </div>
+      {% endif %}
+
       <button
         type="button"
         class="sticky-add-to-cart__button add-to-cart-button button"
+        aria-label="{% if current_variant.available %}{{ 'products.product.add_to_cart' | t }}{% elsif current_variant == blank %}{{ 'products.product.unavailable' | t }}{% else %}{{ 'products.product.sold_out' | t }}{% endif %}"
         ref="addToCartButton"
         on:click="/handleAddToCartClick"
         {% unless current_variant.available %}
@@ -387,6 +399,22 @@
     "groups": ["header", "footer"]
   },
   "settings": [
+    {
+      "type": "select",
+      "id": "layout_style",
+      "label": "Product page style",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "crosley-pdp",
+          "label": "Crosley PDP"
+        }
+      ],
+      "default": "default"
+    },
     {
       "type": "header",
       "content": "t:content.layout"

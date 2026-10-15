@@ -1,0 +1,129 @@
+{% doc %}
+  Renders the production PDP information accordions and product documents.
+  Product metafields are preferred; block settings provide merchant-controlled fallbacks.
+{% enddoc %}
+
+{% liquid
+  assign product_resource = closest.product
+  assign details_content = product_resource.metafields.custom.product_details.value | default: block.settings.product_details
+  if details_content == blank
+    assign details_content = product_resource.description
+  endif
+
+  assign specifications_content = product_resource.metafields.custom.specifications.value | default: block.settings.specifications
+  assign care_content = product_resource.metafields.custom.assembly_and_care.value | default: block.settings.assembly_and_care
+  assign shipping_page = block.settings.shipping_page
+  assign shipping_content = product_resource.metafields.custom.shipping_and_returns.value | default: block.settings.shipping_and_returns | default: shipping_page.content
+
+  assign assembly_manual = product_resource.metafields.custom.assembly_manual.value.url | default: block.settings.assembly_manual
+  assign use_care_manual = product_resource.metafields.custom.use_and_care_manual.value.url | default: block.settings.use_care_manual
+  assign warranty_document = product_resource.metafields.custom.warranty_document.value.url | default: block.settings.warranty_document
+  assign prop_65_document = product_resource.metafields.custom.prop_65_document.value.url | default: block.settings.prop_65_document
+
+  assign has_documents = false
+  if assembly_manual != blank or use_care_manual != blank or warranty_document != blank or prop_65_document != blank
+    assign has_documents = true
+  endif
+%}
+
+<div class="crosley-pdp-details" {{ block.shopify_attributes }}>
+  {% if details_content != blank %}
+    <details class="crosley-pdp-details__item">
+      <summary>
+        <span>{{ block.settings.product_details_heading | escape }}</span>
+        <span class="crosley-pdp-details__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="crosley-pdp-details__content rte">{{ details_content }}</div>
+    </details>
+  {% endif %}
+
+  {% if specifications_content != blank or product_resource.type != blank or product_resource.vendor != blank %}
+    <details class="crosley-pdp-details__item">
+      <summary>
+        <span>{{ block.settings.specifications_heading | escape }}</span>
+        <span class="crosley-pdp-details__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="crosley-pdp-details__content rte">
+        {% if specifications_content != blank %}
+          {{ specifications_content }}
+        {% else %}
+          <dl class="crosley-pdp-details__spec-list">
+            {% if product_resource.type != blank %}
+              <div><dt>Product type</dt><dd>{{ product_resource.type | escape }}</dd></div>
+            {% endif %}
+            {% if product_resource.vendor != blank %}
+              <div><dt>Brand</dt><dd>{{ product_resource.vendor | escape }}</dd></div>
+            {% endif %}
+          </dl>
+        {% endif %}
+      </div>
+    </details>
+  {% endif %}
+
+  {% if care_content != blank %}
+    <details class="crosley-pdp-details__item">
+      <summary>
+        <span>{{ block.settings.assembly_heading | escape }}</span>
+        <span class="crosley-pdp-details__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="crosley-pdp-details__content rte">{{ care_content }}</div>
+    </details>
+  {% endif %}
+
+  {% if shipping_content != blank or shop.shipping_policy.url != blank or shop.refund_policy.url != blank %}
+    <details class="crosley-pdp-details__item">
+      <summary>
+        <span>{{ block.settings.shipping_heading | escape }}</span>
+        <span class="crosley-pdp-details__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="crosley-pdp-details__content rte">
+        {% if shipping_content != blank %}
+          {{ shipping_content }}
+        {% endif %}
+        <p class="crosley-pdp-details__policy-links">
+          {% if shop.shipping_policy.url != blank %}
+            <a href="{{ shop.shipping_policy.url }}">Shipping policy</a>
+          {% endif %}
+          {% if shop.refund_policy.url != blank %}
+            <a href="{{ shop.refund_policy.url }}">Return policy</a>
+          {% endif %}
+        </p>
+      </div>
+    </details>
+  {% endif %}
+
+  {% if has_documents %}
+    <div class="crosley-pdp-documents" aria-label="Product documents">
+      {% if assembly_manual != blank %}<a href="{{ assembly_manual }}" target="_blank" rel="noopener">Assembly manual <span aria-hidden="true">&#8599;</span></a>{% endif %}
+      {% if use_care_manual != blank %}<a href="{{ use_care_manual }}" target="_blank" rel="noopener">Use &amp; care <span aria-hidden="true">&#8599;</span></a>{% endif %}
+      {% if warranty_document != blank %}<a href="{{ warranty_document }}" target="_blank" rel="noopener">Warranty <span aria-hidden="true">&#8599;</span></a>{% endif %}
+      {% if prop_65_document != blank %}<a href="{{ prop_65_document }}" target="_blank" rel="noopener">Prop 65 <span aria-hidden="true">&#8599;</span></a>{% endif %}
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Crosley product details",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "product_details_heading", "label": "Product details heading", "default": "Product details" },
+    { "type": "richtext", "id": "product_details", "label": "Product details fallback" },
+    { "type": "text", "id": "specifications_heading", "label": "Specifications heading", "default": "Specifications" },
+    { "type": "richtext", "id": "specifications", "label": "Specifications fallback" },
+    { "type": "text", "id": "assembly_heading", "label": "Assembly heading", "default": "Assembly & care" },
+    { "type": "richtext", "id": "assembly_and_care", "label": "Assembly and care fallback" },
+    { "type": "text", "id": "shipping_heading", "label": "Shipping heading", "default": "Shipping & returns" },
+    { "type": "richtext", "id": "shipping_and_returns", "label": "Shipping and returns fallback" },
+    { "type": "page", "id": "shipping_page", "label": "Shipping and returns page" },
+    { "type": "header", "content": "Document fallbacks" },
+    { "type": "url", "id": "assembly_manual", "label": "Assembly manual" },
+    { "type": "url", "id": "use_care_manual", "label": "Use and care" },
+    { "type": "url", "id": "warranty_document", "label": "Warranty" },
+    { "type": "url", "id": "prop_65_document", "label": "Prop 65" }
+  ],
+  "presets": [
+    { "name": "Crosley product details" }
+  ]
+}
+{% endschema %}

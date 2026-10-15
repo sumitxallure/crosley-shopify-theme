@@ -1,0 +1,30 @@
+{% doc %}
+  Renders the alternate PDP installment summary when native Shopify payment terms are unavailable.
+{% enddoc %}
+
+{% liquid
+  assign product_resource = closest.product
+  assign selected_variant = product_resource.selected_or_first_available_variant
+  assign installment_count = block.settings.installment_count | default: 4
+  assign installment_price = selected_variant.price | divided_by: installment_count
+%}
+
+{% if selected_variant != blank %}
+  <p class="crosley-pdp-payment-summary" {{ block.shopify_attributes }}>
+    or {{ installment_count }} payments of <strong>{{ installment_price | money }}</strong>
+    with {{ block.settings.provider | escape }}
+    <span aria-label="Installment payment information" role="img">i</span>
+  </p>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Crosley payment summary",
+  "tag": null,
+  "settings": [
+    { "type": "range", "id": "installment_count", "label": "Number of payments", "min": 2, "max": 12, "step": 1, "default": 4 },
+    { "type": "text", "id": "provider", "label": "Provider", "default": "Sezzle" }
+  ],
+  "presets": [{ "name": "Crosley payment summary" }]
+}
+{% endschema %}

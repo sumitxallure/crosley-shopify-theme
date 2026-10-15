@@ -35,7 +35,7 @@
 {% render 'product-recommendations-styles' %}
 <product-recommendations
   id="product-recommendations-{{ section.id }}"
-  class="product-recommendations"
+  class="product-recommendations{% if section.settings.style_variant == 'crosley-pdp' %} product-recommendations--crosley-pdp{% endif %}"
   data-url="{{ routes.product_recommendations_url }}?limit={{ section.settings.max_products }}"
   data-section-id="{{ section.id }}"
   data-product-id="{{ section.settings.product.id | default: product.id }}"
@@ -178,11 +178,19 @@
     {%- else -%}
       <div
         class="resource-list resource-list--grid"
+        {% if section.settings.style_variant == 'crosley-pdp' %}
+          role="status"
+          aria-label="{{ 'accessibility.loading_product_recommendations' | t }}"
+        {% endif %}
       >
         {% for i in (1..section.settings.columns) %}
           <div
             class="product-recommendations__skeleton-item"
-            aria-label="{{ 'accessibility.loading_product_recommendations' | t }}"
+            {% if section.settings.style_variant == 'crosley-pdp' %}
+              aria-hidden="true"
+            {% else %}
+              aria-label="{{ 'accessibility.loading_product_recommendations' | t }}"
+            {% endif %}
           ></div>
         {% endfor %}
       </div>
@@ -229,6 +237,16 @@
     }
   ],
   "settings": [
+    {
+      "type": "select",
+      "id": "style_variant",
+      "label": "Style",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "crosley-pdp", "label": "Crosley PDP" }
+      ],
+      "default": "default"
+    },
     {
       "type": "product",
       "id": "product",
@@ -507,6 +525,18 @@
                 "padding-inline-end": 0
               }
             },
+            "swatches": {
+              "type": "swatches",
+              "name": "t:names.swatches",
+              "settings": {
+                "product_swatches_alignment": "flex-start",
+                "product_swatches_alignment_mobile": "flex-start",
+                "product_swatches_padding_top": 4,
+                "product_swatches_padding_bottom": 0,
+                "product_swatches_padding_left": 0,
+                "product_swatches_padding_right": 0
+              }
+            },
             "product_title": {
               "type": "product-title",
               "name": "t:names.product_title",
@@ -552,7 +582,7 @@
               }
             }
           },
-          "block_order": ["product-card-gallery", "product_title", "price"]
+          "block_order": ["product-card-gallery", "swatches", "product_title", "price"]
         }
       },
       "block_order": ["header"]
@@ -560,3 +590,116 @@
   ]
 }
 {% endschema %}
+
+{% stylesheet %}
+  .product-recommendations--crosley-pdp {
+    display: block;
+    width: 100%;
+    overflow: clip;
+    border-block-end: 1px solid #ededed;
+  }
+
+  .product-recommendations--crosley-pdp .section-resource-list__content h1,
+  .product-recommendations--crosley-pdp .section-resource-list__content h2,
+  .product-recommendations--crosley-pdp .section-resource-list__content h3,
+  .product-recommendations--crosley-pdp .section-resource-list__content h4 {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    color: #676767;
+    font-size: clamp(18px, 1.05vw + 9.5px, 24px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.05em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .product-recommendations--crosley-pdp .section-resource-list__content,
+  .product-recommendations--crosley-pdp .section-resource-list__content .text-block {
+    width: 100%;
+    max-width: none;
+  }
+
+  .product-recommendations--crosley-pdp .section-resource-list {
+    width: min(100%, 1440px);
+    margin-inline: auto;
+    padding-inline: 40px;
+  }
+
+  .product-recommendations--crosley-pdp .resource-list {
+    min-width: 0;
+  }
+
+  .product-recommendations--crosley-pdp .product-card__content {
+    padding-inline: 0;
+  }
+
+    .product-recommendations--crosley-pdp .product-card-gallery {
+    background: #f5f5f4;
+  }
+
+    .product-recommendations--crosley-pdp product-swatches {
+      overflow: visible;
+    }
+
+    .product-recommendations--crosley-pdp .variant-option--swatches {
+      gap: 6px;
+    }
+
+    .product-recommendations--crosley-pdp .variant-option__button-label--has-swatch {
+      padding: 0;
+    }
+
+    .product-recommendations--crosley-pdp .variant-option__button-label--has-swatch .swatch {
+      --variant-picker-swatch-width: 12px;
+      --variant-picker-swatch-height: 12px;
+    }
+
+  @media (max-width: 860px) {
+    .product-recommendations--crosley-pdp .section-resource-list {
+      width: 100vw;
+      max-width: none;
+      display: block;
+      margin-inline: calc(50% - 50vw);
+      padding: 40px 0 48px !important;
+    }
+
+    .product-recommendations--crosley-pdp .section-resource-list__content {
+      padding-inline: 20px;
+    }
+
+    .product-recommendations--crosley-pdp .section-resource-list__content h1,
+    .product-recommendations--crosley-pdp .section-resource-list__content h2,
+    .product-recommendations--crosley-pdp .section-resource-list__content h3,
+    .product-recommendations--crosley-pdp .section-resource-list__content h4 {
+      font-size: 18px;
+      text-align: left;
+    }
+
+    .product-recommendations--crosley-pdp .resource-list--grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .product-recommendations--crosley-pdp .section-resource-list > .resource-list {
+      box-sizing: border-box;
+      padding-inline: 20px;
+    }
+
+    .product-recommendations--crosley-pdp .section-resource-list > .hidden--desktop {
+      box-sizing: border-box;
+      width: 100%;
+      padding-inline: 20px;
+      overflow: hidden;
+    }
+
+    .product-recommendations--crosley-pdp .section-resource-list > .hidden--desktop .resource-list__carousel {
+      --mobile-card-size: 76cqw;
+    }
+
+    .product-recommendations--crosley-pdp .section-resource-list > .hidden--desktop .resource-list__carousel slideshow-slides {
+      scroll-padding-inline: 20px;
+    }
+  }
+{% endstylesheet %}

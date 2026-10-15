@@ -351,6 +351,7 @@
       sticky-content
       {% if media_presentation == 'grid' %}
         media-gallery--{{ block_settings.media_columns }}-column
+        {% if block_settings.desktop_grid_thumbnails %}media-gallery--grid-thumbnails{% endif %}
         {% if block_settings.media_columns == "two" and block_settings.large_first_image%}media-gallery--large-first-image{% endif %}
       {% endif %}
       media-gallery--{{ media_presentation }}
@@ -457,12 +458,34 @@
     %}
 
     {% if media_presentation == 'grid' %}
+      {% if block_settings.desktop_grid_thumbnails and sorted_media.size > 1 %}
+        <nav class="media-gallery__grid-thumbnails mobile:hidden" aria-label="{{ 'accessibility.slideshow' | t }}">
+          {% for media in sorted_media %}
+            <a
+              class="media-gallery__grid-thumbnail"
+              href="#ProductMedia-{{ section.id }}-{{ media.id }}"
+              aria-label="{{ 'accessibility.slide_status' | t: index: forloop.index, length: sorted_media.size }}"
+            >
+              {{
+                media.preview_image
+                | image_url: width: 120
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '60, 90, 120',
+                  sizes: '60px',
+                  alt: media.alt
+              }}
+            </a>
+          {% endfor %}
+        </nav>
+      {% endif %}
       <ul
         class="media-gallery__grid list-unstyled"
         data-testid="media-gallery-grid"
       >
         {% for media in sorted_media %}
           <li
+            id="ProductMedia-{{ section.id }}-{{ media.id }}"
             ref="media[]"
             class="{{ product_media_container_class }} product-media-container--{{ media.media_type }} {% unless block_settings.aspect_ratio == 'adapt' %}product-media-container--force-aspect{% endunless %}"
             style="{% if block_settings.aspect_ratio == 'adapt' %} --media-preview-ratio: {{ media.preview_image.aspect_ratio | default: 1.0 }};{% endif %} --media-radius: {{ block_settings.media_radius }}px;"

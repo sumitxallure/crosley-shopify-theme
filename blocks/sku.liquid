@@ -54,6 +54,9 @@
   "
   {{ block.shopify_attributes }}
 >
+  {% if block_settings.prefix != blank %}
+    <span class="sku__prefix">{{ block_settings.prefix | escape }}</span>
+  {% endif %}
   {% render 'sku', product_resource: product_resource %}
 </product-sku-component>
 
@@ -65,6 +68,11 @@
     {
       "type": "paragraph",
       "content": "t:content.resource_reference_product_sku"
+    },
+    {
+      "type": "text",
+      "id": "prefix",
+      "label": "Prefix"
     },
     {
       "type": "header",

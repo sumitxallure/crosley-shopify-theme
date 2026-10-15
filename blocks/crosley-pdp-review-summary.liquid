@@ -1,0 +1,36 @@
+{% doc %}
+  Renders the PDP rating summary, including a visible empty state when no review app data exists.
+{% enddoc %}
+
+{% liquid
+  assign product_resource = closest.product
+  assign rating = product_resource.metafields.reviews.rating.value.rating
+  assign rating_count = product_resource.metafields.reviews.rating_count.value | default: 0
+  assign rounded_rating = rating | round
+%}
+
+<div class="crosley-pdp-review-summary" {{ block.shopify_attributes }}>
+  <span class="crosley-pdp-review-summary__stars" aria-label="{{ rating | default: 0 }} out of 5 stars">
+    {% for star in (1..5) %}
+      <span{% if rating != blank and star <= rounded_rating %} class="is-filled"{% endif %} aria-hidden="true">&#9734;</span>
+    {% endfor %}
+  </span>
+  <a href="#CrosleyPdpReviews">
+    {% if rating_count > 0 %}
+      {{ rating_count }} review{% unless rating_count == 1 %}s{% endunless %}
+    {% else %}
+      {{ block.settings.empty_label | escape }}
+    {% endif %}
+  </a>
+</div>
+
+{% schema %}
+{
+  "name": "Crosley review summary",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "empty_label", "label": "Empty-state label", "default": "No reviews yet — be the first" }
+  ],
+  "presets": [{ "name": "Crosley review summary" }]
+}
+{% endschema %}

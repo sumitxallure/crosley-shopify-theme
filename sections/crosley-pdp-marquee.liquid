@@ -1,0 +1,108 @@
+{% comment %}
+  Repeating product-feature marquee for the Crosley alternate PDP.
+{% endcomment %}
+
+{% liquid
+  assign features = product.metafields.custom.features.value
+  if features == blank
+    assign features = section.settings.fallback_features | split: '|'
+  endif
+
+  capture serialized_features
+    for feature in features
+      unless forloop.first
+        echo '|'
+      endunless
+      echo feature
+    endfor
+  endcapture
+  assign serialized_features = serialized_features | remove: '["' | remove: '"]' | replace: '\",\"', '|' | replace: '","', '|' | replace: ',', '|'
+  assign features = serialized_features | split: '|'
+
+  capture feature_line
+    for feature in features
+      assign feature_text = feature | strip
+      if feature_text != blank
+        unless forloop.first
+          echo ' <span aria-hidden="true">&middot;</span> '
+        endunless
+        echo feature_text | escape
+      endif
+    endfor
+  endcapture
+%}
+
+{% if feature_line != blank %}
+  <section class="crosley-pdp-marquee" aria-label="Product features">
+    <p class="visually-hidden">{{ feature_line | strip_html }}</p>
+    <div class="crosley-pdp-marquee__track" aria-hidden="true">
+      {% for i in (1..4) %}<span>{{ feature_line }}</span>{% endfor %}
+    </div>
+  </section>
+{% endif %}
+
+{% stylesheet %}
+  .crosley-pdp-marquee {
+    width: 100%;
+    overflow: hidden;
+    color: #fff;
+    background: #383637;
+  }
+
+  .crosley-pdp-marquee__track {
+    display: flex;
+    width: max-content;
+    min-width: 200%;
+    align-items: center;
+    animation: crosley-pdp-marquee 28s linear infinite;
+  }
+
+  .crosley-pdp-marquee__track > span {
+    display: block;
+    flex: none;
+    padding: 17px 34px;
+    font-size: clamp(18px, 1.7vw, 26px);
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .crosley-pdp-marquee__track span span {
+    margin-inline: 10px;
+  }
+
+  @keyframes crosley-pdp-marquee {
+    to { transform: translateX(-50%); }
+  }
+
+  @media (max-width: 860px) {
+    .crosley-pdp-marquee__track > span {
+      padding: 14px 22px;
+      font-size: 16px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .crosley-pdp-marquee__track { animation: none; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Crosley feature marquee",
+  "tag": "section",
+  "class": "crosley-pdp-section crosley-pdp-section--marquee",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "fallback_features",
+      "label": "Fallback features",
+      "info": "Separate features with a vertical bar.",
+      "default": "Bluetooth output|Built-in speakers|3-speed turntable"
+    }
+  ],
+  "presets": [{ "name": "Crosley feature marquee" }]
+}
+{% endschema %}
