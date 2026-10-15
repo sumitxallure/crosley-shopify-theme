@@ -1,0 +1,40 @@
+{% doc %}
+  Renders the fixed Mini Cart action area using Shopify's calculated cart total.
+
+  @example
+  {% render 'cart-drawer-summary' %}
+{% enddoc %}
+
+{%- liquid
+  if settings.currency_code_enabled_cart_total
+    assign drawer_total = cart.total_price | money_with_currency
+  else
+    assign drawer_total = cart.total_price | money
+  endif
+-%}
+
+<p class="cart-drawer__tax-note">
+  {{ 'content.taxes_at_checkout_shipping_at_checkout_without_policy_without_discounts' | t }}
+</p>
+
+<button
+  type="submit"
+  class="cart-drawer__checkout"
+  name="checkout"
+  form="cart-form"
+  on:click="/handleCheckout"
+  data-cart-drawer-checkout
+  {% if cart.empty? %}disabled{% endif %}
+>
+  <span>{{ 'content.checkout' | t }}</span>
+  <span aria-hidden="true">·</span>
+  <span data-cart-subtotal>{{ drawer_total }}</span>
+</button>
+
+<a
+  class="cart-drawer__view-cart"
+  href="{{ routes.cart_url }}"
+  on:click="/handleViewCart"
+>
+  {{ 'content.view_cart' | t }}
+</a>

@@ -1,0 +1,240 @@
+{% doc %}
+  Loads complementary Shopify product recommendations for the first cart line.
+  The first cart line is Shopify's most recently added line and acts as the merchandising seed.
+
+  @example
+  {% render 'cart-drawer-recommendations' %}
+{% enddoc %}
+
+{%- liquid
+  assign recommendation_product = cart.items.first.product
+  assign rendered_recommendations = 0
+-%}
+
+{% if recommendation_product != blank %}
+  <cart-recommendations
+    class="cart-recommendations"
+    data-product-id="{{ recommendation_product.id }}"
+    data-url="{{ routes.product_recommendations_url }}?section_id=cart-drawer-section&product_id={{ recommendation_product.id }}&limit=4&intent=complementary"
+    data-hydration-key="cart-recommendations"
+  >
+    <div data-cart-recommendations-results>
+      {% # theme-check-disable UndefinedObject %}
+      {% if recommendations.performed? and recommendations.products_count > 0 %}
+        {% capture recommendation_cards %}
+          {% for recommendation in recommendations.products limit: 4 %}
+            {%- liquid
+              assign recommendation_in_cart = false
+              for cart_item in cart.items
+                if cart_item.product.id == recommendation.id
+                  assign recommendation_in_cart = true
+                  break
+                endif
+              endfor
+            -%}
+
+            {% if recommendation.available and recommendation_in_cart == false %}
+              {% assign rendered_recommendations = rendered_recommendations | plus: 1 %}
+              <li
+                class="cart-recommendations__item"
+                data-recommendation-card
+              >
+                <a
+                  class="cart-recommendations__link"
+                  href="{{ recommendation.url }}"
+                >
+                  <span class="cart-recommendations__media">
+                    {% if recommendation.featured_image %}
+                      {{-
+                        recommendation.featured_image
+                        | image_url: width: 400
+                        | image_tag:
+                          class: 'cart-recommendations__image',
+                          widths: '160, 240, 320, 400',
+                          sizes: '(max-width: 489px) 40vw, 180px',
+                          loading: 'lazy',
+                          alt: recommendation.featured_image.alt
+                      -}}
+                    {% endif %}
+                  </span>
+                  <span class="cart-recommendations__title">{{ recommendation.title | escape }}</span>
+                  <span class="cart-recommendations__price">
+                    {% if settings.currency_code_enabled_product_cards %}
+                      {{ recommendation.price | money_with_currency }}
+                    {% else %}
+                      {{ recommendation.price | money }}
+                    {% endif %}
+                  </span>
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        {% endcapture %}
+
+        {% if rendered_recommendations > 0 %}
+          <section
+            class="cart-recommendations__section"
+            aria-labelledby="cart-recommendations-heading"
+          >
+            <h3
+              class="cart-recommendations__heading"
+              id="cart-recommendations-heading"
+            >
+              People also bought
+            </h3>
+            <ul
+              class="cart-recommendations__track"
+              role="list"
+              data-recommendation-track
+            >
+              {{ recommendation_cards }}
+            </ul>
+            {% if rendered_recommendations > 2 %}
+              <div
+                class="cart-recommendations__dots"
+                aria-label="People also bought"
+              >
+                {% for index in (1..rendered_recommendations) %}
+                  <button
+                    class="cart-recommendations__dot{% if forloop.first %} is-active{% endif %}"
+                    type="button"
+                    aria-label="{{ 'content.pagination.page' | t: page: index }}"
+                    {% if forloop.first %}aria-current="true"{% endif %}
+                    data-recommendation-dot="{{ forloop.index0 }}"
+                    on:click="/selectRecommendation"
+                  ></button>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </section>
+        {% endif %}
+      {% endif %}
+      {% # theme-check-enable UndefinedObject %}
+    </div>
+  </cart-recommendations>
+{% endif %}
+
+{% stylesheet %}
+  .cart-recommendations {
+    display: block;
+    margin-block-start: auto;
+  }
+
+  .cart-recommendations:empty,
+  .cart-recommendations:not(:has(.cart-recommendations__item)) {
+    display: none;
+  }
+
+  .cart-recommendations__section {
+    padding: 24px 24px 28px;
+  }
+
+  .cart-recommendations__heading {
+    margin: 0 0 18px;
+    color: #171f26;
+    font-family: var(--font-heading--family);
+    font-size: clamp(11px, calc(10.49px + 0.1307vw), 13px);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .cart-recommendations__track {
+    display: flex;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: inline mandatory;
+    scrollbar-width: none;
+  }
+
+  .cart-recommendations__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cart-recommendations__item {
+    flex: 0 0 46%;
+    min-width: 0;
+    list-style: none;
+    scroll-snap-align: start;
+  }
+
+  .cart-recommendations__link {
+    display: flex;
+    flex-direction: column;
+    color: #171f26;
+    text-decoration: none;
+  }
+
+  .cart-recommendations__media {
+    display: flex;
+    width: 100%;
+    aspect-ratio: 1;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #f5f5f4;
+  }
+
+  .cart-recommendations__image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .cart-recommendations__title {
+    margin-block-start: 10px;
+    overflow-wrap: anywhere;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+
+  .cart-recommendations__price {
+    margin-block-start: 4px;
+    color: #676767;
+    font-size: clamp(11px, calc(10.49px + 0.1307vw), 13px);
+    line-height: 1.2;
+  }
+
+  .cart-recommendations__dots {
+    display: flex;
+    min-height: 20px;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-block-start: 6px;
+  }
+
+  .cart-recommendations__dot {
+    position: relative;
+    width: 5px;
+    height: 5px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #dadada;
+    cursor: pointer;
+  }
+
+  .cart-recommendations__dot::before {
+    position: absolute;
+    inset: -7px;
+    content: '';
+  }
+
+  .cart-recommendations__dot.is-active {
+    background: #171f26;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cart-recommendations__track {
+      scroll-behavior: auto;
+    }
+  }
+{% endstylesheet %}
