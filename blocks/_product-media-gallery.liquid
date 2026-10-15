@@ -71,6 +71,13 @@
       "visible_if": "{{ block.settings.media_presentation == 'grid' and block.settings.media_columns == 'two' }}"
     },
     {
+      "type": "checkbox",
+      "id": "desktop_grid_thumbnails",
+      "label": "Show desktop thumbnail rail",
+      "default": false,
+      "visible_if": "{{ block.settings.media_presentation == 'grid' }}"
+    },
+    {
       "type": "header",
       "content": "t:content.carousel"
     },

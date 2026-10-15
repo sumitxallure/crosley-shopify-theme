@@ -13,7 +13,19 @@
   {% endstyle %}
 {%- endif -%}
 
-{% render 'quantity-selector', product: closest.product, block: block, wrapper_class: wrapper_class %}
+{% liquid
+  assign show_quantity_notice = false
+  if section.settings.layout_style == 'crosley-pdp'
+    assign show_quantity_notice = true
+  endif
+%}
+
+{% render 'quantity-selector',
+  product: closest.product,
+  block: block,
+  wrapper_class: wrapper_class,
+  show_quantity_notice: show_quantity_notice
+%}
 
 {% schema %}
 {

@@ -1,0 +1,89 @@
+{% comment %}
+  Accessible product breadcrumbs for the Crosley PDP.
+  @example
+  Add immediately before the product information section.
+{% endcomment %}
+
+{% liquid
+  assign parent_collection = collection
+  if parent_collection == blank
+    assign parent_collection = product.collections.first
+  endif
+%}
+
+<nav class="crosley-pdp-breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="{{ routes.root_url }}">Home</a></li>
+    {% if parent_collection != blank %}
+      <li><a href="{{ parent_collection.url }}">{{ parent_collection.title | escape }}</a></li>
+    {% endif %}
+    <li aria-current="page">{{ product.title | escape }}</li>
+  </ol>
+</nav>
+
+{% stylesheet %}
+  .crosley-pdp-breadcrumbs {
+    width: min(100%, 1440px);
+    margin-inline: auto;
+    padding: 10px 40px;
+    color: #676767;
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .crosley-pdp-breadcrumbs ol {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .crosley-pdp-breadcrumbs li {
+    min-width: 0;
+  }
+
+  .crosley-pdp-breadcrumbs li:not(:last-child)::after {
+    content: '/';
+    margin-inline-start: 8px;
+    color: #a3a3a3;
+  }
+
+  .crosley-pdp-breadcrumbs li:last-child {
+    overflow: hidden;
+    color: #171f26;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .crosley-pdp-breadcrumbs a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .crosley-pdp-breadcrumbs a:hover {
+    color: #171f26;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 749px) {
+    .crosley-pdp-breadcrumbs {
+      padding: 10px 16px;
+      font-size: 11px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Crosley PDP breadcrumbs",
+  "tag": "section",
+  "class": "crosley-pdp-section crosley-pdp-section--breadcrumbs",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [],
+  "presets": [{ "name": "Crosley PDP breadcrumbs" }]
+}
+{% endschema %}

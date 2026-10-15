@@ -11,6 +11,7 @@
   @param {number} [min] - override the minimum quantity (e.g., 0 for quick order list)
   @param {block} [block] - The block object, used for Shopify editor attributes.
   @param {string} [wrapper_class] - Extra class for the wrapper, used to scope block-level CSS variable overrides so surface-level styles (e.g. quick-add modal) can override them.
+  @param {boolean} [show_quantity_notice] - Whether to show the Crosley PDP maximum quantity notice at 10 units.
 {%- enddoc -%}
 
 {% liquid
@@ -100,6 +101,14 @@
     </button>
   </{{ component_name }}>
 
+  {% if show_quantity_notice %}
+    <p class="quantity-selector__notice" data-crosley-quantity-notice hidden>
+      Max 10 units. For quantities above 10, please contact
+      <a href="mailto:retailsales@crosleyradio.com">retailsales@crosleyradio.com</a>
+      for assistance.
+    </p>
+  {% endif %}
+
   {%- if line_index == null -%}
     {%- liquid
       # Check if variant has volume pricing
@@ -177,6 +186,18 @@
     @media screen and (min-width: 750px) {
       gap: var(--gap-sm);
     }
+  }
+
+  .quantity-selector__notice {
+    flex-basis: 100%;
+    margin: 4px 0 0;
+    color: #f04444;
+    font-size: 8px;
+    line-height: 1.35;
+  }
+
+  .quantity-selector__notice[hidden] {
+    display: none;
   }
 
   .price-per-item {

@@ -53,4 +53,29 @@ test.describe('critical interaction states', () => {
     await recordPlayers.hover();
     await expect(page.locator('.menu-list__submenu').first()).toBeVisible();
   });
+
+  test('PDP quantity stays synchronized between the main form and sticky bar', async ({ page }, testInfo) => {
+    test.skip(!viewportGroups.mobile.has(testInfo.project.name), 'Mobile-only behavior.');
+
+    await page.goto('/products/zodiac-cruiser-plus-record-player?view=crosley&variant=67783735804139', {
+      waitUntil: 'domcontentloaded',
+    });
+
+    const mainQuantity = page.locator('.product-information--crosley-pdp quantity-selector-component');
+    const stickyQuantity = page.locator('sticky-add-to-cart quantity-selector-component');
+    await expect(mainQuantity).toHaveCount(1);
+    await expect(stickyQuantity).toHaveCount(1);
+    await expect(mainQuantity.locator('input')).toHaveValue('1');
+    await expect(stickyQuantity.locator('input')).toHaveValue('1');
+
+    await mainQuantity.locator('.quantity-plus').click();
+    await expect(mainQuantity.locator('input')).toHaveValue('2');
+    await expect(stickyQuantity.locator('input')).toHaveValue('2');
+
+    await page.evaluate(() => window.scrollTo(0, 1500));
+    await expect(page.locator('sticky-add-to-cart .sticky-add-to-cart__bar')).toHaveAttribute('data-stuck', 'true');
+    await stickyQuantity.locator('.quantity-plus').click();
+    await expect(mainQuantity.locator('input')).toHaveValue('3');
+    await expect(stickyQuantity.locator('input')).toHaveValue('3');
+  });
 });

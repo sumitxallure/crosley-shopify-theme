@@ -1,0 +1,1006 @@
+.product-information--crosley-pdp {
+  display: block;
+  width: min(100%, 1440px);
+  max-width: none;
+  margin-inline: auto;
+  padding: 32px 40px 56px;
+  color: #171f26;
+  overflow: clip;
+}
+
+.product-information--crosley-pdp .product-information__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(360px, 1fr) !important;
+  grid-column: auto !important;
+  align-items: start;
+  gap: 64px;
+}
+
+.product-information--crosley-pdp .product-information__media,
+.product-information--crosley-pdp .product-details {
+  width: 100%;
+  min-width: 0;
+  padding: 0 !important;
+}
+
+.product-information--crosley-pdp .product-details {
+  justify-content: stretch;
+}
+
+.product-information--crosley-pdp .product-details > .group-block {
+  width: 100%;
+  max-width: none;
+}
+
+.product-information--crosley-pdp .crosley-pdp-badge {
+  margin: 0;
+  color: #676767;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.product-information--crosley-pdp .product-details h1 {
+  margin: 0;
+  color: #171f26;
+  font-size: clamp(28px, 2.35vw, 36px);
+  line-height: 1.08;
+  text-transform: uppercase;
+}
+
+.product-information--crosley-pdp product-sku-component {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: baseline;
+  gap: 4px;
+  color: #171f26;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.product-information--crosley-pdp .sku__prefix {
+  display: inline !important;
+  width: auto !important;
+  flex: 0 0 auto;
+  margin: 0;
+  color: #676767;
+  font-weight: 700;
+}
+
+.product-information--crosley-pdp product-sku-component > div,
+.product-information--crosley-pdp product-sku-component .sku {
+  display: inline;
+  width: auto !important;
+  flex: 0 0 auto;
+  color: #676767;
+  font-weight: 400;
+}
+
+.product-information--crosley-pdp .price {
+  color: #676767;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.crosley-pdp-payment-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: -12px 0 0;
+  color: #676767;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.crosley-pdp-payment-summary strong {
+  font-weight: 400;
+}
+
+.crosley-pdp-payment-summary > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 15px;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #a6a6a6;
+  border-radius: 50%;
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+  font-style: italic;
+  line-height: 1;
+}
+
+.crosley-pdp-review-summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: -8px;
+  color: #676767;
+  font-size: 14px;
+}
+
+.crosley-pdp-review-summary__stars {
+  display: flex;
+  gap: 2px;
+  font-family: Arial, sans-serif;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.crosley-pdp-review-summary__stars .is-filled {
+  color: #171f26;
+}
+
+.crosley-pdp-review-summary a {
+  color: #676767;
+  text-underline-offset: 2px;
+}
+
+.product-information--crosley-pdp variant-picker {
+  display: block;
+}
+
+.product-information--crosley-pdp variant-picker fieldset {
+  margin-block: 0 24px;
+}
+
+.product-information--crosley-pdp variant-picker legend,
+.product-information--crosley-pdp .variant-option__button-label {
+  color: #171f26;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.product-information--crosley-pdp .variant-option__button-label span {
+  color: #676767;
+  font-weight: 400;
+  text-transform: none;
+}
+
+.product-information--crosley-pdp .variant-option__button-label:has(:checked) span {
+  color: var(--color-selected-variant-text);
+}
+
+.product-information--crosley-pdp .variant-option--buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.product-information--crosley-pdp .variant-option--buttons .variant-option__button-label {
+  position: relative;
+  box-sizing: border-box;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  max-width: 32px;
+  max-height: 32px;
+  padding: 2px;
+  border: 2px solid #dadada;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.product-information--crosley-pdp .variant-option--buttons .variant-option__button-label:has(input:checked) {
+  border: 2px solid #171f26;
+  padding: 2px;
+}
+
+.product-information--crosley-pdp .variant-option--buttons .variant-option__button-label__pill {
+  display: block;
+  position: static;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 50%;
+  background: #aa967f;
+  transform: none;
+}
+
+.product-information--crosley-pdp .variant-option--buttons label:has(input[value='Black']) .variant-option__button-label__pill {
+  background: #075541;
+}
+
+.product-information--crosley-pdp .variant-option--buttons label:has(input[value='Cream']) .variant-option__button-label__pill {
+  background: #b5a1d9;
+}
+
+.product-information--crosley-pdp .variant-option--buttons .variant-option__button-label__text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.crosley-pdp-secondary {
+  min-width: 0;
+  margin: 0 0 24px;
+  padding: 0;
+  border: 0;
+}
+
+.crosley-pdp-secondary legend {
+  margin-block-end: 14px;
+  color: #171f26;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.crosley-pdp-secondary__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.crosley-pdp-secondary__option {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 2px solid #e4e4e4;
+  border-radius: 50%;
+  color: #171f26;
+  background: #f5f5f4;
+  cursor: pointer;
+}
+
+.crosley-pdp-secondary__option:not(:has(input:checked)) {
+  border-color: #ededed;
+  color: #171f26;
+}
+
+.crosley-pdp-secondary__option:has(input:checked) {
+  color: #fff;
+  background: #171f26;
+  border-color: #171f26;
+}
+
+.crosley-pdp-secondary__option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.crosley-pdp-secondary__option > svg {
+  display: block;
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+}
+
+@media (min-width: 1400px) {
+  .crosley-pdp-secondary__options {
+    width: max-content;
+    flex-wrap: nowrap;
+  }
+}
+
+.crosley-pdp-feature-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 4px 0 22px;
+  padding: 0;
+  list-style: none;
+}
+
+.crosley-pdp-feature-pills li {
+  padding: 10px 18px;
+  border-radius: 999px;
+  color: #676767;
+  background: #f5f5f4;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.product-information--crosley-pdp .product-form-buttons {
+  display: grid;
+  grid-template-columns: minmax(0, 30%) minmax(0, 1fr);
+  gap: 12px;
+}
+
+.product-information--crosley-pdp .product-form-buttons > * {
+  min-width: 0;
+}
+
+.product-information--crosley-pdp .product-form-buttons .quantity-selector,
+.product-information--crosley-pdp .product-form-buttons .add-to-cart-button {
+  min-height: 54px;
+  border-radius: 0;
+}
+
+.product-information--crosley-pdp .product-form-buttons .quantity-selector input[type='number'],
+.crosley-sticky-quantity .quantity-selector input[type='number'] {
+  flex: 1 1 auto;
+  width: 0;
+  min-width: 0;
+  align-self: stretch;
+  height: 100%;
+  border-inline: 1px solid #dadada;
+  border-radius: 0;
+  font-size: 14px;
+}
+
+.product-information--crosley-pdp .product-form-buttons .quantity-selector .quantity-minus,
+.product-information--crosley-pdp .product-form-buttons .quantity-selector .quantity-plus {
+  flex: 0 0 30%;
+  width: 30%;
+  min-width: 0;
+  height: 52px;
+  min-height: 0;
+}
+
+.product-information--crosley-pdp .product-form-buttons .add-to-cart-button {
+  width: 100%;
+  color: #fff;
+  background: #383637;
+  border-color: #383637;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.product-information--crosley-pdp .product-form-buttons .add-to-cart-button:hover:not(:disabled) {
+  background: #171f26;
+  border-color: #171f26;
+}
+
+.product-information--crosley-pdp .product-form-buttons .quantity-label,
+.product-information--crosley-pdp .product-form-buttons .quantity-rules,
+.product-information--crosley-pdp .product-form-buttons volume-pricing,
+.product-information--crosley-pdp .product-form-buttons .accelerated-checkout-block {
+  grid-column: 1 / -1;
+}
+
+.product-information--crosley-pdp .accelerated-checkout-block {
+  display: none;
+}
+
+.product-information--crosley-pdp media-gallery.media-gallery--grid-thumbnails {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr);
+  align-items: start;
+  gap: 20px;
+}
+
+.product-information--crosley-pdp .media-gallery--grid-thumbnails slideshow-component {
+  grid-column: 1 / -1;
+}
+
+.product-information--crosley-pdp .media-gallery__grid-thumbnails {
+  position: sticky;
+  top: calc(var(--header-height, 0px) + 24px);
+  z-index: 1;
+  display: flex;
+  max-height: calc(100vh - var(--header-height, 0px) - 48px);
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.product-information--crosley-pdp .media-gallery__grid-thumbnails::-webkit-scrollbar {
+  display: none;
+}
+
+.product-information--crosley-pdp .media-gallery__grid-thumbnail {
+  display: block;
+  width: 60px;
+  height: 60px;
+  flex: 0 0 60px;
+  padding: 2px;
+  border: 1px solid #dadada;
+  color: inherit;
+  background: #f5f5f4;
+}
+
+.product-information--crosley-pdp .media-gallery__grid-thumbnail:hover,
+.product-information--crosley-pdp .media-gallery__grid-thumbnail:focus-visible {
+  border-color: #171f26;
+}
+
+.product-information--crosley-pdp .media-gallery__grid-thumbnail img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.product-information--crosley-pdp .media-gallery--grid-thumbnails .media-gallery__grid {
+  grid-column: 2;
+}
+
+.product-information--crosley-pdp .media-gallery__grid .product-media-container {
+  scroll-margin-top: calc(var(--header-height, 0px) + 24px);
+  background: #f5f5f4;
+}
+
+.product-information--crosley-pdp .product-media,
+.product-information--crosley-pdp .product-media img {
+  max-width: 100%;
+}
+
+.crosley-pdp-details {
+  width: 100%;
+  border-block-start: 1px solid #ededed;
+}
+
+.crosley-pdp-details__item {
+  border-block-end: 1px solid #ededed;
+}
+
+.crosley-pdp-details__item summary {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0;
+  color: #171f26;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  list-style: none;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.crosley-pdp-details__item summary::-webkit-details-marker {
+  display: none;
+}
+
+.crosley-pdp-details__icon {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+}
+
+.crosley-pdp-details__icon::before,
+.crosley-pdp-details__icon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 1px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+}
+
+.crosley-pdp-details__icon::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+  transition: transform 180ms ease;
+}
+
+.crosley-pdp-details__item[open] .crosley-pdp-details__icon::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.crosley-pdp-details__content {
+  padding: 0 0 24px;
+  color: #676767;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.crosley-pdp-details__content > :first-child {
+  margin-block-start: 0;
+}
+
+.crosley-pdp-details__content > :last-child {
+  margin-block-end: 0;
+}
+
+.crosley-pdp-details__spec-list {
+  margin: 0;
+}
+
+.crosley-pdp-details__spec-list > div {
+  display: grid;
+  grid-template-columns: minmax(100px, 0.4fr) 1fr;
+  gap: 20px;
+  padding-block: 8px;
+  border-block-end: 1px solid #ededed;
+}
+
+.crosley-pdp-details__spec-list dt {
+  color: #171f26;
+  font-weight: 700;
+}
+
+.crosley-pdp-details__spec-list dd {
+  margin: 0;
+}
+
+.crosley-pdp-details__policy-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+
+.crosley-pdp-details__policy-links a,
+.crosley-pdp-documents a {
+  color: #171f26;
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
+.crosley-pdp-documents {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin-block-start: 24px;
+  background: #ededed;
+  border: 1px solid #ededed;
+}
+
+.crosley-pdp-documents a {
+  display: flex;
+  min-width: 0;
+  min-height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #fff;
+  font-size: 12px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.product-information--crosley-pdp + .sticky-add-to-cart .sticky-add-to-cart__bar,
+body:has(.product-information--crosley-pdp) .sticky-add-to-cart__bar {
+  border-radius: 0;
+}
+
+body:has(.product-information--crosley-pdp):has(.sticky-add-to-cart__bar[data-stuck='true'])
+  .header-section {
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  width: 100%;
+  z-index: var(--layer-menu-drawer);
+}
+
+body:has(.product-information--crosley-pdp):has(.sticky-add-to-cart__bar[data-stuck='true'])
+  .header-section::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  z-index: 1;
+  height: 1px;
+  background: #dadada;
+}
+
+body:has(.product-information--crosley-pdp) .sticky-add-to-cart__bar {
+  bottom: auto;
+  top: var(--header-height, 80px);
+  display: grid;
+  width: 100%;
+  max-width: none;
+  grid-template-columns: 34px minmax(0, 1fr) 88px auto;
+  grid-template-rows: auto auto;
+  column-gap: 16px;
+  row-gap: 0;
+  padding: 8px max(32px, calc((100vw - 1400px) / 2));
+  border: 0;
+  border-block-end: 1px solid #ededed;
+  box-shadow: 0 16px 32px rgb(0 0 0 / 16%), 0 2px 8px rgb(0 0 0 / 8%);
+  transform: translateX(-50%) translateY(-100%);
+  transition: transform 0.25s ease;
+}
+
+body:has(.product-information--crosley-pdp) .sticky-add-to-cart__bar[data-stuck='true'] {
+  transform: translateX(-50%) translateY(0);
+}
+
+body:has(.product-information--crosley-pdp) .sticky-add-to-cart__image {
+  grid-row: 1 / 3;
+  width: 34px;
+  height: 34px;
+  border-radius: 0;
+}
+
+body:has(.product-information--crosley-pdp) .sticky-add-to-cart__info {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+}
+
+body:has(.product-information--crosley-pdp) .sticky-add-to-cart__title {
+  margin: 0;
+  font-size: clamp(11px, calc(10.49px + 0.1307vw), 13px);
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+body:has(.product-information--crosley-pdp) .sticky-add-to-cart__variant {
+  display: none;
+}
+
+body:has(.product-information--crosley-pdp) .sticky-add-to-cart__price {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  color: #676767;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+body:has(.product-information--crosley-pdp) .sticky-add-to-cart__price .price {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.crosley-sticky-quantity {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  align-self: center;
+}
+
+.crosley-sticky-quantity .quantity-selector {
+  width: 88px;
+  height: 36px;
+  border: 1px solid #dadada;
+  border-radius: 0;
+}
+
+.crosley-sticky-quantity .quantity-selector .quantity-minus,
+.crosley-sticky-quantity .quantity-selector .quantity-plus {
+  flex: 0 0 28px;
+  width: 28px;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+}
+
+.crosley-sticky-quantity .quantity-selector input[type='number'] {
+  flex: 0 0 30px;
+  width: 30px;
+  min-width: 30px;
+  height: 100%;
+  padding: 0;
+  font-size: 12px;
+}
+
+body:has(.product-information--crosley-pdp) .sticky-add-to-cart__button {
+  grid-column: 4;
+  grid-row: 1 / 3;
+  width: auto;
+  min-width: 0;
+  height: 36px;
+  min-height: 0;
+  padding: 0 24px;
+  align-self: center;
+  border-radius: 0;
+  background: #383637;
+  font-size: clamp(11px, calc(10.49px + 0.1307vw), 13px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body:has(.product-information--crosley-pdp)
+  .sticky-add-to-cart__button
+  .add-to-cart-text
+  > .svg-wrapper {
+  display: none;
+}
+
+body:has(.product-information--crosley-pdp)
+  .sticky-add-to-cart__button
+  [ref='quantityDisplay'] {
+  display: none !important;
+}
+
+body:has(.product-information--crosley-pdp) .crosley-social-gallery__grid {
+  width: min(calc(100% - 80px), 1120px);
+  gap: 16px;
+}
+
+@media (max-width: 1023px) {
+  .product-information--crosley-pdp {
+    padding-inline: 24px;
+  }
+
+  .product-information--crosley-pdp .product-information__grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr) !important;
+    gap: 36px;
+  }
+}
+
+@media (max-width: 860px) {
+  .product-information--crosley-pdp {
+    width: 100%;
+    padding: 22px 20px 96px;
+    overflow: hidden;
+  }
+
+  .product-information--crosley-pdp .product-information__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 32px;
+  }
+
+  .product-information--crosley-pdp .product-information__media,
+  .product-information--crosley-pdp .product-details {
+    grid-column: 1 !important;
+  }
+
+  .product-information--crosley-pdp media-gallery.media-gallery--grid .media-gallery__grid,
+  .product-information--crosley-pdp .media-gallery__grid-thumbnails {
+    display: none !important;
+  }
+
+  .product-information--crosley-pdp media-gallery.media-gallery--grid slideshow-component {
+    display: flex !important;
+    grid-column: 1;
+    padding-block-end: 34px;
+  }
+
+  .product-information--crosley-pdp .product-details > .group-block {
+    padding: 0;
+  }
+
+  .product-information--crosley-pdp .group-block-content {
+    gap: 0 !important;
+  }
+
+  .product-information--crosley-pdp .group-block-content > .shopify-block:has(.crosley-pdp-badge) {
+    display: none;
+  }
+
+  .product-information--crosley-pdp .product-details h1 {
+    font-size: 30px;
+    line-height: 1.12;
+  }
+
+  .product-information--crosley-pdp .group-block-content > product-sku-component {
+    margin-block-start: 6px;
+    font-size: 11px;
+    line-height: 14px;
+  }
+
+  .product-information--crosley-pdp product-sku-component > div,
+  .product-information--crosley-pdp product-sku-component .sku,
+  .product-information--crosley-pdp product-sku-component .sku__prefix {
+    font-size: 11px;
+    line-height: 14px !important;
+  }
+
+  .product-information--crosley-pdp .group-block-content > product-price {
+    margin-block-start: 14px;
+  }
+
+  .product-information--crosley-pdp .price {
+    font-size: 18px;
+  }
+
+  .product-information--crosley-pdp .crosley-pdp-payment-summary {
+    margin-block-start: 6px;
+    font-size: 11px;
+    line-height: normal;
+  }
+
+  .product-information--crosley-pdp .crosley-pdp-review-summary {
+    gap: 8px;
+    margin-block-start: 16px;
+    font-size: 11px;
+  }
+
+  .product-information--crosley-pdp .crosley-pdp-review-summary__stars {
+    font-size: 15px;
+  }
+
+  .product-information--crosley-pdp .group-block-content > variant-picker {
+    margin-block-start: 28px;
+  }
+
+  .product-information--crosley-pdp variant-picker legend,
+  .product-information--crosley-pdp .variant-option__button-label,
+  .product-information--crosley-pdp .crosley-pdp-secondary legend {
+    font-size: 11px;
+  }
+
+  .product-information--crosley-pdp variant-picker fieldset {
+    margin-block-end: 0;
+  }
+
+  .product-information--crosley-pdp variant-picker legend {
+    margin-block-end: 14px;
+  }
+
+  .product-information--crosley-pdp .group-block-content > .crosley-pdp-secondary {
+    margin: 28px 0 0;
+  }
+
+  .product-information--crosley-pdp .group-block-content > .buy-buttons-block {
+    margin-block-start: 30px;
+  }
+
+  .product-information--crosley-pdp media-gallery.media-gallery--grid-thumbnails {
+    display: block;
+  }
+
+  .product-information--crosley-pdp .media-gallery__mobile-controls {
+    mix-blend-mode: normal;
+  }
+
+  .product-information--crosley-pdp .slideshow-controls__dots button::after {
+    background-color: #fff;
+    box-shadow: inset 0 0 0 1px #c7c7c7;
+  }
+
+  .product-information--crosley-pdp .slideshow-controls__dots button[aria-selected='true']::after {
+    background-color: #000;
+    box-shadow: none;
+  }
+
+  .product-information--crosley-pdp .product-form-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .product-information--crosley-pdp .product-form-buttons .quantity-selector {
+    width: 100% !important;
+    min-height: 54px;
+  }
+
+  .product-information--crosley-pdp .product-form-buttons > .quantity-selector-wrapper {
+    width: 30%;
+    flex: 0 0 auto !important;
+    align-self: flex-start;
+  }
+
+  .product-information--crosley-pdp .product-form-buttons > span:has(add-to-cart-component) {
+    width: 100%;
+    height: 52px;
+    flex: 0 0 auto !important;
+  }
+
+  .product-information--crosley-pdp .product-form-buttons .add-to-cart-button {
+    width: 100%;
+    min-height: 52px;
+  }
+
+  .crosley-pdp-feature-pills {
+    margin: 16px 0 0;
+    gap: 8px;
+  }
+
+  .crosley-pdp-feature-pills li {
+    padding: 7px 14px;
+    font-size: 11px;
+  }
+
+  .product-information--crosley-pdp .group-block-content > .crosley-pdp-details {
+    margin-block-start: 36px;
+  }
+
+  body:has(.product-information--crosley-pdp) .sticky-add-to-cart__bar {
+    top: auto;
+    bottom: 0;
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    padding: 12px 20px calc(12px + var(--safe-area-inset-bottom));
+    border-block-end: 0;
+    transform: translateX(-50%) translateY(calc(100% + 10px));
+  }
+
+  body:has(.product-information--crosley-pdp) .sticky-add-to-cart__bar[data-stuck='true'] {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  body:has(.product-information--crosley-pdp) .sticky-add-to-cart__image,
+  body:has(.product-information--crosley-pdp) .sticky-add-to-cart__info,
+  body:has(.product-information--crosley-pdp) .sticky-add-to-cart__price {
+    display: none;
+  }
+
+  .crosley-sticky-quantity {
+    display: block;
+    flex: 0 0 30%;
+  }
+
+  .crosley-sticky-quantity .quantity-selector {
+    width: 100%;
+    height: 50px;
+  }
+
+  .crosley-sticky-quantity .quantity-selector .quantity-minus,
+  .crosley-sticky-quantity .quantity-selector .quantity-plus {
+    flex: 0 0 30%;
+    width: 30%;
+    height: 100%;
+  }
+
+  .crosley-sticky-quantity .quantity-selector input[type='number'] {
+    flex: 1 1 auto;
+    width: 0;
+    min-width: 0;
+    height: 100%;
+    font-size: 14px;
+  }
+
+  body:has(.product-information--crosley-pdp) .sticky-add-to-cart__button {
+    width: auto;
+    min-width: 0;
+    height: 50px;
+    flex: 1 1 auto;
+  }
+
+  body:has(.product-information--crosley-pdp)
+    .sticky-add-to-cart__button
+    .add-to-cart-text__content {
+    display: block !important;
+  }
+
+  .crosley-pdp-documents {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body:has(.product-information--crosley-pdp) .crosley-social-gallery__grid {
+    width: 100%;
+    gap: 12px;
+  }
+
+  body:has(.product-information--crosley-pdp) .crosley-benefits {
+    padding: 40px 0;
+    overflow: hidden;
+  }
+
+  body:has(.product-information--crosley-pdp) .crosley-benefits__grid {
+    display: flex;
+    width: calc(100% - 80px);
+    margin-inline: 40px;
+    gap: 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  body:has(.product-information--crosley-pdp) .crosley-benefits__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  body:has(.product-information--crosley-pdp) .crosley-benefit {
+    flex: 0 0 100%;
+    padding-inline: 40px;
+    scroll-snap-align: center;
+  }
+
+  body:has(.product-information--crosley-pdp) .crosley-benefits__dots {
+    display: flex;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crosley-pdp-details__icon::after {
+    transition: none;
+  }
+}

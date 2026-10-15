@@ -257,6 +257,16 @@ class StickyAddToCartComponent extends Component {
         if (variant == null) {
           this.#handleVariantUnavailable();
         }
+
+        // Variant updates can replace the sticky quantity selector. Reapply the
+        // product form's current quantity to both controls after the morph.
+        requestAnimationFrame(() => {
+          const mainQuantitySelector = this.#getProductForm()?.querySelector('quantity-selector-component');
+          const quantity = Number(mainQuantitySelector?.getValue?.()) || this.#currentQuantity;
+          this.#currentQuantity = this.#syncQuantitySelectors(quantity);
+          this.#updateButtonText();
+        });
+
         // Restore the current quantity display if needed
         this.#updateButtonText();
       })
@@ -312,7 +322,7 @@ class StickyAddToCartComponent extends Component {
     // Only respond to product page quantity selector updates, not cart drawer
     if (event.detail.cartLine) return;
 
-    this.#currentQuantity = event.detail.quantity;
+    this.#currentQuantity = this.#syncQuantitySelectors(event.detail.quantity, event.target);
     this.#updateButtonText();
   };
 
@@ -371,10 +381,62 @@ class StickyAddToCartComponent extends Component {
   }
 
   /**
+   * Gets the product-page quantity selectors that must stay in sync.
+   * @returns {{main: HTMLElement | null, sticky: HTMLElement | null}}
+   */
+  #getQuantitySelectors() {
+    return {
+      main: this.#getProductForm()?.querySelector('quantity-selector-component') ?? null,
+      sticky: this.querySelector('quantity-selector-component'),
+    };
+  }
+
+  /**
+   * Applies one normalized quantity to both product-page controls.
+   * @param {number} quantity - Requested quantity
+   * @param {EventTarget | null} [source] - Selector that originated the update
+   * @returns {number} The normalized quantity
+   */
+  #syncQuantitySelectors(quantity, source = null) {
+    const { main, sticky } = this.#getQuantitySelectors();
+    const selectors = [main, sticky].filter(Boolean);
+    if (selectors.length === 0) return quantity;
+
+    const constraints = selectors.map((selector) => {
+      const values = selector.getCurrentValues?.();
+      return {
+        min: values?.min ?? 1,
+        max: selector.getEffectiveMax?.() ?? null,
+      };
+    });
+
+    const minimum = Math.max(...constraints.map(({ min }) => min));
+    const finiteMaximums = constraints.map(({ max }) => max).filter((max) => max !== null);
+    const maximum = finiteMaximums.length > 0 ? Math.min(...finiteMaximums) : Infinity;
+    const normalizedQuantity = Math.max(minimum, Math.min(maximum, Number(quantity) || minimum));
+
+    selectors.forEach((selector) => {
+      if (selector === source) return;
+      selector.setValue?.(String(normalizedQuantity));
+      selector.updateButtonStates?.();
+    });
+
+    // The source input has already been updated by its own component. If the
+    // stricter selector clamped the value, bring the source back into agreement.
+    if (source && selectors.includes(source)) {
+      source.setValue?.(String(normalizedQuantity));
+      source.updateButtonStates?.();
+    }
+
+    return normalizedQuantity;
+  }
+
+  /**
    * Gets the initial quantity from the data attribute
    */
   #getInitialQuantity() {
     this.#currentQuantity = parseInt(this.dataset.initialQuantity || '1') || 1;
+    this.#currentQuantity = this.#syncQuantitySelectors(this.#currentQuantity);
     this.#updateButtonText();
   }
 

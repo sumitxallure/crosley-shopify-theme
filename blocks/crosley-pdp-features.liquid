@@ -1,0 +1,50 @@
+{% doc %}
+  Renders product feature pills from custom.features with a merchant fallback.
+{% enddoc %}
+
+{% liquid
+  assign product_resource = closest.product
+  assign features = product_resource.metafields.custom.features.value
+  if features == blank
+    assign features = block.settings.fallback_features | split: '|'
+  endif
+
+  capture serialized_features
+    for feature in features
+      unless forloop.first
+        echo '|'
+      endunless
+      echo feature
+    endfor
+  endcapture
+  assign serialized_features = serialized_features | remove: '["' | remove: '"]' | replace: '\",\"', '|' | replace: '","', '|' | replace: ',', '|'
+  assign features = serialized_features | split: '|'
+%}
+
+{% if features != blank %}
+  <ul class="crosley-pdp-feature-pills" aria-label="Product features" {{ block.shopify_attributes }}>
+    {% for feature in features %}
+      {% assign feature_text = feature | strip %}
+      {% if feature_text != blank %}
+        <li>{{ feature_text | escape }}</li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Crosley feature pills",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "fallback_features",
+      "label": "Fallback features",
+      "info": "Separate features with a vertical bar.",
+      "default": "Bluetooth output|Portable|Built-in speakers|3-speed turntable"
+    }
+  ],
+  "presets": [{ "name": "Crosley feature pills" }]
+}
+{% endschema %}

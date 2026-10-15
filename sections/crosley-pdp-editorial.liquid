@@ -1,0 +1,167 @@
+{% comment %}
+  Responsive alternating product-story rows for the Crosley PDP.
+{% endcomment %}
+
+{% liquid
+  assign first_media = product.media[1] | default: product.featured_media
+  assign second_media = product.media[2] | default: product.featured_media
+  assign first_image = section.settings.first_image | default: first_media.preview_image
+  assign second_image = section.settings.second_image | default: second_media.preview_image
+%}
+
+<section class="crosley-pdp-editorial">
+  <div class="crosley-pdp-editorial__inner">
+    <article class="crosley-pdp-editorial__row">
+      <div class="crosley-pdp-editorial__media">
+        {% if first_image != blank %}
+          {{ first_image | image_url: width: 1400 | image_tag: widths: '480, 720, 960, 1200, 1400', sizes: '(min-width: 750px) 50vw, 100vw', loading: 'lazy', alt: section.settings.first_heading }}
+        {% endif %}
+      </div>
+      <div class="crosley-pdp-editorial__content">
+        <p>{{ section.settings.first_eyebrow | escape }}</p>
+        <h2>{{ section.settings.first_heading | escape }}</h2>
+        <div class="rte">{{ section.settings.first_text }}</div>
+      </div>
+    </article>
+
+    <article class="crosley-pdp-editorial__row crosley-pdp-editorial__row--reverse">
+      <div class="crosley-pdp-editorial__media">
+        {% if second_image != blank %}
+          {{ second_image | image_url: width: 1400 | image_tag: widths: '480, 720, 960, 1200, 1400', sizes: '(min-width: 750px) 50vw, 100vw', loading: 'lazy', alt: section.settings.second_heading }}
+        {% endif %}
+      </div>
+      <div class="crosley-pdp-editorial__content">
+        <p>{{ section.settings.second_eyebrow | escape }}</p>
+        <h2>{{ section.settings.second_heading | escape }}</h2>
+        <div class="rte">{{ section.settings.second_text }}</div>
+      </div>
+    </article>
+  </div>
+</section>
+
+{% stylesheet %}
+  .crosley-pdp-editorial {
+    width: 100%;
+    padding: 24px clamp(16px, 2.78vw, 40px) 32px;
+    background: #fff;
+  }
+
+  .crosley-pdp-editorial__inner {
+    width: min(100%, 1400px);
+    margin-inline: auto;
+  }
+
+  .crosley-pdp-editorial__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 64px;
+  }
+
+  .crosley-pdp-editorial__row + .crosley-pdp-editorial__row {
+    margin-block-start: 8px;
+  }
+
+  .crosley-pdp-editorial__row--reverse .crosley-pdp-editorial__media {
+    grid-column: 2;
+  }
+
+  .crosley-pdp-editorial__row--reverse .crosley-pdp-editorial__content {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    justify-self: end;
+  }
+
+  .crosley-pdp-editorial__media {
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #f8f8f7;
+  }
+
+  .crosley-pdp-editorial__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .crosley-pdp-editorial__content {
+    max-width: 470px;
+  }
+
+  .crosley-pdp-editorial__content > p {
+    margin: 0 0 16px;
+    color: #676767;
+    font-size: clamp(12px, 0.52vw + 7.5px, 15px);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .crosley-pdp-editorial__content h2 {
+    margin: 0 0 16px;
+    color: #171f26;
+    font-size: clamp(20px, 1.05vw + 12.5px, 28px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .crosley-pdp-editorial__content .rte {
+    max-width: 420px;
+    color: #676767;
+    font-size: clamp(14px, 0.26vw + 12px, 16px);
+    line-height: 1.7;
+  }
+
+  .crosley-pdp-editorial__content .rte > :first-child { margin-block-start: 0; }
+  .crosley-pdp-editorial__content .rte > :last-child { margin-block-end: 0; }
+
+  @media (max-width: 860px) {
+    .crosley-pdp-editorial {
+      padding: 24px 20px 32px;
+    }
+
+    .crosley-pdp-editorial__row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    .crosley-pdp-editorial__row + .crosley-pdp-editorial__row {
+      margin-block-start: 56px;
+    }
+
+    .crosley-pdp-editorial__row--reverse .crosley-pdp-editorial__media,
+    .crosley-pdp-editorial__row--reverse .crosley-pdp-editorial__content {
+      grid-column: 1;
+      grid-row: auto;
+    }
+
+    .crosley-pdp-editorial__row--reverse .crosley-pdp-editorial__content {
+      justify-self: stretch;
+    }
+
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Crosley PDP editorial",
+  "tag": "section",
+  "class": "crosley-pdp-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "image_picker", "id": "first_image", "label": "First image" },
+    { "type": "text", "id": "first_eyebrow", "label": "First eyebrow", "default": "The materials" },
+    { "type": "text", "id": "first_heading", "label": "First heading", "default": "Built to travel" },
+    { "type": "richtext", "id": "first_text", "label": "First text", "default": "<p>A two-wrapped case shell over a solid frame, with chrome corner guards and a built-in handle to play tunes on the shelf or on the road.</p>" },
+    { "type": "image_picker", "id": "second_image", "label": "Second image" },
+    { "type": "text", "id": "second_eyebrow", "label": "Second eyebrow", "default": "Keeping it up" },
+    { "type": "text", "id": "second_heading", "label": "Second heading", "default": "Little upkeep, long life" },
+    { "type": "richtext", "id": "second_text", "label": "Second text", "default": "<p>Wipe the case down with a dry cloth, keep the platter and stylus dust-free, and store it closed when you're not spinning records.</p>" }
+  ],
+  "presets": [{ "name": "Crosley PDP editorial" }]
+}
+{% endschema %}

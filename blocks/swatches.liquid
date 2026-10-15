@@ -3,7 +3,7 @@
 {%- liquid
   assign block_settings = block.settings
   assign allow_color_image_fallback = false
-  if template.suffix == 'crosley'
+  if template.suffix == 'crosley' or request.path contains '/recommendations/products'
     assign allow_color_image_fallback = true
   endif
 
