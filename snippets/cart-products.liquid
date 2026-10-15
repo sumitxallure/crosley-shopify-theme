@@ -48,7 +48,7 @@
 
 <div
   {{ block.shopify_attributes }}
-  class="cart-items__wrapper{% if context == 'drawer' and cart.empty? or force_empty %} cart-items__wrapper--drawer-empty{% endif %}"
+  class="cart-items__wrapper{% if context == 'drawer' %} cart-items__wrapper--drawer{% endif %}{% if context == 'drawer' and cart.empty? or force_empty %} cart-items__wrapper--drawer-empty{% endif %}"
   {% if context == 'drawer' and cart.empty? or force_empty %}
     data-cart-drawer-empty
   {% endif %}
@@ -87,7 +87,7 @@
       method="post"
     >
       <div
-        class="cart-items spacing-style{% if block_settings.dividers %} cart-items--dividers{% endif %}"
+        class="cart-items spacing-style{% if context == 'drawer' %} cart-items--drawer{% endif %}{% if block_settings.dividers %} cart-items--dividers{% endif %}"
         style="{% render 'spacing-style', settings: block_settings %} --cart-items-gap:{{ block_settings.gap | append: "px" }};"
       >
         <table
@@ -362,7 +362,7 @@
                     %}
 
                     <button
-                      class="button cart-items__remove"
+                      class="button cart-items__remove{% if context == 'drawer' %} cart-items__remove--text{% endif %}"
                       type="button"
                       aria-label="{{ 'accessibility.remove_item' | t: title: item.title | escape }}"
                       on:click="/onLineItemRemove/{{ item.index | plus: 1 }}"
@@ -371,8 +371,12 @@
                         hidden
                       {% endif %}
                     >
-                      {{- 'icon-delete.svg' | inline_asset_content -}}
-                      <span class="visually-hidden">{{ 'accessibility.remove' | t }}</span>
+                      {% if context == 'drawer' %}
+                        <span>{{ 'actions.remove' | t }}</span>
+                      {% else %}
+                        {{- 'icon-delete.svg' | inline_asset_content -}}
+                        <span class="visually-hidden">{{ 'accessibility.remove' | t }}</span>
+                      {% endif %}
                     </button>
                   </div>
                 </td>

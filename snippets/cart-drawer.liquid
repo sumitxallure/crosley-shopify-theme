@@ -21,18 +21,23 @@
     src="{{ 'cart-drawer.js' | asset_url }}"
     fetchpriority="low"
   ></script>
+  <script
+    type="module"
+    src="{{ 'cart-recommendations.js' | asset_url }}"
+    fetchpriority="low"
+  ></script>
 
   {% capture empty_cart_drawer_content %}
     <div
-      class="cart-drawer__content"
+      class="cart-drawer__content cart-drawer__content--empty"
       aria-label="{{ 'accessibility.cart' | t }}"
     >
-      <h2
-        class="theme-drawer__title h4"
-        id="cart-drawer-heading"
+      <h3
+        class="cart-drawer__empty-heading"
+        id="cart-drawer-empty-heading"
       >
         {{ 'content.your_cart_is_empty' | t }}
-      </h2>
+      </h3>
 
       <div class="cart-drawer__items">
         {% render 'cart-products', force_empty: true, context: 'drawer' %}
@@ -43,12 +48,13 @@
   <theme-drawer
     id="cart-drawer"
     data-skip-node-update
+    modal-always
+    no-persist
   >
     <dialog
       ref="panel"
-      class="theme-drawer__dialog color-custom-drawer"
+      class="theme-drawer__dialog cart-drawer__dialog color-custom-drawer"
       aria-labelledby="cart-drawer-heading"
-      cart-summary-sticky="true"
     >
       <cart-drawer-component
         {% if settings.auto_open_cart_drawer and template.name != 'cart' %}
@@ -63,61 +69,31 @@
           class="cart-drawer__inner{% if cart.empty? %} cart-drawer--empty{% endif %}"
           data-hydration-key="cart-drawer-inner"
         >
-          {%- if cart.empty? -%}
-            <div class="theme-drawer__header">
-              <button
-                on:click="#cart-drawer/close"
-                class="theme-drawer__close-button cart-drawer__close-button--empty"
-                type="button"
-                aria-label="{{ 'actions.close' | t }}"
-              >
-                <span class="svg-wrapper">
-                  {{- 'icon-close.svg' | inline_asset_content -}}
-                </span>
-              </button>
-            </div>
-          {%- else -%}
-            {% capture cart_badge_html %}
-              <span
-                class="theme-drawer__badge{% if cart.item_count == 0 %} visually-hidden{% endif %}"
-                aria-hidden="true"
-                {% if cart.item_count <= 99 %}
-                  data-maintain-ratio
-                {% endif %}
-              >
-                {{- cart.item_count -}}
-              </span>
-              {% if cart.item_count > 0 %}
-                <span class="visually-hidden">
-                  {{ 'accessibility.cart_count' | t }}: {{ cart.item_count }}
-                </span>
-              {% endif %}
-            {% endcapture %}
-            {% assign cart_drawer_title = 'content.cart_title' | t %}
-            {% render 'theme-drawer-header',
-              title: cart_drawer_title,
-              drawer_id: 'cart-drawer',
-              heading_id: 'cart-drawer-heading',
-              title_append: cart_badge_html
-            %}
-          {%- endif -%}
+          {% assign cart_drawer_title = 'content.cart_title' | t %}
+          {% render 'theme-drawer-header',
+            title: cart_drawer_title,
+            drawer_id: 'cart-drawer',
+            heading_id: 'cart-drawer-heading'
+          %}
 
           {% capture cart_items_children %}
             {%- if cart.empty? -%}
               {{ empty_cart_drawer_content }}
             {%- else -%}
-              <scroll-hint
+              <div
                 class="cart-drawer__content"
                 aria-label="{{ 'accessibility.cart' | t }}"
               >
-                <scroll-hint class="cart-drawer__items">
+                <div class="cart-drawer__items">
                   {% render 'cart-products', context: 'drawer' %}
-                </scroll-hint>
-
-                <div class="cart-drawer__summary">
-                  {% render 'cart-summary', section_id: 'cart-drawer-section' %}
                 </div>
-              </scroll-hint>
+
+                {% render 'cart-drawer-recommendations' %}
+              </div>
+
+              <div class="cart-drawer__summary">
+                {% render 'cart-drawer-summary' %}
+              </div>
             {%- endif -%}
           {% endcapture %}
           {% render 'cart-items-component',
@@ -136,10 +112,26 @@
 {%- endif -%}
 
 {% stylesheet %}
+  #cart-drawer {
+    --theme-drawer-width: min(440px, 90vw);
+  }
+
   cart-drawer-component {
-    --cart-drawer-padding: var(--theme-drawer-padding);
+    --cart-drawer-padding: 24px;
     --font-paragraph--line-height: 1;
     display: contents;
+    color: #171f26;
+    font-family: 'acumin-pro-condensed', Arial, sans-serif;
+  }
+
+  .cart-drawer__dialog {
+    --theme-drawer-padding: 24px;
+    border: 0;
+    box-shadow: -8px 0 32px rgb(0 0 0 / 15%);
+  }
+
+  .cart-drawer__dialog::backdrop {
+    background: rgb(23 31 38 / 50%);
   }
 
   .cart-drawer__inner {
@@ -158,107 +150,297 @@
   .cart-drawer__content {
     display: flex;
     flex-direction: column;
+    min-height: 0;
     padding: 0;
-    background-color: var(--color-background);
+    background: #fff;
     flex-grow: 1;
     overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .cart-drawer__items {
-    display: flex;
-    flex-direction: column;
-    padding-inline: var(--cart-drawer-padding);
-    overflow-y: auto;
+    padding: 24px;
   }
 
   .cart-drawer__items .cart-items__table-row {
-    padding-bottom: var(--gap-xl);
-    border-bottom: var(--style-border-width) solid rgb(var(--color-foreground-rgb) / var(--opacity-10-25));
-    margin-bottom: var(--gap-xl);
+    grid-template-columns: 80px minmax(0, 1fr);
+    grid-template-rows: repeat(4, min-content) 1fr;
+    grid-template-areas:
+      'media details'
+      'media variants'
+      'media unit_price'
+      'media quantity'
+      'error error';
+    column-gap: 20px;
+    padding-block-end: 24px;
+    border-block-end: 1px solid #ededed;
+    margin-block-end: 24px;
   }
 
-  .cart-drawer__items .cart-items__table-row:has(+ .cart-items__nested-line) {
-    border-bottom: none;
-    margin-bottom: 0;
+  .cart-drawer__items .cart-items__table-row .cart-items__details {
+    display: contents;
+    color: #676767;
   }
 
-  .cart-drawer__items .cart-items__table-row:last-child {
-    border-bottom: none;
-    padding-block-end: 0;
-    margin-block-end: 0;
+  .cart-drawer__items .cart-items__product-info {
+    grid-area: details;
   }
 
-  .cart-drawer__close-button--empty {
-    margin-inline-start: auto;
+  .cart-drawer__items .cart-items__variants-wrapper {
+    grid-area: variants;
+    color: #676767;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+
+  .cart-drawer__items .cart-items__unit-price-wrapper {
+    grid-area: unit_price;
+    margin-block-start: 6px;
+    color: #171f26;
+    font-size: 14px;
+    line-height: 1.2;
+  }
+
+  .cart-drawer__items .cart-items__price {
+    display: none;
+  }
+
+  .cart-drawer__items .cart-items__title-row {
+    display: block;
+  }
+
+  .cart-drawer__items .cart-items__title {
+    color: #171f26;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+
+  .cart-drawer__items .cart-items__media-container {
+    width: 80px;
+    height: 80px;
+    aspect-ratio: 1;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f4;
+  }
+
+  .cart-drawer__items .cart-items__media-image {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 0;
+    object-fit: contain;
+  }
+
+  .cart-drawer__items .cart-items__quantity {
+    grid-area: quantity;
+    margin-block-start: 14px;
+  }
+
+  .cart-drawer__items .cart-items__quantity-controls {
+    gap: 16px;
+  }
+
+  .cart-drawer__items .quantity-selector-wrapper {
+    gap: 0;
+  }
+
+  .cart-drawer__items .quantity-selector {
+    --quantity-selector-width: 94px;
+    width: 94px;
+    height: 38px;
+    min-height: 38px;
+    border: 1px solid #dadada;
+    border-radius: 0;
+    background: #fff;
+    flex: 0 0 94px;
+  }
+
+  .cart-drawer__items .quantity-selector :is(.quantity-minus, .quantity-plus) {
+    width: 32px;
+    height: 38px;
+    border-radius: 0;
+    color: #171f26;
+  }
+
+  .cart-drawer__items .quantity-selector input[type='number'] {
+    width: 30px;
+    height: 100%;
+    min-width: 30px;
+    border-block: 0;
+    border-inline: 1px solid #dadada;
+    border-radius: 0;
+    color: #171f26;
+    font-size: clamp(11px, calc(10.49px + 0.1307vw), 13px);
+  }
+
+  .cart-drawer__items .cart-items__remove--text {
+    width: auto;
+    min-width: 44px;
+    height: 44px;
+    padding: 0;
+    color: #171f26;
+    font-family: inherit;
+    font-size: clamp(11px, calc(10.49px + 0.1307vw), 13px);
+    font-weight: 400;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .cart-drawer__items .cart-items__error {
+    margin-block-start: 10px;
+    color: #fd2929;
+  }
+
+  .cart-drawer__items .cart-item__error {
+    padding: 0;
+    color: inherit;
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .cart-drawer__items .cart-item__error .svg-wrapper {
+    display: none;
   }
 
   .cart-drawer__summary {
-    --cart-drawer-summary-padding: var(--padding-lg);
-
-    position: sticky;
-    bottom: 0;
-    z-index: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: var(--gap-xl);
-    padding: var(--cart-drawer-summary-padding);
+    flex-shrink: 0;
+    gap: 8px;
+    padding: 14px 24px;
+    border-block-start: 1px solid #ededed;
     margin-top: auto;
-    background-color: var(--color-background);
-    /* stylelint-disable-next-line color-named */
-    mask-image: linear-gradient(to bottom, transparent, black var(--cart-drawer-summary-padding));
-
-    @media screen and (min-width: 750px) {
-      --cart-drawer-summary-padding: var(--padding-2xl);
-    }
+    background: #fff;
   }
 
-  .theme-drawer__dialog[cart-summary-sticky='false'] .cart-drawer__summary {
-    position: static;
-    mask-image: none;
+  .cart-drawer__tax-note {
+    margin: 0 0 2px;
+    color: #676767;
+    font-size: 12px;
+    line-height: 1.3;
   }
 
-  .theme-drawer__dialog[cart-summary-sticky='false'] .cart-drawer__items {
-    overflow: unset;
+  .cart-drawer__checkout,
+  .cart-drawer__view-cart {
+    display: flex;
+    width: 100%;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 0;
+    font-family: inherit;
+    font-size: clamp(11px, calc(10.49px + 0.1307vw), 13px);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    text-decoration: none;
+    text-transform: uppercase;
   }
 
-  .cart-actions summary {
-    padding-inline: 0;
-    padding-block: var(--padding-sm);
+  .cart-drawer__checkout {
+    border: 1px solid #383637;
+    background: #383637;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .cart-drawer__checkout:hover {
+    background: #2a2828;
+  }
+
+  .cart-drawer__checkout:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .cart-drawer__view-cart {
+    border: 1px solid #171f26;
+    background: #fff;
+    color: #171f26;
+  }
+
+  .cart-drawer__view-cart:hover {
+    background: #f5f5f4;
+  }
+
+  #cart-drawer .theme-drawer__header {
+    min-height: 76px;
+    padding: 16px 24px;
+    border-block-end: 1px solid #ededed;
+  }
+
+  #cart-drawer .theme-drawer__title {
+    margin: 0;
+    color: #171f26;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     line-height: 1.2;
-    min-height: var(--minimum-touch-target);
+    text-transform: uppercase;
   }
 
-  .cart-drawer__summary .cart__summary-totals:not(:has(.cart__subtotal-container:empty)) {
-    border-block-start: var(--style-border-width) solid rgb(var(--color-foreground-rgb) / var(--opacity-10-25));
-    padding-block-start: var(--padding-2xl);
+  #cart-drawer .theme-drawer__close-button {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: #676767;
   }
 
-  .cart-drawer__summary .cart-note {
-    @media screen and (min-width: 750px) {
-      margin-block-start: var(--margin-3xs);
-    }
+  #cart-drawer .theme-drawer__close-button:hover:not(:active) {
+    background: transparent;
   }
 
-  .cart-drawer--empty .cart-drawer__content {
+  #cart-drawer .theme-drawer__close-button .svg-wrapper {
+    width: 18px;
+    height: 18px;
+  }
+
+  .cart-drawer--empty .cart-drawer__content,
+  .cart-drawer__content--empty {
     text-align: center;
     align-items: center;
     justify-content: center;
     min-height: auto;
+    padding: 32px 24px;
   }
 
   .cart-drawer--empty .cart-drawer__items {
     padding-inline: 0;
   }
 
-  cart-drawer-component:not(:has(.cart-form)) .cart-drawer__content {
-    text-align: center;
-    align-items: center;
-    justify-content: center;
+  .cart-drawer__empty-heading {
+    margin: 0;
+    color: #171f26;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+    text-transform: uppercase;
   }
 
-  cart-drawer-component:not(:has(.cart-form)) .cart-drawer__items {
-    padding-inline: 0;
+  .cart-drawer--empty .cart-items__empty-button {
+    min-width: 190px;
+    min-height: 44px;
+    border-radius: 0;
+    background: #383637;
+    color: #fff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
   @media screen and (prefers-reduced-motion: no-preference) {
@@ -273,6 +455,28 @@
     .cart-drawer__header,
     .cart-drawer__content {
       background: transparent;
+    }
+  }
+
+  @media screen and (max-width: 389px) {
+    #cart-drawer {
+      --theme-drawer-width: 90vw;
+    }
+
+    .cart-drawer__items,
+    .cart-recommendations__section,
+    .cart-drawer__summary {
+      padding-inline: 20px;
+    }
+
+    .cart-drawer__items .cart-items__table-row {
+      grid-template-columns: 72px minmax(0, 1fr);
+      column-gap: 16px;
+    }
+
+    .cart-drawer__items .cart-items__media-container {
+      width: 72px;
+      height: 72px;
     }
   }
 {% endstylesheet %}

@@ -2,6 +2,7 @@ import { Component } from '@theme/component';
 import { StandardEvents } from '@shopify/events';
 import { DrawerOpenEvent } from '@theme/theme-drawer';
 import { ThemeEvents } from '@theme/events';
+import { CartItemsComponent } from '@theme/component-cart-items';
 
 /**
  * A custom element that manages cart drawer behavior within a `<theme-drawer>`.
@@ -124,6 +125,35 @@ class CartDrawerComponent extends Component {
 
   #isCartEmpty() {
     return Boolean(this.querySelector('.cart-drawer--empty'));
+  }
+
+  /**
+   * Waits for all in-flight Cart API quantity updates before submitting Shopify's native checkout form.
+   * @param {MouseEvent} event
+   */
+  async handleCheckout(event) {
+    event.preventDefault();
+
+    const clickedButton = event.currentTarget;
+    if (clickedButton instanceof HTMLButtonElement) clickedButton.disabled = true;
+
+    try {
+      await Promise.allSettled(CartItemsComponent.pendingQuantityUpdates);
+
+      const form = document.getElementById('cart-form');
+      const liveButton = this.querySelector('[data-cart-drawer-checkout]');
+      if (form instanceof HTMLFormElement && liveButton instanceof HTMLButtonElement) {
+        form.requestSubmit(liveButton);
+      }
+    } finally {
+      if (clickedButton instanceof HTMLButtonElement && document.contains(clickedButton)) {
+        clickedButton.disabled = false;
+      }
+    }
+  }
+
+  handleViewCart() {
+    this.#themeDrawer?.close();
   }
 
   #updateStickyState() {

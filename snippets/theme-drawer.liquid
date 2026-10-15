@@ -87,22 +87,23 @@
 
   // ── Squeeze coordination ──
   // Listens to all drawers. Only squeezes on wide viewports.
-  document.addEventListener('theme-drawer:open', () => {
-    if (squeezeQuery.matches) {
+  document.addEventListener('theme-drawer:open', (event) => {
+    const drawer = event.target instanceof Element ? event.target.closest('theme-drawer') : null;
+    if (squeezeQuery.matches && !drawer?.hasAttribute('modal-always')) {
       pageWrapper?.classList.add('page-wrapper--drawer-open');
     }
   });
 
   document.addEventListener('theme-drawer:close', () => {
-    const openDrawer = document.querySelector('theme-drawer[open]');
-    if (!openDrawer) {
+    const openSidebarDrawer = document.querySelector('theme-drawer[open]:not([modal-always])');
+    if (!openSidebarDrawer) {
       pageWrapper?.classList.remove('page-wrapper--drawer-open');
     }
   });
 
   squeezeQuery.addEventListener('change', () => {
-    const openDrawer = document.querySelector('theme-drawer[open]');
-    pageWrapper?.classList.toggle('page-wrapper--drawer-open', Boolean(openDrawer) && squeezeQuery.matches);
+    const openSidebarDrawer = document.querySelector('theme-drawer[open]:not([modal-always])');
+    pageWrapper?.classList.toggle('page-wrapper--drawer-open', Boolean(openSidebarDrawer) && squeezeQuery.matches);
   });
 
   // ── State persistence ──
