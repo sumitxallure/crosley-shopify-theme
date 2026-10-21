@@ -4,14 +4,17 @@
 {% enddoc %}
 
 {% liquid
+  assign product_resource = closest.product | default: product
+  assign show_zodiac_selector = product_resource.metafields.custom.enable_zodiac_selector.value
   assign option_values = 'Aries,Taurus,Gemini,Cancer,Leo,Virgo,Libra,Scorpio,Sagittarius,Capricorn,Aquarius,Pisces' | split: ','
 %}
 
-<fieldset class="crosley-pdp-secondary" data-crosley-secondary-option {{ block.shopify_attributes }}>
-  <legend>
-    {{ block.settings.label | escape }}:
-    <span data-crosley-secondary-label>{{ option_values.first }}</span>
-  </legend>
+{% if show_zodiac_selector %}
+  <fieldset class="crosley-pdp-secondary" data-crosley-secondary-option {{ block.shopify_attributes }}>
+    <legend>
+      {{ block.settings.label | escape }}:
+      <span data-crosley-secondary-label>{{ option_values.first }}</span>
+    </legend>
   <div class="crosley-pdp-secondary__options">
     {% for option_value in option_values %}
       <label class="crosley-pdp-secondary__option">
@@ -86,7 +89,8 @@
       </label>
     {% endfor %}
   </div>
-</fieldset>
+  </fieldset>
+{% endif %}
 
 {% schema %}
 {

@@ -246,20 +246,15 @@
             },
             "features": {
               "type": "crosley-pdp-features",
-              "settings": {
-                "fallback_features": "Bluetooth output|Portable|Built-in speakers|3-speed turntable"
-              },
+              "settings": {},
               "blocks": {}
             },
             "details": {
               "type": "crosley-pdp-details",
               "settings": {
                 "product_details_heading": "Product details",
-                "product_details": "<p>The Zodiac Cruiser Plus is a suitcase-style turntable built for taking your records wherever you go.</p>",
                 "specifications_heading": "Specifications",
-                "specifications": "<p>Three-speed belt-drive turntable with built-in stereo speakers, Bluetooth output, RCA line out, and headphone jack.</p>",
                 "assembly_heading": "Assembly & care",
-                "assembly_and_care": "<p>No assembly required. Keep the platter and stylus dust-free and store the unit closed when not in use.</p>",
                 "shipping_heading": "Shipping & returns",
                 "shipping_and_returns": "<p>Free standard shipping to the continental U.S. Returns are accepted within 30 days of delivery in original packaging.</p>",
                 "shipping_page": ""

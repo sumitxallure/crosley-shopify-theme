@@ -5,9 +5,6 @@
 {% liquid
   assign product_resource = closest.product
   assign features = product_resource.metafields.custom.features.value
-  if features == blank
-    assign features = block.settings.fallback_features | split: '|'
-  endif
 
   capture serialized_features
     for feature in features
@@ -17,7 +14,7 @@
       echo feature
     endfor
   endcapture
-  assign serialized_features = serialized_features | remove: '["' | remove: '"]' | replace: '\",\"', '|' | replace: '","', '|' | replace: ',', '|'
+  assign serialized_features = serialized_features | remove: '["' | remove: '"]' | replace: '\",\"', '|' | replace: '","', '|' | replace: ';', '|' | replace: ',', '|'
   assign features = serialized_features | split: '|'
 %}
 
@@ -36,15 +33,7 @@
 {
   "name": "Crosley feature pills",
   "tag": null,
-  "settings": [
-    {
-      "type": "text",
-      "id": "fallback_features",
-      "label": "Fallback features",
-      "info": "Separate features with a vertical bar.",
-      "default": "Bluetooth output|Portable|Built-in speakers|3-speed turntable"
-    }
-  ],
+  "settings": [],
   "presets": [{ "name": "Crosley feature pills" }]
 }
 {% endschema %}

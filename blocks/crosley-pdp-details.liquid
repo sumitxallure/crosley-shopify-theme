@@ -5,13 +5,24 @@
 
 {% liquid
   assign product_resource = closest.product
-  assign details_content = product_resource.metafields.custom.product_details.value | default: block.settings.product_details
-  if details_content == blank
+  assign details_metafield = product_resource.metafields.custom.product_details
+  assign specifications_metafield = product_resource.metafields.custom.specifications
+  assign care_metafield = product_resource.metafields.custom.assembly_and_care
+
+  if details_metafield != blank
+    assign details_content = details_metafield | metafield_tag
+  else
     assign details_content = product_resource.description
   endif
 
-  assign specifications_content = product_resource.metafields.custom.specifications.value | default: block.settings.specifications
-  assign care_content = product_resource.metafields.custom.assembly_and_care.value | default: block.settings.assembly_and_care
+  if specifications_metafield != blank
+    assign specifications_content = specifications_metafield | metafield_tag
+  endif
+
+  if care_metafield != blank
+    assign care_content = care_metafield | metafield_tag
+  endif
+
   assign shipping_page = block.settings.shipping_page
   assign shipping_content = product_resource.metafields.custom.shipping_and_returns.value | default: block.settings.shipping_and_returns | default: shipping_page.content
 
@@ -39,7 +50,7 @@
     </details>
   {% endif %}
 
-  {% if specifications_content != blank or product_resource.type != blank or product_resource.vendor != blank %}
+  {% if specifications_content != blank %}
     <details class="crosley-pdp-details__item">
       <summary>
         <span>{{ block.settings.specifications_heading | escape }}</span>
@@ -48,18 +59,7 @@
         </svg>
       </summary>
       <div class="crosley-pdp-details__content rte">
-        {% if specifications_content != blank %}
-          {{ specifications_content }}
-        {% else %}
-          <dl class="crosley-pdp-details__spec-list">
-            {% if product_resource.type != blank %}
-              <div><dt>Product type</dt><dd>{{ product_resource.type | escape }}</dd></div>
-            {% endif %}
-            {% if product_resource.vendor != blank %}
-              <div><dt>Brand</dt><dd>{{ product_resource.vendor | escape }}</dd></div>
-            {% endif %}
-          </dl>
-        {% endif %}
+        {{ specifications_content }}
       </div>
     </details>
   {% endif %}
@@ -116,11 +116,8 @@
   "tag": null,
   "settings": [
     { "type": "text", "id": "product_details_heading", "label": "Product details heading", "default": "Product details" },
-    { "type": "richtext", "id": "product_details", "label": "Product details fallback" },
     { "type": "text", "id": "specifications_heading", "label": "Specifications heading", "default": "Specifications" },
-    { "type": "richtext", "id": "specifications", "label": "Specifications fallback" },
     { "type": "text", "id": "assembly_heading", "label": "Assembly heading", "default": "Assembly & care" },
-    { "type": "richtext", "id": "assembly_and_care", "label": "Assembly and care fallback" },
     { "type": "text", "id": "shipping_heading", "label": "Shipping heading", "default": "Shipping & returns" },
     { "type": "richtext", "id": "shipping_and_returns", "label": "Shipping and returns fallback" },
     { "type": "page", "id": "shipping_page", "label": "Shipping and returns page" },
