@@ -9,6 +9,7 @@
   @param {string} block_shopify_attributes - Block shopify attributes
   @param {block} block - The current block object
   @param {section} section - The current section object
+  @param {boolean} [show_video_media] - Whether videos should be included in the gallery
 
   @example
   {% render 'product-media-gallery-content',
@@ -27,7 +28,13 @@
 {%- liquid
   assign selected_product = closest.product
   assign selected_variant_media = selected_product.selected_or_first_available_variant.featured_media
-  assign first_3d_model = selected_product.media | where: 'media_type', 'model' | first
+  assign gallery_media = selected_product.media
+
+  if show_video_media == false
+    assign gallery_media = gallery_media | reject: 'media_type', 'video' | reject: 'media_type', 'external_video'
+  endif
+
+  assign first_3d_model = gallery_media | where: 'media_type', 'model' | first
 
   if block_settings.hide_variants
     assign variant_images = selected_product.images | where: 'attached_to_variant?', true | map: 'src'
@@ -63,13 +70,13 @@
 
   assign slideshow_controls_style = block_settings.slideshow_controls_style
   # Use a counter instead of dots when there are many images to avoid cropping/overflow.
-  if slideshow_controls_style == 'dots' and selected_product.media.size > 15
+  if slideshow_controls_style == 'dots' and gallery_media.size > 15
     assign slideshow_controls_style = 'counter'
   endif
 
   assign render_slideshow_arrows = false
 
-  if selected_product.media.size <= 1
+  if gallery_media.size <= 1
     assign slideshow_class = 'product-media-gallery__slideshow--single-media slideshow--single-media'
   else
     assign slideshow_class = ''
@@ -109,20 +116,20 @@
 
   assign sorted_media = '' | split: ','
   if selected_variant_media
-    assign sorted_media = sorted_media | concat: selected_product.media | where: 'id', selected_variant_media.id
+    assign sorted_media = sorted_media | concat: gallery_media | where: 'id', selected_variant_media.id
 
-    for media in selected_product.media
+    for media in gallery_media
       if block_settings.hide_variants and variant_images contains media.src and sorted_media.size > 0
         continue
       endif
 
       if media.id != selected_variant_media.id
-        assign found_media = selected_product.media | where: 'id', media.id
+        assign found_media = gallery_media | where: 'id', media.id
         assign sorted_media = sorted_media | concat: found_media
       endif
     endfor
   else
-    assign sorted_media = selected_product.media
+    assign sorted_media = gallery_media
   endif
   assign has_image_drop = sorted_media | has: 'media_type', 'image'
 
