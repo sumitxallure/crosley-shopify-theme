@@ -17,12 +17,14 @@ export default class ResultsList extends PaginatedList {
     super.connectedCallback();
 
     mediaQueryLarge.addEventListener('change', this.#handleMediaQueryChange);
+    this.#restoreLayoutPreference();
     this.#observeGrid();
     this.setAttribute('initialized', '');
   }
 
   updatedCallback() {
     super.updatedCallback();
+    this.#restoreLayoutPreference();
     this.#observeGrid();
   }
 
@@ -98,6 +100,19 @@ export default class ResultsList extends PaginatedList {
 
     grid.setAttribute('product-grid-view', value);
     this.#syncProductCardImageSizes();
+  }
+
+  #restoreLayoutPreference() {
+    const viewport = mediaQueryLarge.matches ? 'desktop' : 'mobile';
+    const inputName = mediaQueryLarge.matches ? 'grid' : 'grid-mobile';
+    const storedLayout = sessionStorage.getItem(`product-grid-view-${viewport}`) || 'default';
+
+    this.#setLayout(storedLayout);
+
+    const options = /** @type {NodeListOf<HTMLInputElement>} */ (
+      this.querySelectorAll(`input[type="radio"][name="${inputName}"]`)
+    );
+    for (const option of options) option.checked = option.value === storedLayout;
   }
 
   #observeGrid() {

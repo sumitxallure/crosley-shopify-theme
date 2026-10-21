@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const productPath = '/products/zodiac-cruiser-plus-record-player?view=crosley&variant=67783735804139';
+const productPath = '/products/zodiac-cruiser-plus-record-player?variant=67783735804139';
 const responsiveViewports = [
   { width: 390, height: 844 },
   { width: 430, height: 932 },
@@ -109,6 +109,14 @@ test.describe('mini cart', () => {
         expect(box.x).toBeGreaterThanOrEqual(dialogBox.x - 1);
         expect(box.x + box.width).toBeLessThanOrEqual(viewport.width + 1);
       }
+
+      const closeIcon = page.locator('#cart-drawer .theme-drawer__close-button svg');
+      const closeIconBox = await closeIcon.boundingBox();
+      await expect(closeIcon).toHaveAttribute('viewBox', '0 0 18 18');
+      await expect(closeIcon.locator('path')).toHaveCount(2);
+      expect(closeIconBox.width).toBeCloseTo(13, 0);
+      expect(closeIconBox.height).toBeCloseTo(13, 0);
+      await expect(closeIcon.locator('path').first()).toHaveAttribute('stroke-width', '1.3');
 
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(viewport.width);
       await page.locator('#cart-drawer .theme-drawer__close-button').click();

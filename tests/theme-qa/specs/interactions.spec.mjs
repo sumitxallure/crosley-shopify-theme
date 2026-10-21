@@ -57,7 +57,7 @@ test.describe('critical interaction states', () => {
   test('PDP quantity stays synchronized between the main form and sticky bar', async ({ page }, testInfo) => {
     test.skip(!viewportGroups.mobile.has(testInfo.project.name), 'Mobile-only behavior.');
 
-    await page.goto('/products/zodiac-cruiser-plus-record-player?view=crosley&variant=67783735804139', {
+    await page.goto('/products/zodiac-cruiser-plus-record-player?variant=67783735804139', {
       waitUntil: 'domcontentloaded',
     });
 

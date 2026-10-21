@@ -1,50 +1,28 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */{
+{
   "sections": {
+    "breadcrumbs": {
+      "type": "crosley-pdp-breadcrumbs",
+      "settings": {}
+    },
     "main": {
       "type": "product-information",
       "blocks": {
-        "disclosures_g9mWze": {
-          "type": "disclosures",
-          "name": "t:names.disclosures",
-          "settings": {
-            "heading": "Disclosures",
-            "heading_preset": "h5",
-            "open_by_default": false,
-            "icon": "caret",
-            "disclosure_heading_preset": "h6",
-            "text_color": "",
-            "dividers": true,
-            "divider_color": "{{ settings.color_palette.color2 }}",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
         "media-gallery": {
           "type": "_product-media-gallery",
           "static": true,
           "settings": {
             "media_presentation": "grid",
-            "media_columns": "two",
-            "image_gap": 4,
+            "media_columns": "one",
+            "image_gap": 16,
             "large_first_image": false,
-            "slideshow_controls_style": "counter",
+            "desktop_grid_thumbnails": true,
+            "slideshow_controls_style": "thumbnails",
             "slideshow_mobile_controls_style": "dots",
-            "thumbnail_position": "right",
-            "thumbnail_width": 44,
+            "thumbnail_position": "left",
+            "thumbnail_width": 60,
             "thumbnail_radius": 0,
-            "aspect_ratio": "adapt",
-            "constrain_to_viewport": true,
+            "aspect_ratio": "square",
+            "constrain_to_viewport": false,
             "media_fit": "contain",
             "media_radius": 0,
             "extend_media": false,
@@ -68,7 +46,7 @@
             "custom_width_mobile": 100,
             "height": "fit",
             "details_position": "flex-start",
-            "gap": 28,
+            "gap": 20,
             "sticky_details_desktop": true,
             "background_media": "none",
             "background_color": "",
@@ -79,209 +57,29 @@
             "border_opacity": 100,
             "border_color": "",
             "border_radius": 0,
-            "padding-block-start": 24,
-            "padding-block-end": 24,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
           "blocks": {
-            "group_icgrde": {
-              "type": "group",
-              "name": "t:names.header",
+            "badge": {
+              "type": "crosley-pdp-badge",
               "settings": {
-                "content_direction": "column",
-                "vertical_on_mobile": true,
-                "horizontal_alignment": "flex-start",
-                "vertical_alignment": "center",
-                "align_baseline": false,
-                "horizontal_alignment_flex_direction_column": "flex-start",
-                "vertical_alignment_flex_direction_column": "center",
-                "gap": 12,
-                "width": "fill",
-                "custom_width": 100,
-                "width_mobile": "fill",
-                "custom_width_mobile": 100,
-                "height": "fit",
-                "custom_height": 100,
-                "background_media": "none",
-                "background_color": "",
-                "video_position": "cover",
-                "background_image_position": "cover",
-                "toggle_overlay": false,
-                "overlay_color": "#00000026",
-                "overlay_style": "solid",
-                "gradient_direction": "to top",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_color": "",
-                "border_radius": 0,
-                "open_in_new_tab": false,
-                "placeholder": "",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {
-                "text_xrnftG": {
-                  "type": "text",
-                  "name": "t:names.product_title",
-                  "settings": {
-                    "text": "<h1>{{ closest.product.title }}</h1>",
-                    "width": "100%",
-                    "max_width": "normal",
-                    "alignment": "left",
-                    "type_preset": "h3",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "text_color": "",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                },
-                "price_tVjtKg": {
-                  "type": "price",
-                  "settings": {
-                    "show_sale_price_first": true,
-                    "show_installments": false,
-                    "show_tax_info": false,
-                    "type_preset": "paragraph",
-                    "width": "100%",
-                    "alignment": "left",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "text_color": "",
-                    "padding-block-start": 4,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "text_xrnftG",
-                "price_tVjtKg"
-              ]
-            },
-            "divider_VJhene": {
-              "type": "_divider",
-              "name": "t:names.divider",
-              "settings": {
-                "thickness": 1,
-                "corner_radius": "square",
-                "divider_color": "{{ settings.color_palette.color2 }}",
-                "width_percent": 100,
-                "padding-block-start": 0,
-                "padding-block-end": 0
+                "text": "New",
+                "product_tag": "New"
               },
               "blocks": {}
             },
-            "variant_picker_R3rGDr": {
-              "type": "variant-picker",
-              "settings": {
-                "variant_style": "buttons",
-                "show_swatches": false,
-                "option_label_text_color": "",
-                "variant_style_class": "default",
-                "custom_variant_background": "{{ settings.color_palette.background }}",
-                "custom_variant_text": "{{ settings.color_palette.foreground }}",
-                "custom_variant_border": "{{ settings.color_palette.foreground }}",
-                "selected_variant_style_class": "default",
-                "custom_selected_variant_background": "{{ settings.color_palette.foreground }}",
-                "custom_selected_variant_text": "{{ settings.color_palette.background }}",
-                "custom_selected_variant_border": "{{ settings.color_palette.foreground }}",
-                "alignment": "left",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "buy_buttons_eYQEYi": {
-              "type": "buy-buttons",
-              "settings": {
-                "stacking": true,
-                "text_color": "",
-                "show_pickup_availability": false,
-                "gift_card_form": true,
-                "recipient_button_style": "default",
-                "recipient_button_background": "{{ settings.color_palette.background }}",
-                "recipient_button_text": "{{ settings.color_palette.foreground }}",
-                "recipient_button_border": "{{ settings.color_palette.foreground }}",
-                "selected_recipient_button_style": "default",
-                "selected_recipient_button_background": "{{ settings.color_palette.foreground }}",
-                "selected_recipient_button_text": "{{ settings.color_palette.background }}",
-                "selected_recipient_button_border": "{{ settings.color_palette.foreground }}",
-                "input_style": "default",
-                "input_background_color": "{{ settings.color_palette.background }}",
-                "input_text_color": "{{ settings.color_palette.foreground }}",
-                "input_border_color": "{{ settings.color_palette.foreground }}",
-                "border_width": 1,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {
-                "quantity": {
-                  "type": "quantity",
-                  "static": true,
-                  "settings": {
-                    "input_style": "default",
-                    "input_background_color": "{{ settings.color_palette.background }}",
-                    "input_text_color": "{{ settings.color_palette.foreground }}",
-                    "input_border_color": "{{ settings.color_palette.foreground }}",
-                    "border_width": 1,
-                    "border_radius": 0
-                  },
-                  "blocks": {}
-                },
-                "add-to-cart": {
-                  "type": "add-to-cart",
-                  "static": true,
-                  "settings": {
-                    "style_class": "button",
-                    "custom_button_background": "{{ settings.color_palette.foreground }}",
-                    "custom_button_text": "{{ settings.color_palette.background }}",
-                    "custom_button_border": "{{ settings.color_palette.background }}"
-                  },
-                  "blocks": {}
-                },
-                "accelerated-checkout": {
-                  "type": "accelerated-checkout",
-                  "static": true,
-                  "settings": {},
-                  "blocks": {}
-                }
-              },
-              "block_order": []
-            },
-            "text_aEtTtq": {
+            "title": {
               "type": "text",
-              "name": "t:names.product_description",
+              "name": "Product title",
               "settings": {
-                "text": "{{ closest.product.description }}",
+                "text": "<h1>{{ closest.product.title }}</h1>",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
-                "type_preset": "rte",
+                "type_preset": "h2",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
@@ -298,44 +96,252 @@
                 "padding-inline-end": 0
               },
               "blocks": {}
+            },
+            "sku": {
+              "type": "sku",
+              "name": "Model number",
+              "settings": {
+                "prefix": "Model",
+                "type_preset": "paragraph",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "font": "var(--font-body--family)",
+                "font_size": "0.875rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "text_color": "",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "price": {
+              "type": "price",
+              "settings": {
+                "show_sale_price_first": true,
+                "show_installments": true,
+                "show_tax_info": false,
+                "type_preset": "h5",
+                "width": "100%",
+                "alignment": "left",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "text_color": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "payment_summary": {
+              "type": "crosley-pdp-payment-summary",
+              "settings": {
+                "installment_count": 4,
+                "provider": "Sezzle"
+              },
+              "blocks": {}
+            },
+            "review_summary": {
+              "type": "crosley-pdp-review-summary",
+              "name": "Review summary",
+              "settings": {
+                "empty_label": "No reviews yet — be the first"
+              },
+              "blocks": {}
+            },
+            "variant_picker": {
+              "type": "variant-picker",
+              "settings": {
+                "variant_style": "buttons",
+                "show_swatches": true,
+                "option_label_text_color": "#171f26",
+                "variant_style_class": "default",
+                "custom_variant_background": "#ffffff",
+                "custom_variant_text": "#171f26",
+                "custom_variant_border": "#171f26",
+                "selected_variant_style_class": "custom",
+                "custom_selected_variant_background": "#171f26",
+                "custom_selected_variant_text": "#ffffff",
+                "custom_selected_variant_border": "#171f26",
+                "alignment": "left",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "secondary_option": {
+              "type": "crosley-pdp-secondary-option",
+              "settings": {
+                "label": "Select secondary color"
+              },
+              "blocks": {}
+            },
+            "buy_buttons": {
+              "type": "buy-buttons",
+              "settings": {
+                "stacking": false,
+                "text_color": "",
+                "show_pickup_availability": false,
+                "gift_card_form": true,
+                "recipient_button_style": "default",
+                "recipient_button_background": "#ffffff",
+                "recipient_button_text": "#171f26",
+                "recipient_button_border": "#171f26",
+                "selected_recipient_button_style": "default",
+                "selected_recipient_button_background": "#171f26",
+                "selected_recipient_button_text": "#ffffff",
+                "selected_recipient_button_border": "#171f26",
+                "input_style": "default",
+                "input_background_color": "#ffffff",
+                "input_text_color": "#171f26",
+                "input_border_color": "#171f26",
+                "border_width": 1,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "quantity": {
+                  "type": "quantity",
+                  "static": true,
+                  "settings": {
+                    "input_style": "custom",
+                    "input_background_color": "#ffffff",
+                    "input_text_color": "#171f26",
+                    "input_border_color": "#dadada",
+                    "border_width": 1,
+                    "border_radius": 0
+                  },
+                  "blocks": {}
+                },
+                "add-to-cart": {
+                  "type": "add-to-cart",
+                  "static": true,
+                  "settings": {
+                    "style_class": "button-custom",
+                    "custom_button_background": "#383637",
+                    "custom_button_text": "#ffffff",
+                    "custom_button_border": "#383637"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": []
+            },
+            "features": {
+              "type": "crosley-pdp-features",
+              "settings": {
+                "fallback_features": "Bluetooth output|Portable|Built-in speakers|3-speed turntable"
+              },
+              "blocks": {}
+            },
+            "details": {
+              "type": "crosley-pdp-details",
+              "settings": {
+                "product_details_heading": "Product details",
+                "product_details": "<p>The Zodiac Cruiser Plus is a suitcase-style turntable built for taking your records wherever you go.</p>",
+                "specifications_heading": "Specifications",
+                "specifications": "<p>Three-speed belt-drive turntable with built-in stereo speakers, Bluetooth output, RCA line out, and headphone jack.</p>",
+                "assembly_heading": "Assembly & care",
+                "assembly_and_care": "<p>No assembly required. Keep the platter and stylus dust-free and store the unit closed when not in use.</p>",
+                "shipping_heading": "Shipping & returns",
+                "shipping_and_returns": "<p>Free standard shipping to the continental U.S. Returns are accepted within 30 days of delivery in original packaging.</p>",
+                "shipping_page": ""
+              },
+              "blocks": {}
             }
           },
-          "block_order": [
-            "group_icgrde",
-            "divider_VJhene",
-            "variant_picker_R3rGDr",
-            "buy_buttons_eYQEYi",
-            "text_aEtTtq"
-          ]
+          "block_order": ["badge", "title", "sku", "price", "payment_summary", "review_summary", "variant_picker", "secondary_option", "buy_buttons", "features", "details"]
         }
       },
-      "block_order": [
-        "disclosures_g9mWze"
-      ],
+      "block_order": [],
       "settings": {
-        "content_width": "content-center-aligned",
+        "layout_style": "crosley-pdp",
+        "content_width": "content-full-width",
         "desktop_media_position": "left",
         "equal_columns": false,
         "limit_details_width": false,
         "gap": 48,
         "enable_sticky_add_to_cart": true,
-        "background_color": "{{ settings.color_palette.background }}",
+        "background_color": "#ffffff",
         "padding-block-start": 0,
         "padding-block-end": 0
       }
     },
-    "product_recommendations_qggXJq": {
+    "video": {
+      "type": "crosley-pdp-video",
+      "settings": {
+        "video_url": "https://www.youtube.com/watch?v=ABFxBGHPJZc",
+        "cover_image": "shopify://shop_images/CP8005FLIB-TE-E1.jpg",
+        "eyebrow": "See it in action",
+        "heading": "The Zodiac Cruiser Plus"
+      }
+    },
+    "feature_marquee": {
+      "type": "crosley-pdp-marquee",
+      "settings": {
+        "fallback_features": "Bluetooth output|Built-in speakers|3-speed turntable"
+      }
+    },
+    "editorial": {
+      "type": "crosley-pdp-editorial",
+      "settings": {
+        "first_eyebrow": "The materials",
+        "first_heading": "Built to travel",
+        "first_text": "<p>A two-wrapped case shell over a solid frame, with chrome corner guards and a built-in handle to play tunes on the shelf or on the road.</p>",
+        "second_eyebrow": "Keeping it up",
+        "second_heading": "Little upkeep, long life",
+        "second_text": "<p>Wipe the case down with a dry cloth, keep the platter and stylus dust-free, and store it closed when you're not spinning records.</p>"
+      }
+    },
+    "collections": {
+      "type": "crosley-pdp-collections",
+      "blocks": {
+        "speakers": { "type": "collection", "settings": { "collection": "speakers", "reference_asset": "crosley-pdp-collection-speakers.webp", "label": "Speakers" } },
+        "radios": { "type": "collection", "settings": { "collection": "radios-phones", "reference_asset": "crosley-pdp-collection-radios.webp", "label": "Radios" } },
+        "cd_players": { "type": "collection", "settings": { "reference_asset": "crosley-pdp-collection-cd.webp", "label": "CD Players" } }
+      },
+      "block_order": ["speakers", "radios", "cd_players"],
+      "settings": { "heading": "Explore our collections" }
+    },
+    "reviews": {
+      "type": "crosley-pdp-reviews",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "heading": "Reviews",
+        "empty_text": "Be the first to review this product",
+        "review_label": "Review this Product"
+      }
+    },
+    "recommendations": {
       "type": "product-recommendations",
       "blocks": {
-        "text_cbcgyb": {
+        "heading": {
           "type": "text",
-          "name": "t:names.header",
+          "name": "Heading",
           "settings": {
-            "text": "<h3>You may also like </h3>",
-            "width": "fit-content",
+            "text": "<h2>You may also like</h2>",
+            "width": "100%",
             "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h4",
+            "alignment": "center",
+            "type_preset": "h3",
             "font": "var(--font-body--family)",
             "font_size": "1rem",
             "line_height": "normal",
@@ -355,7 +361,7 @@
         },
         "static-product-card": {
           "type": "_product-card",
-          "name": "t:names.product_card",
+          "name": "Product card",
           "static": true,
           "settings": {
             "product_card_gap": 8,
@@ -366,16 +372,15 @@
             "border_color": "",
             "border_radius": 0,
             "padding-block-start": 0,
-            "padding-block-end": 8,
+            "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
           "blocks": {
-            "product_card_gallery_DNizbJ": {
+            "gallery": {
               "type": "_product-card-gallery",
-              "name": "t:names.product_card_media",
               "settings": {
-                "image_ratio": "adapt",
+                "image_ratio": "square",
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
@@ -388,14 +393,25 @@
               },
               "blocks": {}
             },
-            "product_title_M7MJkb": {
+            "swatches": {
+              "type": "swatches",
+              "settings": {
+                "product_swatches_alignment": "flex-start",
+                "product_swatches_alignment_mobile": "flex-start",
+                "product_swatches_padding_top": 4,
+                "product_swatches_padding_bottom": 0,
+                "product_swatches_padding_left": 0,
+                "product_swatches_padding_right": 0
+              },
+              "blocks": {}
+            },
+            "title": {
               "type": "product-title",
-              "name": "t:names.product_title",
               "settings": {
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
-                "type_preset": "rte",
+                "type_preset": "h6",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
@@ -406,20 +422,20 @@
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
-                "padding-block-start": 4,
+                "padding-block-start": 2,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
               "blocks": {}
             },
-            "price_gLWgA6": {
+            "price": {
               "type": "price",
               "settings": {
                 "show_sale_price_first": true,
                 "show_installments": false,
                 "show_tax_info": false,
-                "type_preset": "h6",
+                "type_preset": "paragraph",
                 "width": "100%",
                 "alignment": "left",
                 "font": "var(--font-body--family)",
@@ -436,39 +452,53 @@
               "blocks": {}
             }
           },
-          "block_order": [
-            "product_card_gallery_DNizbJ",
-            "product_title_M7MJkb",
-            "price_gLWgA6"
-          ]
+          "block_order": ["gallery", "swatches", "title", "price"]
         }
       },
-      "block_order": [
-        "text_cbcgyb"
-      ],
-      "name": "t:names.product_recommendations",
+      "block_order": ["heading"],
       "settings": {
+        "style_variant": "crosley-pdp",
         "product": "{{ closest.product }}",
         "recommendation_type": "related",
         "layout_type": "grid",
-        "carousel_on_mobile": false,
+        "carousel_on_mobile": true,
         "max_products": 4,
         "columns": 4,
         "mobile_columns": "2",
-        "columns_gap": 12,
-        "rows_gap": 24,
+        "columns_gap": 16,
+        "rows_gap": 28,
         "icons_style": "arrow",
         "icons_shape": "none",
         "section_width": "page-width",
-        "gap": 28,
-        "background_color": "{{ settings.color_palette.background }}",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "gap": 40,
+        "background_color": "#ffffff",
+        "padding-block-start": 72,
+        "padding-block-end": 64
       }
+    },
+    "social": {
+      "type": "crosley-social-gallery",
+      "blocks": {
+        "post_1": { "type": "post", "settings": { "label": "View Crosley social post" } },
+        "post_2": { "type": "post", "settings": { "label": "View Crosley social post" } },
+        "post_3": { "type": "post", "settings": { "label": "View Crosley social post" } },
+        "post_4": { "type": "post", "settings": { "label": "View Crosley social post" } },
+        "post_5": { "type": "post", "settings": { "label": "View Crosley social post" } }
+      },
+      "block_order": ["post_1", "post_2", "post_3", "post_4", "post_5"],
+      "settings": { "eyebrow": "Join us", "heading": "@CrosleyRadio" }
+    },
+    "benefits": {
+      "type": "crosley-benefits",
+      "blocks": {
+        "delivery": { "type": "benefit", "settings": { "icon": "delivery", "heading": "Free delivery", "text": "Every order ships for free to the continental U.S." } },
+        "payments": { "type": "benefit", "settings": { "icon": "payments", "heading": "Buy now pay later", "text": "Split your order into four payments with Sezzle." } },
+        "support": { "type": "benefit", "settings": { "icon": "support", "heading": "Technical support", "text": "Have a problem? We are here to help." } },
+        "warranty": { "type": "benefit", "settings": { "icon": "warranty", "heading": "One-year warranty", "text": "Our products are covered for an entire year." } }
+      },
+      "block_order": ["delivery", "payments", "support", "warranty"],
+      "settings": {}
     }
   },
-  "order": [
-    "main",
-    "product_recommendations_qggXJq"
-  ]
+  "order": ["breadcrumbs", "main", "video", "feature_marquee", "editorial", "reviews", "recommendations", "collections", "social", "benefits"]
 }

@@ -98,9 +98,9 @@
 
   .crosley-pdp-video__play {
     position: relative;
-    width: 66px;
-    height: 66px;
-    margin-block-start: 28px;
+    width: 68px;
+    height: 68px;
+    margin-block-start: 32px;
     padding: 0;
     border: 0;
     border-radius: 50%;
@@ -124,15 +124,16 @@
   .crosley-pdp-video h2 {
     margin: 0;
     color: inherit;
-    font-size: clamp(24px, 2.5vw, 36px);
+    font-size: clamp(24px, calc(21.96px + 0.5229vw), 32px);
     line-height: 1.1;
+    letter-spacing: 0.02em;
     text-transform: uppercase;
   }
 
   .crosley-pdp-video__eyebrow {
-    margin: 0 0 16px;
+    margin: 0 0 18px;
     color: rgb(255 255 255 / 85%);
-    font-size: 13px;
+    font-size: clamp(11px, calc(10.49px + 0.1307vw), 13px);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;

@@ -24,7 +24,7 @@
   elsif section.settings.enable_transparent_header_product and template.name == 'product'
     assign transparent = 'always'
     assign transparent_text_color_setting = section.settings.text_color_transparent_product
-  elsif template.name == 'collection' and template.suffix == 'crosley'
+  elsif template.name == 'collection'
     assign transparent = 'always'
     assign transparent_text_color_setting = section.settings.text_color_transparent_home
   elsif section.settings.enable_transparent_header_collection and template.name == 'collection'
@@ -1234,6 +1234,55 @@
   .dropdown-localization:not(dropdown-localization-component) .language-selector {
     font-family: var(--menu-localization-font);
     font-size: var(--menu-localization-font-size);
+  }
+
+  @media screen and (max-width: 749px) {
+    body:has(.crosley-main-collection) #header-component .header__row--top .header__columns {
+      height: 80px !important;
+      min-height: 80px !important;
+      padding-block: 18px !important;
+      padding-inline: 28px !important;
+    }
+
+    body:has(.crosley-main-collection) #header-component .header-logo__image {
+      width: min(188px, calc(100vw - 188px)) !important;
+      height: auto !important;
+      transform: translateX(clamp(1px, calc(21.62vw - 80.08px), 9px));
+    }
+
+    body:has(.crosley-main-collection) #header-component .header-logo {
+      height: 44px;
+    }
+
+    body:has(.crosley-main-collection) #header-component .header-logo__brand-fallback--collection {
+      width: min(204px, calc(100vw - 172px)) !important;
+      height: 20px !important;
+      object-fit: fill;
+      transform: translate(4px, -1px);
+    }
+
+    body:has(.crosley-main-collection) #header-component .header__column--right {
+      transform: translate(12px, -1px);
+    }
+
+    body:has(.crosley-main-collection)
+      #header-component
+      .menu-drawer-container--content-height
+      .header-drawer-icon--open {
+      margin-left: 1px;
+      background-size: 20px 1.6px;
+    }
+
+    body:has(.crosley-main-collection)
+      #header-component
+      .menu-drawer-container--content-height
+      .header-drawer-icon--open::before,
+    body:has(.crosley-main-collection)
+      #header-component
+      .menu-drawer-container--content-height
+      .header-drawer-icon--open::after {
+      height: 1.6px;
+    }
   }
 {% endstylesheet %}
 

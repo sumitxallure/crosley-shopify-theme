@@ -73,7 +73,8 @@
           {% render 'theme-drawer-header',
             title: cart_drawer_title,
             drawer_id: 'cart-drawer',
-            heading_id: 'cart-drawer-heading'
+            heading_id: 'cart-drawer-heading',
+            close_icon_style: 'crosley-cart'
           %}
 
           {% capture cart_items_children %}
@@ -390,6 +391,7 @@
   #cart-drawer .theme-drawer__close-button {
     width: 44px;
     height: 44px;
+    margin-inline-end: -11.5px;
     padding: 0;
     border: 0;
     border-radius: 0;
@@ -403,8 +405,14 @@
   }
 
   #cart-drawer .theme-drawer__close-button .svg-wrapper {
-    width: 18px;
-    height: 18px;
+    width: 13px;
+    height: 13px;
+  }
+
+  #cart-drawer .theme-drawer__close-button svg {
+    display: block;
+    width: 13px;
+    height: 13px;
   }
 
   .cart-drawer--empty .cart-drawer__content,

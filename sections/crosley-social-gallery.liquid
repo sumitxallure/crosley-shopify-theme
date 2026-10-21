@@ -43,10 +43,10 @@
 
   .crosley-social-gallery__grid {
     display: grid;
-    width: min(calc(100% - 80px), 1400px);
+    width: auto;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 24px;
-    margin-inline: auto;
+    margin-inline: clamp(40px, 7.03vw, 160px);
   }
 
   .crosley-social-gallery__grid a {
@@ -72,6 +72,7 @@
       display: flex;
       width: 100%;
       gap: 12px;
+      margin-inline: 0;
       padding-inline-start: 16px;
       overflow-x: auto;
       scroll-snap-type: x mandatory;

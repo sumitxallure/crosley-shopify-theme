@@ -45,7 +45,7 @@
 
   .crosley-footer__inner {
     display: grid;
-    width: min(100%, 1400px);
+    width: 100%;
     grid-template-columns: minmax(240px, 1.5fr) repeat(4, minmax(120px, 0.75fr));
     gap: 48px;
     margin-inline: auto;
@@ -135,16 +135,6 @@
     display: flex;
     flex-direction: column;
     gap: 14px;
-  }
-
-  @media (max-width: 989px) {
-    .crosley-footer__inner {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .crosley-footer__newsletter {
-      grid-column: 1 / -1;
-    }
   }
 
   @media (max-width: 860px) {

@@ -326,8 +326,8 @@
       "block_order": [],
       "settings": {
         "heading": "Reviews",
-        "empty_text": "Be the first to review this product.",
-        "review_label": "Review this product"
+        "empty_text": "Be the first to review this product",
+        "review_label": "Review this Product"
       }
     },
     "recommendations": {

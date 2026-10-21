@@ -15,6 +15,7 @@
         "cd_campaign": {
           "type": "slide",
           "settings": {
+            "image": "shopify://shop_images/crosley-hero-cd.jpg",
             "fallback_image": "cd",
             "eyebrow": "The CD comeback, done right",
             "heading": "Find your next CD player",
@@ -28,6 +29,7 @@
         "c65_campaign": {
           "type": "slide",
           "settings": {
+            "image": "shopify://shop_images/crosley-home-hero.jpg",
             "fallback_image": "c65",
             "eyebrow": "Designed to be seen. Built to be heard",
             "heading": "The C65",
@@ -50,6 +52,7 @@
     "crosley_contest": {
       "type": "crosley-split-promo",
       "settings": {
+        "image": "shopify://shop_images/crosley-contest.jpg",
         "default_image": "contest",
         "image_position": "left",
         "eyebrow": "Custom Cruiser contest",
@@ -64,6 +67,7 @@
     "crosley_audioengine": {
       "type": "crosley-split-promo",
       "settings": {
+        "image": "shopify://shop_images/crosley-audioengine.webp",
         "default_image": "audioengine",
         "image_position": "right",
         "eyebrow": "",
@@ -78,6 +82,7 @@
     "crosley_miller": {
       "type": "crosley-split-promo",
       "settings": {
+        "image": "shopify://shop_images/crosley-miller.jpg",
         "default_image": "miller",
         "image_position": "left",
         "eyebrow": "",
@@ -148,6 +153,7 @@
     "crosley_newsletter": {
       "type": "crosley-newsletter",
       "settings": {
+        "image": "shopify://shop_images/crosley-newsletter.jpg",
         "eyebrow": "Keep me updated",
         "heading": "Save 10% on your first order!",
         "text": "<p>Subscribe to hear about new turntables, restocks, and the occasional sale.</p>",

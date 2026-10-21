@@ -5,8 +5,6 @@ body:has(.crosley-main-collection):has(#header-component[transparent])
 }
 
 .crosley-collection-hero {
-  --crosley-collection-content-width: 1280px;
-
   position: relative;
   display: grid;
   height: var(--crosley-collection-hero-height);
@@ -43,7 +41,7 @@ body:has(.crosley-main-collection):has(#header-component[transparent])
   grid-area: 1 / 1;
   z-index: 2;
   align-self: center;
-  width: min(100% - 80px, var(--crosley-collection-content-width));
+  width: calc(100% - 80px);
   margin-inline: auto;
 }
 
@@ -304,13 +302,14 @@ body:has(.crosley-main-collection):has(#header-component[transparent])
 }
 
 .crosley-main-collection .main-collection-grid > div {
-  padding-inline: clamp(16px, calc(7.33px + 2.2222vw), 50px);
+  padding-inline: clamp(28px, calc(45vw - 505px), 200px);
 }
 
 .crosley-main-collection .product-grid[product-grid-view='default'] {
+  width: 100%;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 48px 24px;
-  max-width: 1500px;
+  max-width: none;
 }
 
 .crosley-main-collection .product-grid[product-grid-view='crosley-three'] {
@@ -467,7 +466,7 @@ body:has(.crosley-main-collection):has(#header-component[transparent])
   }
 
   .crosley-collection-hero__content {
-    width: calc(100% - 80px);
+    width: calc(100% - 56px);
   }
 
   .crosley-collection-hero__description {

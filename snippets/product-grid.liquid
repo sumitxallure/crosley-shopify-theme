@@ -148,14 +148,14 @@
               // No need to read the window width if no custom layouts were saved.
               if (storedLayoutMobile === 'default' && storedLayoutDesktop === 'default') return;
 
-              const storedLayout = window.innerWidth >= 750 ? storedLayoutDesktop : storedLayoutMobile;
+              const isDesktop = window.innerWidth >= 750;
+              const storedLayout = isDesktop ? storedLayoutDesktop : storedLayoutMobile;
               if (storedLayout === 'default') return;
 
               grid.setAttribute('product-grid-view', storedLayout);
 
-              const options = document.querySelectorAll(
-                'input[type="radio"][name="grid"], input[type="radio"][name="grid-mobile"]'
-              );
+              const inputName = isDesktop ? 'grid' : 'grid-mobile';
+              const options = document.querySelectorAll(`input[type="radio"][name="${inputName}"]`);
               for (const option of options) {
                 option.checked = option.value === storedLayout;
               }
@@ -171,7 +171,7 @@
         {% liquid
           assign pagination_anchor = blank
           assign pagination_click_handler = blank
-          if template.suffix == 'crosley'
+          if template.name == 'collection'
             assign pagination_anchor = 'ResultsList'
             assign pagination_click_handler = '/paginate'
           endif

@@ -1,9 +1,9 @@
 .product-information--crosley-pdp {
   display: block;
-  width: min(100%, 1440px);
+  width: 100%;
   max-width: none;
   margin-inline: auto;
-  padding: 32px 40px 56px;
+  padding: 32px clamp(16px, calc(9.88px + 1.5686vw), 40px) clamp(40px, calc(33.88px + 1.5686vw), 64px);
   color: #171f26;
   overflow: clip;
 }
@@ -32,6 +32,14 @@
   max-width: none;
 }
 
+.product-information--crosley-pdp .group-block-content {
+  gap: 0 !important;
+}
+
+.product-information--crosley-pdp .group-block-content > .shopify-block:has(.crosley-pdp-badge) {
+  display: none;
+}
+
 .product-information--crosley-pdp .crosley-pdp-badge {
   margin: 0;
   color: #676767;
@@ -44,8 +52,9 @@
 .product-information--crosley-pdp .product-details h1 {
   margin: 0;
   color: #171f26;
-  font-size: clamp(28px, 2.35vw, 36px);
-  line-height: 1.08;
+  font-size: clamp(30px, calc(28.47px + 0.3922vw), 36px);
+  line-height: 1.12;
+  letter-spacing: 0.01em;
   text-transform: uppercase;
 }
 
@@ -55,10 +64,12 @@
   flex-wrap: nowrap !important;
   align-items: baseline;
   gap: 4px;
-  color: #171f26;
-  font-size: 14px;
+  color: #676767;
+  font-size: clamp(11px, calc(10.49px + 0.1307vw), 13px);
   font-weight: 400;
-  line-height: 1.3;
+  line-height: normal;
+  letter-spacing: 0.03em;
+  margin-block-start: 6px;
 }
 
 .product-information--crosley-pdp .sku__prefix {
@@ -67,7 +78,7 @@
   flex: 0 0 auto;
   margin: 0;
   color: #676767;
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .product-information--crosley-pdp product-sku-component > div,
@@ -77,23 +88,31 @@
   flex: 0 0 auto;
   color: #676767;
   font-weight: 400;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.product-information--crosley-pdp .group-block-content > product-price {
+  margin-block-start: 14px;
 }
 
 .product-information--crosley-pdp .price {
-  color: #676767;
-  font-size: 22px;
-  font-weight: 700;
+  color: #171f26;
+  font-size: clamp(18px, calc(16.47px + 0.3922vw), 24px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: normal;
 }
 
 .crosley-pdp-payment-summary {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: -12px 0 0;
+  margin: 6px 0 0;
   color: #676767;
-  font-size: 14px;
+  font-size: clamp(11px, calc(10.49px + 0.1307vw), 13px);
   font-weight: 400;
-  line-height: 1.35;
+  line-height: normal;
 }
 
 .crosley-pdp-payment-summary strong {
@@ -118,22 +137,28 @@
 .crosley-pdp-review-summary {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin-top: -8px;
+  gap: 8px;
+  margin-top: 16px;
   color: #676767;
-  font-size: 14px;
+  font-size: clamp(11px, calc(10.49px + 0.1307vw), 13px);
 }
 
 .crosley-pdp-review-summary__stars {
   display: flex;
   gap: 2px;
-  font-family: Arial, sans-serif;
-  font-size: 22px;
-  line-height: 1;
+}
+
+.crosley-pdp-review-summary__stars svg {
+  display: block;
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: #171f26;
+  stroke-width: 0.6;
 }
 
 .crosley-pdp-review-summary__stars .is-filled {
-  color: #171f26;
+  fill: #171f26;
 }
 
 .crosley-pdp-review-summary a {
@@ -143,10 +168,11 @@
 
 .product-information--crosley-pdp variant-picker {
   display: block;
+  margin-block-start: 28px;
 }
 
 .product-information--crosley-pdp variant-picker fieldset {
-  margin-block: 0 24px;
+  margin: 0;
 }
 
 .product-information--crosley-pdp variant-picker legend,
@@ -155,7 +181,12 @@
   font-size: 12px;
   font-weight: 700;
   line-height: 1.2;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+.product-information--crosley-pdp variant-picker legend {
+  margin-block-end: 12px;
 }
 
 .product-information--crosley-pdp .variant-option__button-label span {
@@ -228,17 +259,18 @@
 
 .crosley-pdp-secondary {
   min-width: 0;
-  margin: 0 0 24px;
+  margin: 28px 0 0;
   padding: 0;
   border: 0;
 }
 
 .crosley-pdp-secondary legend {
-  margin-block-end: 14px;
+  margin-block-end: 12px;
   color: #171f26;
   font-size: 12px;
   font-weight: 700;
   line-height: 1.2;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
@@ -286,8 +318,9 @@
 
 @media (min-width: 1400px) {
   .crosley-pdp-secondary__options {
-    width: max-content;
+    width: 100%;
     flex-wrap: nowrap;
+    gap: clamp(6px, calc((100% - 504px) / 11), 12px);
   }
 }
 
@@ -295,7 +328,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 4px 0 22px;
+  margin: 24px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -318,13 +351,17 @@
   gap: 12px;
 }
 
+.product-information--crosley-pdp .group-block-content > .buy-buttons-block {
+  margin-block-start: 30px;
+}
+
 .product-information--crosley-pdp .product-form-buttons > * {
   min-width: 0;
 }
 
 .product-information--crosley-pdp .product-form-buttons .quantity-selector,
 .product-information--crosley-pdp .product-form-buttons .add-to-cart-button {
-  min-height: 54px;
+  min-height: 52px;
   border-radius: 0;
 }
 
@@ -351,12 +388,20 @@
 
 .product-information--crosley-pdp .product-form-buttons .add-to-cart-button {
   width: 100%;
+  gap: 0;
+  padding: 0 17px;
   color: #fff;
   background: #383637;
   border-color: #383637;
   font-size: 14px;
   font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.product-information--crosley-pdp .product-form-buttons .add-to-cart-icon {
+  display: none;
 }
 
 .product-information--crosley-pdp .product-form-buttons .add-to-cart-button:hover:not(:disabled) {
@@ -441,6 +486,7 @@
 
 .crosley-pdp-details {
   width: 100%;
+  margin-block-start: 36px;
   border-block-start: 1px solid #ededed;
 }
 
@@ -450,15 +496,16 @@
 
 .crosley-pdp-details__item summary {
   display: flex;
-  min-height: 58px;
+  min-height: 52px;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
   padding: 0;
   color: #171f26;
-  font-size: 14px;
+  font-size: clamp(11px, calc(10.49px + 0.1307vw), 13px);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: normal;
+  letter-spacing: 0.06em;
   list-style: none;
   text-transform: uppercase;
   cursor: pointer;
@@ -469,31 +516,20 @@
 }
 
 .crosley-pdp-details__icon {
-  position: relative;
-  width: 14px;
-  height: 14px;
-  flex: 0 0 14px;
-}
-
-.crosley-pdp-details__icon::before,
-.crosley-pdp-details__icon::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
+  display: block;
   width: 12px;
-  height: 1px;
-  background: currentColor;
-  transform: translate(-50%, -50%);
+  height: 8px;
+  flex: 0 0 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 150ms ease;
 }
 
-.crosley-pdp-details__icon::after {
-  transform: translate(-50%, -50%) rotate(90deg);
-  transition: transform 180ms ease;
-}
-
-.crosley-pdp-details__item[open] .crosley-pdp-details__icon::after {
-  transform: translate(-50%, -50%) rotate(0deg);
+.crosley-pdp-details__item[open] .crosley-pdp-details__icon {
+  transform: rotate(180deg);
 }
 
 .crosley-pdp-details__content {
@@ -604,7 +640,7 @@ body:has(.product-information--crosley-pdp) .sticky-add-to-cart__bar {
   grid-template-rows: auto auto;
   column-gap: 16px;
   row-gap: 0;
-  padding: 8px max(32px, calc((100vw - 1400px) / 2));
+  padding: 8px clamp(32px, calc(18.67px + 0.8681vw), 40px);
   border: 0;
   border-block-end: 1px solid #ededed;
   box-shadow: 0 16px 32px rgb(0 0 0 / 16%), 0 2px 8px rgb(0 0 0 / 8%);
@@ -716,11 +752,6 @@ body:has(.product-information--crosley-pdp)
   display: none !important;
 }
 
-body:has(.product-information--crosley-pdp) .crosley-social-gallery__grid {
-  width: min(calc(100% - 80px), 1120px);
-  gap: 16px;
-}
-
 @media (max-width: 1023px) {
   .product-information--crosley-pdp {
     padding-inline: 24px;
@@ -735,7 +766,7 @@ body:has(.product-information--crosley-pdp) .crosley-social-gallery__grid {
 @media (max-width: 860px) {
   .product-information--crosley-pdp {
     width: 100%;
-    padding: 22px 20px 96px;
+    padding: 20px 20px 96px;
     overflow: hidden;
   }
 
@@ -763,14 +794,6 @@ body:has(.product-information--crosley-pdp) .crosley-social-gallery__grid {
 
   .product-information--crosley-pdp .product-details > .group-block {
     padding: 0;
-  }
-
-  .product-information--crosley-pdp .group-block-content {
-    gap: 0 !important;
-  }
-
-  .product-information--crosley-pdp .group-block-content > .shopify-block:has(.crosley-pdp-badge) {
-    display: none;
   }
 
   .product-information--crosley-pdp .product-details h1 {
@@ -830,7 +853,7 @@ body:has(.product-information--crosley-pdp) .crosley-social-gallery__grid {
   }
 
   .product-information--crosley-pdp variant-picker legend {
-    margin-block-end: 14px;
+    margin-block-end: 12px;
   }
 
   .product-information--crosley-pdp .group-block-content > .crosley-pdp-secondary {
@@ -897,10 +920,6 @@ body:has(.product-information--crosley-pdp) .crosley-social-gallery__grid {
     font-size: 11px;
   }
 
-  .product-information--crosley-pdp .group-block-content > .crosley-pdp-details {
-    margin-block-start: 36px;
-  }
-
   body:has(.product-information--crosley-pdp) .sticky-add-to-cart__bar {
     top: auto;
     bottom: 0;
@@ -964,43 +983,10 @@ body:has(.product-information--crosley-pdp) .crosley-social-gallery__grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  body:has(.product-information--crosley-pdp) .crosley-social-gallery__grid {
-    width: 100%;
-    gap: 12px;
-  }
-
-  body:has(.product-information--crosley-pdp) .crosley-benefits {
-    padding: 40px 0;
-    overflow: hidden;
-  }
-
-  body:has(.product-information--crosley-pdp) .crosley-benefits__grid {
-    display: flex;
-    width: calc(100% - 80px);
-    margin-inline: 40px;
-    gap: 0;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-  }
-
-  body:has(.product-information--crosley-pdp) .crosley-benefits__grid::-webkit-scrollbar {
-    display: none;
-  }
-
-  body:has(.product-information--crosley-pdp) .crosley-benefit {
-    flex: 0 0 100%;
-    padding-inline: 40px;
-    scroll-snap-align: center;
-  }
-
-  body:has(.product-information--crosley-pdp) .crosley-benefits__dots {
-    display: flex;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .crosley-pdp-details__icon::after {
+  .crosley-pdp-details__icon {
     transition: none;
   }
 }

@@ -43,6 +43,12 @@
     }
   }
 
+  @media screen and (min-width: 750px) {
+    .footer-utilities .section--page-width {
+      --full-page-grid-central-column-width: calc(100% - (var(--page-margin) * 2));
+    }
+  }
+
   .utilities a,
   .utilities button {
     color: var(--color-utilities, var(--color-foreground-muted));
