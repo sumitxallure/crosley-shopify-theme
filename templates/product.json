@@ -292,6 +292,7 @@
     },
     "feature_marquee": {
       "type": "crosley-pdp-marquee",
+      "disabled": true,
       "settings": {
         "fallback_features": "Bluetooth output|Built-in speakers|3-speed turntable"
       }
