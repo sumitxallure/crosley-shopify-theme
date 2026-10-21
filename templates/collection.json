@@ -11,6 +11,7 @@
     "crosley_hero": {
       "type": "crosley-collection-hero",
       "settings": {
+        "image": "shopify://shop_images/crosley-miller.jpg",
         "show_description": true,
         "content_alignment": "center",
         "image_position": "center center",
@@ -165,11 +166,11 @@
     "crosley_social": {
       "type": "crosley-social-gallery",
       "blocks": {
-        "post_1": { "type": "post", "settings": { "label": "View Crosley social post" } },
-        "post_2": { "type": "post", "settings": { "label": "View Crosley social post" } },
-        "post_3": { "type": "post", "settings": { "label": "View Crosley social post" } },
-        "post_4": { "type": "post", "settings": { "label": "View Crosley social post" } },
-        "post_5": { "type": "post", "settings": { "label": "View Crosley social post" } }
+        "post_1": { "type": "post", "settings": { "image": "shopify://shop_images/crosley-social-1.jpg", "label": "View Crosley social post" } },
+        "post_2": { "type": "post", "settings": { "image": "shopify://shop_images/crosley-social-2.jpg", "label": "View Crosley social post" } },
+        "post_3": { "type": "post", "settings": { "image": "shopify://shop_images/crosley-social-3.jpg", "label": "View Crosley social post" } },
+        "post_4": { "type": "post", "settings": { "image": "shopify://shop_images/crosley-social-4.jpg", "label": "View Crosley social post" } },
+        "post_5": { "type": "post", "settings": { "image": "shopify://shop_images/crosley-social-5.jpg", "label": "View Crosley social post" } }
       },
       "block_order": ["post_1", "post_2", "post_3", "post_4", "post_5"],
       "settings": { "eyebrow": "Join us", "heading": "@CrosleyRadio" }

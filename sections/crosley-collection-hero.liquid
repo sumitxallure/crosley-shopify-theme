@@ -1,6 +1,6 @@
 {% comment %}
   Collection-aware hero for the Crosley collection template.
-  Uses Shopify collection data first and a merchant-selected or bundled fallback image.
+  Uses a merchant-selected Shopify image with the collection image as a fallback.
 {% endcomment %}
 
 {{ 'crosley-collection.css' | asset_url | stylesheet_tag }}
@@ -11,12 +11,10 @@
     assign is_record_players = true
   endif
 
-  unless is_record_players
+  assign hero_image = section.settings.image
+  if hero_image == blank
     assign hero_image = collection.image
-    if hero_image == blank
-      assign hero_image = section.settings.fallback_image
-    endif
-  endunless
+  endif
 
   assign image_alt = hero_image.alt | default: collection.title
   assign has_description = false
@@ -37,16 +35,7 @@
   "
 >
   <div class="crosley-collection-hero__media" aria-hidden="true">
-    {% if is_record_players %}
-      <img
-        src="{{ 'crosley-miller.jpg' | asset_url }}"
-        alt=""
-        width="1400"
-        height="1400"
-        loading="eager"
-        fetchpriority="high"
-      >
-    {% elsif hero_image != blank %}
+    {% if hero_image != blank %}
       {{
         hero_image
         | image_url: width: 2800
@@ -58,14 +47,7 @@
           alt: image_alt
       }}
     {% else %}
-      <img
-        src="{{ 'crosley-collection-hero.jpg' | asset_url }}"
-        alt=""
-        width="3000"
-        height="1000"
-        loading="eager"
-        fetchpriority="high"
-      >
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'crosley-collection-hero__placeholder' }}
     {% endif %}
   </div>
 
@@ -120,9 +102,9 @@
     },
     {
       "type": "image_picker",
-      "id": "fallback_image",
-      "label": "Fallback image",
-      "info": "Used only when the current collection has no collection image."
+      "id": "image",
+      "label": "Hero image",
+      "info": "Overrides the current collection image. Select an image uploaded to Shopify Files."
     },
     {
       "type": "select",

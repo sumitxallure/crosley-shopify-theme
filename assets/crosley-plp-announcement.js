@@ -4,6 +4,7 @@ class CrosleyPlpAnnouncement extends HTMLElement {
     this.benefits = [...this.querySelectorAll('[data-benefit]')].map((item) => item.textContent.trim());
     this.mobileBenefit = this.querySelector('[data-mobile-benefit]');
     this.benefitIndex = 0;
+    this.benefitRotationMs = Number.parseInt(this.dataset.benefitRotationMs || '2600', 10);
 
     this.renderCountdown();
     this.countdownTimer = window.setInterval(() => {
@@ -15,7 +16,7 @@ class CrosleyPlpAnnouncement extends HTMLElement {
       this.benefitTimer = window.setInterval(() => {
         this.benefitIndex = (this.benefitIndex + 1) % this.benefits.length;
         this.mobileBenefit.textContent = this.benefits[this.benefitIndex];
-      }, 2600);
+      }, this.benefitRotationMs);
     }
   }
 

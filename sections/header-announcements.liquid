@@ -5,6 +5,17 @@
   if template.name == 'collection'
     assign is_crosley_collection = true
   endif
+
+  assign benefit_1 = section.settings.crosley_benefit_1
+  assign benefit_2 = section.settings.crosley_benefit_2
+  assign benefit_3 = section.settings.crosley_benefit_3
+  assign benefit_4 = section.settings.crosley_benefit_4
+  assign mobile_benefit = benefit_1 | default: benefit_2 | default: benefit_3 | default: benefit_4
+
+  assign countdown_seconds = section.settings.crosley_countdown_days | times: 86400
+  assign countdown_hours = section.settings.crosley_countdown_hours | times: 3600
+  assign countdown_minutes = section.settings.crosley_countdown_minutes | times: 60
+  assign countdown_seconds = countdown_seconds | plus: countdown_hours | plus: countdown_minutes | plus: section.settings.crosley_countdown_seconds
 %}
 
 {% if is_crosley_collection %}
@@ -22,48 +33,67 @@
 {% endif %}
 
 {% if is_crosley_collection %}
-  <crosley-plp-announcement class="crosley-plp-announcement" data-countdown-seconds="1062292">
+  <crosley-plp-announcement
+    class="crosley-plp-announcement"
+    data-countdown-seconds="{{ countdown_seconds }}"
+    data-benefit-rotation-ms="{{ section.settings.crosley_mobile_rotation_speed | times: 1000 }}"
+    style="--crosley-benefits-bg: {{ section.settings.crosley_benefits_background }}; --crosley-promotion-bg: {{ section.settings.crosley_promotion_background }}; --crosley-announcement-text: {{ section.settings.crosley_text_color }};"
+  >
+    {% if section.settings.crosley_show_benefits %}
     <aside class="crosley-plp-announcement__benefits" aria-label="Store benefits">
       <div class="crosley-plp-announcement__benefits-desktop">
-        <span data-benefit>Free Delivery</span>
-        <span class="crosley-plp-announcement__separator" aria-hidden="true">|</span>
-        <span data-benefit>Buy Now Pay Later</span>
-        <span class="crosley-plp-announcement__separator" aria-hidden="true">|</span>
-        <span data-benefit>Technical Support</span>
-        <span class="crosley-plp-announcement__separator" aria-hidden="true">|</span>
-        <span data-benefit>One-Year Warranty</span>
+        {% if benefit_1 != blank %}
+          <span data-benefit>{{ benefit_1 | escape }}</span>
+          {% if benefit_2 != blank or benefit_3 != blank or benefit_4 != blank %}<span class="crosley-plp-announcement__separator" aria-hidden="true">|</span>{% endif %}
+        {% endif %}
+        {% if benefit_2 != blank %}
+          <span data-benefit>{{ benefit_2 | escape }}</span>
+          {% if benefit_3 != blank or benefit_4 != blank %}<span class="crosley-plp-announcement__separator" aria-hidden="true">|</span>{% endif %}
+        {% endif %}
+        {% if benefit_3 != blank %}
+          <span data-benefit>{{ benefit_3 | escape }}</span>
+          {% if benefit_4 != blank %}<span class="crosley-plp-announcement__separator" aria-hidden="true">|</span>{% endif %}
+        {% endif %}
+        {% if benefit_4 != blank %}<span data-benefit>{{ benefit_4 | escape }}</span>{% endif %}
       </div>
-      <span class="crosley-plp-announcement__benefit-mobile" data-mobile-benefit>Free Delivery</span>
+      <span class="crosley-plp-announcement__benefit-mobile" data-mobile-benefit>{{ mobile_benefit | escape }}</span>
     </aside>
+    {% endif %}
 
+    {% if section.settings.crosley_show_promotion %}
     <aside class="crosley-plp-announcement__promotion" aria-label="Promotion">
       <div class="crosley-plp-announcement__offer">
-        <span>Save up to 25% on select turntables</span>
-        <a href="{{ routes.all_products_collection_url }}">Shop Now</a>
+        <span>{{ section.settings.crosley_offer_text | escape }}</span>
+        {% if section.settings.crosley_link_label != blank %}
+          <a href="{{ section.settings.crosley_link | default: routes.all_products_collection_url }}">{{ section.settings.crosley_link_label | escape }}</a>
+        {% endif %}
       </div>
 
+      {% if section.settings.crosley_show_countdown %}
       <div class="crosley-plp-announcement__countdown" aria-label="Promotion countdown">
         <span class="crosley-plp-announcement__time">
-          <strong data-countdown-value="days">12</strong>
-          <small>Day</small>
+          <strong data-countdown-value="days">{{ section.settings.crosley_countdown_days }}</strong>
+          <small>{{ section.settings.crosley_days_label | escape }}</small>
         </span>
         <span class="crosley-plp-announcement__colon" aria-hidden="true">:</span>
         <span class="crosley-plp-announcement__time">
-          <strong data-countdown-value="hours">07</strong>
-          <small>Hrs</small>
+          <strong data-countdown-value="hours">{{ section.settings.crosley_countdown_hours }}</strong>
+          <small>{{ section.settings.crosley_hours_label | escape }}</small>
         </span>
         <span class="crosley-plp-announcement__colon" aria-hidden="true">:</span>
         <span class="crosley-plp-announcement__time">
-          <strong data-countdown-value="minutes">04</strong>
-          <small>Min</small>
+          <strong data-countdown-value="minutes">{{ section.settings.crosley_countdown_minutes }}</strong>
+          <small>{{ section.settings.crosley_minutes_label | escape }}</small>
         </span>
         <span class="crosley-plp-announcement__colon" aria-hidden="true">:</span>
         <span class="crosley-plp-announcement__time">
-          <strong data-countdown-value="seconds">52</strong>
-          <small>Sec</small>
+          <strong data-countdown-value="seconds">{{ section.settings.crosley_countdown_seconds }}</strong>
+          <small>{{ section.settings.crosley_seconds_label | escape }}</small>
         </span>
       </div>
+      {% endif %}
     </aside>
+    {% endif %}
   </crosley-plp-announcement>
 {% else %}
   {% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
@@ -197,7 +227,7 @@
 
   .crosley-plp-announcement {
     display: block;
-    color: #fff;
+    color: var(--crosley-announcement-text, #fff);
     font-family: "acumin-pro-condensed", Arial, sans-serif;
     font-weight: 700;
     letter-spacing: 0.06em;
@@ -211,7 +241,7 @@
     align-items: center;
     justify-content: center;
     padding: 10px 40px;
-    background: #383637;
+    background: var(--crosley-benefits-bg, #383637);
     font-size: 12px;
     letter-spacing: 0.06em;
   }
@@ -224,7 +254,7 @@
 
   .crosley-plp-announcement__separator {
     margin-inline: 10px;
-    color: rgb(255 255 255 / 40%);
+    color: color-mix(in srgb, var(--crosley-announcement-text, #fff) 40%, transparent);
   }
 
   .crosley-plp-announcement__benefit-mobile {
@@ -239,7 +269,7 @@
     justify-content: space-between;
     gap: 24px;
     padding: 11px 40px;
-    background: #171f26;
+    background: var(--crosley-promotion-bg, #171f26);
   }
 
   .crosley-plp-announcement__offer {
@@ -251,7 +281,7 @@
   }
 
   .crosley-plp-announcement__offer a {
-    color: #fff;
+    color: var(--crosley-announcement-text, #fff);
     line-height: normal;
     text-decoration: underline;
     text-underline-offset: 2px;
@@ -277,14 +307,14 @@
 
   .crosley-plp-announcement__time small {
     margin-top: 5px;
-    color: rgb(255 255 255 / 65%);
+    color: color-mix(in srgb, var(--crosley-announcement-text, #fff) 65%, transparent);
     font-size: 9px;
     font-weight: 700;
     letter-spacing: 0.06em;
   }
 
   .crosley-plp-announcement__colon {
-    color: rgb(255 255 255 / 40%);
+    color: color-mix(in srgb, var(--crosley-announcement-text, #fff) 40%, transparent);
     font-size: 14px;
   }
 
@@ -371,6 +401,178 @@
     "groups": ["header"]
   },
   "settings": [
+    {
+      "type": "header",
+      "content": "Collection announcement"
+    },
+    {
+      "type": "checkbox",
+      "id": "crosley_show_benefits",
+      "label": "Show benefits bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "crosley_benefit_1",
+      "label": "Benefit 1",
+      "default": "Free Delivery",
+      "visible_if": "{{ section.settings.crosley_show_benefits }}"
+    },
+    {
+      "type": "text",
+      "id": "crosley_benefit_2",
+      "label": "Benefit 2",
+      "default": "Buy Now Pay Later",
+      "visible_if": "{{ section.settings.crosley_show_benefits }}"
+    },
+    {
+      "type": "text",
+      "id": "crosley_benefit_3",
+      "label": "Benefit 3",
+      "default": "Technical Support",
+      "visible_if": "{{ section.settings.crosley_show_benefits }}"
+    },
+    {
+      "type": "text",
+      "id": "crosley_benefit_4",
+      "label": "Benefit 4",
+      "default": "One-Year Warranty",
+      "visible_if": "{{ section.settings.crosley_show_benefits }}"
+    },
+    {
+      "type": "range",
+      "id": "crosley_mobile_rotation_speed",
+      "label": "Mobile benefit rotation",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "sec",
+      "default": 3,
+      "visible_if": "{{ section.settings.crosley_show_benefits }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "crosley_show_promotion",
+      "label": "Show promotion bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "crosley_offer_text",
+      "label": "Promotion text",
+      "default": "Save up to 25% on select turntables",
+      "visible_if": "{{ section.settings.crosley_show_promotion }}"
+    },
+    {
+      "type": "text",
+      "id": "crosley_link_label",
+      "label": "Link label",
+      "default": "Shop Now",
+      "visible_if": "{{ section.settings.crosley_show_promotion }}"
+    },
+    {
+      "type": "url",
+      "id": "crosley_link",
+      "label": "Link",
+      "visible_if": "{{ section.settings.crosley_show_promotion }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "crosley_show_countdown",
+      "label": "Show countdown",
+      "default": true,
+      "visible_if": "{{ section.settings.crosley_show_promotion }}"
+    },
+    {
+      "type": "range",
+      "id": "crosley_countdown_days",
+      "label": "Days",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 12,
+      "visible_if": "{{ section.settings.crosley_show_promotion and section.settings.crosley_show_countdown }}"
+    },
+    {
+      "type": "range",
+      "id": "crosley_countdown_hours",
+      "label": "Hours",
+      "min": 0,
+      "max": 23,
+      "step": 1,
+      "default": 7,
+      "visible_if": "{{ section.settings.crosley_show_promotion and section.settings.crosley_show_countdown }}"
+    },
+    {
+      "type": "range",
+      "id": "crosley_countdown_minutes",
+      "label": "Minutes",
+      "min": 0,
+      "max": 59,
+      "step": 1,
+      "default": 4,
+      "visible_if": "{{ section.settings.crosley_show_promotion and section.settings.crosley_show_countdown }}"
+    },
+    {
+      "type": "range",
+      "id": "crosley_countdown_seconds",
+      "label": "Seconds",
+      "min": 0,
+      "max": 59,
+      "step": 1,
+      "default": 52,
+      "visible_if": "{{ section.settings.crosley_show_promotion and section.settings.crosley_show_countdown }}"
+    },
+    {
+      "type": "text",
+      "id": "crosley_days_label",
+      "label": "Days label",
+      "default": "Day",
+      "visible_if": "{{ section.settings.crosley_show_promotion and section.settings.crosley_show_countdown }}"
+    },
+    {
+      "type": "text",
+      "id": "crosley_hours_label",
+      "label": "Hours label",
+      "default": "Hrs",
+      "visible_if": "{{ section.settings.crosley_show_promotion and section.settings.crosley_show_countdown }}"
+    },
+    {
+      "type": "text",
+      "id": "crosley_minutes_label",
+      "label": "Minutes label",
+      "default": "Min",
+      "visible_if": "{{ section.settings.crosley_show_promotion and section.settings.crosley_show_countdown }}"
+    },
+    {
+      "type": "text",
+      "id": "crosley_seconds_label",
+      "label": "Seconds label",
+      "default": "Sec",
+      "visible_if": "{{ section.settings.crosley_show_promotion and section.settings.crosley_show_countdown }}"
+    },
+    {
+      "type": "color",
+      "id": "crosley_benefits_background",
+      "label": "Benefits background",
+      "default": "#383637"
+    },
+    {
+      "type": "color",
+      "id": "crosley_promotion_background",
+      "label": "Promotion background",
+      "default": "#171f26"
+    },
+    {
+      "type": "color",
+      "id": "crosley_text_color",
+      "label": "Collection announcement text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Standard announcement"
+    },
     {
       "type": "range",
       "id": "speed",

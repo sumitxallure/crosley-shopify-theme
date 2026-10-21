@@ -287,10 +287,7 @@
     "video": {
       "type": "crosley-pdp-video",
       "settings": {
-        "video_url": "https://www.youtube.com/watch?v=ABFxBGHPJZc",
-        "cover_image": "shopify://shop_images/CP8005FLIB-TE-E1.jpg",
-        "eyebrow": "See it in action",
-        "heading": "The Zodiac Cruiser Plus"
+        "eyebrow": "See it in action"
       }
     },
     "feature_marquee": {
@@ -302,9 +299,11 @@
     "editorial": {
       "type": "crosley-pdp-editorial",
       "settings": {
+        "first_image": "shopify://shop_images/CP8005FLIB-TE-E2.jpg",
         "first_eyebrow": "The materials",
         "first_heading": "Built to travel",
         "first_text": "<p>A two-wrapped case shell over a solid frame, with chrome corner guards and a built-in handle to play tunes on the shelf or on the road.</p>",
+        "second_image": "shopify://shop_images/CP8005FLIB-TE-W2.jpg",
         "second_eyebrow": "Keeping it up",
         "second_heading": "Little upkeep, long life",
         "second_text": "<p>Wipe the case down with a dry cloth, keep the platter and stylus dust-free, and store it closed when you're not spinning records.</p>"
@@ -313,9 +312,9 @@
     "collections": {
       "type": "crosley-pdp-collections",
       "blocks": {
-        "speakers": { "type": "collection", "settings": { "collection": "speakers", "reference_asset": "crosley-pdp-collection-speakers.webp", "label": "Speakers" } },
-        "radios": { "type": "collection", "settings": { "collection": "radios-phones", "reference_asset": "crosley-pdp-collection-radios.webp", "label": "Radios" } },
-        "cd_players": { "type": "collection", "settings": { "reference_asset": "crosley-pdp-collection-cd.webp", "label": "CD Players" } }
+        "speakers": { "type": "collection", "settings": { "collection": "speakers", "image": "shopify://shop_images/crosley-pdp-collection-speakers.webp", "label": "Speakers" } },
+        "radios": { "type": "collection", "settings": { "collection": "radios-phones", "image": "shopify://shop_images/crosley-pdp-collection-radios.webp", "label": "Radios" } },
+        "cd_players": { "type": "collection", "settings": { "image": "shopify://shop_images/crosley-pdp-collection-cd.webp", "label": "CD Players" } }
       },
       "block_order": ["speakers", "radios", "cd_players"],
       "settings": { "heading": "Explore our collections" }
@@ -479,11 +478,11 @@
     "social": {
       "type": "crosley-social-gallery",
       "blocks": {
-        "post_1": { "type": "post", "settings": { "label": "View Crosley social post" } },
-        "post_2": { "type": "post", "settings": { "label": "View Crosley social post" } },
-        "post_3": { "type": "post", "settings": { "label": "View Crosley social post" } },
-        "post_4": { "type": "post", "settings": { "label": "View Crosley social post" } },
-        "post_5": { "type": "post", "settings": { "label": "View Crosley social post" } }
+        "post_1": { "type": "post", "settings": { "image": "shopify://shop_images/crosley-social-1.jpg", "label": "View Crosley social post" } },
+        "post_2": { "type": "post", "settings": { "image": "shopify://shop_images/crosley-social-2.jpg", "label": "View Crosley social post" } },
+        "post_3": { "type": "post", "settings": { "image": "shopify://shop_images/crosley-social-3.jpg", "label": "View Crosley social post" } },
+        "post_4": { "type": "post", "settings": { "image": "shopify://shop_images/crosley-social-4.jpg", "label": "View Crosley social post" } },
+        "post_5": { "type": "post", "settings": { "image": "shopify://shop_images/crosley-social-5.jpg", "label": "View Crosley social post" } }
       },
       "block_order": ["post_1", "post_2", "post_3", "post_4", "post_5"],
       "settings": { "eyebrow": "Join us", "heading": "@CrosleyRadio" }
