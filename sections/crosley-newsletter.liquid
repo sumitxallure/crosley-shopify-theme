@@ -5,6 +5,7 @@
 {% endcomment %}
 
 {% assign newsletter_alt = section.settings.image.alt | default: section.settings.heading %}
+{% assign heading_tag = section.settings.heading_tag | default: 'h2' %}
 
 <section class="crosley-newsletter" style="--crosley-newsletter-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};">
   <div class="crosley-newsletter__media">
@@ -35,7 +36,7 @@
       <p>{{ section.settings.eyebrow | escape }}</p>
     {% endif %}
     {% if section.settings.heading != blank %}
-      <h2>{{ section.settings.heading | escape }}</h2>
+      <{{ heading_tag }} class="crosley-newsletter__heading">{{ section.settings.heading | escape }}</{{ heading_tag }}>
     {% endif %}
     {% if section.settings.text != blank %}
       <div class="rte">{{ section.settings.text }}</div>
@@ -124,7 +125,7 @@
     text-transform: uppercase;
   }
 
-  .crosley-newsletter h2 {
+  .crosley-newsletter__heading {
     margin: 0 0 20px;
     color: inherit;
     font-size: clamp(20px, calc(17.96px + 0.5229vw), 28px);
@@ -245,6 +246,19 @@
       "id": "heading",
       "label": "Heading",
       "default": "Save 10% on your first order"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
+      ],
+      "default": "h2"
     },
     {
       "type": "richtext",

@@ -5,6 +5,7 @@
 {% endcomment %}
 
 {% assign promo_alt = section.settings.image.alt | default: section.settings.heading %}
+{% assign heading_tag = section.settings.heading_tag | default: 'h2' %}
 
 <section
   class="crosley-promo crosley-promo--image-{{ section.settings.image_position }}"
@@ -31,7 +32,7 @@
       <p class="crosley-promo__eyebrow">{{ section.settings.eyebrow | escape }}</p>
     {% endif %}
     {% if section.settings.heading != blank %}
-      <h2>{{ section.settings.heading | escape }}</h2>
+      <{{ heading_tag }} class="crosley-promo__heading">{{ section.settings.heading | escape }}</{{ heading_tag }}>
     {% endif %}
     {% if section.settings.text != blank %}
       <div class="crosley-promo__text rte">{{ section.settings.text }}</div>
@@ -90,7 +91,7 @@
     text-transform: uppercase;
   }
 
-  .crosley-promo h2 {
+  .crosley-promo__heading {
     max-width: none;
     margin: 0;
     color: inherit;
@@ -206,6 +207,19 @@
       "id": "heading",
       "label": "Heading",
       "default": "Crosley x Audioengine"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
+      ],
+      "default": "h2"
     },
     {
       "type": "richtext",

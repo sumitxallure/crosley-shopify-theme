@@ -1,6 +1,8 @@
+{% assign heading_tag = section.settings.heading_tag | default: 'h2' %}
+
 <section class="crosley-social-gallery">
   <p>{{ section.settings.eyebrow | escape }}</p>
-  <h2>{{ section.settings.heading | escape }}</h2>
+  <{{ heading_tag }} class="crosley-social-gallery__heading">{{ section.settings.heading | escape }}</{{ heading_tag }}>
   <div class="crosley-social-gallery__grid">
     {% for block in section.blocks %}
       {% liquid
@@ -34,7 +36,7 @@
     text-transform: uppercase;
   }
 
-  .crosley-social-gallery h2 {
+  .crosley-social-gallery__heading {
     margin: 0 0 56px;
     color: #171f26;
     font-size: clamp(24px, calc(21.96px + 0.5229vw), 32px);
@@ -104,7 +106,20 @@
   "settings": [
     { "type": "header", "content": "Content" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Join us" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "@CrosleyRadio" }
+    { "type": "text", "id": "heading", "label": "Heading", "default": "@CrosleyRadio" },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
+      ],
+      "default": "h2"
+    }
   ],
   "blocks": [
     {

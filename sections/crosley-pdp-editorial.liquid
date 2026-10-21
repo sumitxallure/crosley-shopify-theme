@@ -7,6 +7,8 @@
   assign second_media = product.media[2] | default: product.featured_media
   assign first_image = section.settings.first_image | default: first_media.preview_image
   assign second_image = section.settings.second_image | default: second_media.preview_image
+  assign first_heading_tag = section.settings.first_heading_tag | default: 'h2'
+  assign second_heading_tag = section.settings.second_heading_tag | default: 'h2'
 %}
 
 <section class="crosley-pdp-editorial">
@@ -19,7 +21,7 @@
       </div>
       <div class="crosley-pdp-editorial__content">
         <p>{{ section.settings.first_eyebrow | escape }}</p>
-        <h2>{{ section.settings.first_heading | escape }}</h2>
+        <{{ first_heading_tag }} class="crosley-pdp-editorial__heading">{{ section.settings.first_heading | escape }}</{{ first_heading_tag }}>
         <div class="rte">{{ section.settings.first_text }}</div>
       </div>
     </article>
@@ -32,7 +34,7 @@
       </div>
       <div class="crosley-pdp-editorial__content">
         <p>{{ section.settings.second_eyebrow | escape }}</p>
-        <h2>{{ section.settings.second_heading | escape }}</h2>
+        <{{ second_heading_tag }} class="crosley-pdp-editorial__heading">{{ section.settings.second_heading | escape }}</{{ second_heading_tag }}>
         <div class="rte">{{ section.settings.second_text }}</div>
       </div>
     </article>
@@ -99,7 +101,7 @@
     text-transform: uppercase;
   }
 
-  .crosley-pdp-editorial__content h2 {
+  .crosley-pdp-editorial__heading {
     margin: 0 0 16px;
     color: #171f26;
     font-size: clamp(20px, 1.05vw + 12.5px, 28px);
@@ -156,10 +158,36 @@
     { "type": "image_picker", "id": "first_image", "label": "First image" },
     { "type": "text", "id": "first_eyebrow", "label": "First eyebrow", "default": "The materials" },
     { "type": "text", "id": "first_heading", "label": "First heading", "default": "Built to travel" },
+    {
+      "type": "select",
+      "id": "first_heading_tag",
+      "label": "First heading tag",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
+      ],
+      "default": "h2"
+    },
     { "type": "richtext", "id": "first_text", "label": "First text", "default": "<p>A two-wrapped case shell over a solid frame, with chrome corner guards and a built-in handle to play tunes on the shelf or on the road.</p>" },
     { "type": "image_picker", "id": "second_image", "label": "Second image" },
     { "type": "text", "id": "second_eyebrow", "label": "Second eyebrow", "default": "Keeping it up" },
     { "type": "text", "id": "second_heading", "label": "Second heading", "default": "Little upkeep, long life" },
+    {
+      "type": "select",
+      "id": "second_heading_tag",
+      "label": "Second heading tag",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
+      ],
+      "default": "h2"
+    },
     { "type": "richtext", "id": "second_text", "label": "Second text", "default": "<p>Wipe the case down with a dry cloth, keep the platter and stylus dust-free, and store it closed when you're not spinning records.</p>" }
   ],
   "presets": [{ "name": "Crosley PDP editorial" }]

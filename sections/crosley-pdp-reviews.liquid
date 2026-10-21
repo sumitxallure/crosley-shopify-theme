@@ -4,6 +4,8 @@
   Add the merchant's review app block inside this section in the theme editor.
 {% endcomment %}
 
+{% assign heading_tag = section.settings.heading_tag | default: 'h2' %}
+
 {% liquid
   assign review_target = section.settings.review_link
   if review_target == blank
@@ -13,7 +15,7 @@
 
 <section class="crosley-pdp-reviews" id="CrosleyPdpReviews">
   <div class="crosley-pdp-reviews__inner">
-    <h2>{{ section.settings.heading | escape }}</h2>
+    <{{ heading_tag }} class="crosley-pdp-reviews__heading">{{ section.settings.heading | escape }}</{{ heading_tag }}>
     {% if section.blocks.size > 0 %}
       <div class="crosley-pdp-reviews__app">
         {% content_for 'blocks' %}
@@ -56,7 +58,7 @@
     border: 1px solid #ededed;
   }
 
-  .crosley-pdp-reviews h2 {
+  .crosley-pdp-reviews__heading {
     margin: 0 0 20px;
     color: #171f26;
     font-size: clamp(20px, calc(17.96px + 0.5229vw), 28px);
@@ -165,7 +167,7 @@
       border: 1px solid #ededed;
     }
 
-    .crosley-pdp-reviews h2 {
+    .crosley-pdp-reviews__heading {
       margin-block-end: 20px;
       font-size: 20px;
       text-align: left;
@@ -226,6 +228,19 @@
   "blocks": [{ "type": "@app" }],
   "settings": [
     { "type": "text", "id": "heading", "label": "Heading", "default": "Reviews" },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
+      ],
+      "default": "h2"
+    },
     { "type": "text", "id": "empty_text", "label": "Empty state", "default": "Be the first to review this product" },
     { "type": "text", "id": "review_label", "label": "Review link label", "default": "Review this Product" },
     { "type": "url", "id": "review_link", "label": "Review link" }

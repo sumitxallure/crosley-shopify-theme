@@ -4,6 +4,8 @@
   Add collection blocks and optionally override each collection image and label.
 {% endcomment %}
 
+{% assign heading_tag = section.settings.heading_tag | default: 'h2' %}
+
 <section
   class="crosley-categories"
   style="
@@ -16,7 +18,7 @@
       <p>{{ section.settings.eyebrow | escape }}</p>
     {% endif %}
     {% if section.settings.heading != blank %}
-      <h2>{{ section.settings.heading | escape }}</h2>
+      <{{ heading_tag }} class="crosley-categories__heading">{{ section.settings.heading | escape }}</{{ heading_tag }}>
     {% endif %}
   </div>
 
@@ -81,7 +83,7 @@
     text-transform: uppercase;
   }
 
-  .crosley-categories__header h2 {
+  .crosley-categories__heading {
     margin: 0;
     color: #171f26;
     font-size: clamp(24px, calc(21.96px + 0.5229vw), 32px);
@@ -234,6 +236,19 @@
       "id": "heading",
       "label": "Heading",
       "default": "Featured categories"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
+      ],
+      "default": "h2"
     },
     {
       "type": "header",

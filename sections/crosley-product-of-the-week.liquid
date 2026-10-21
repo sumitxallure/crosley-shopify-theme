@@ -4,6 +4,7 @@
   assign product_alt = product_image.alt | default: product.title
   assign product_description = product.description | strip_html | truncate: 260
   assign product_sku = product.selected_or_first_available_variant.sku
+  assign heading_tag = section.settings.heading_tag | default: 'h2'
 %}
 
 {% if product != blank %}
@@ -14,7 +15,7 @@
       {% endif %}
 
       {% if section.settings.heading != blank %}
-        <h2>{{ section.settings.heading | escape }}</h2>
+        <{{ heading_tag }} class="crosley-product-week__heading">{{ section.settings.heading | escape }}</{{ heading_tag }}>
       {% endif %}
 
       <div class="crosley-product-week__grid">
@@ -87,7 +88,7 @@
     text-transform: uppercase;
   }
 
-  .crosley-product-week h2 {
+  .crosley-product-week__heading {
     margin: 0 0 64px;
     color: #171f26;
     font-size: clamp(24px, calc(21.96px + 0.5229vw), 32px);
@@ -187,7 +188,7 @@
   }
 
   @media screen and (max-width: 749px) {
-    .crosley-product-week h2 {
+    .crosley-product-week__heading {
       margin-bottom: 28px;
     }
 
@@ -244,6 +245,19 @@
       "id": "heading",
       "label": "Heading",
       "default": "Product Of The Week"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
+      ],
+      "default": "h2"
     },
     {
       "type": "text",

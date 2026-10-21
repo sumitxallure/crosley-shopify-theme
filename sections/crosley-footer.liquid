@@ -1,7 +1,9 @@
+{% assign newsletter_heading_tag = section.settings.newsletter_heading_tag | default: 'h2' %}
+
 <footer class="crosley-footer">
   <div class="crosley-footer__inner">
     <div class="crosley-footer__newsletter">
-      <h2>{{ section.settings.newsletter_heading | escape }}</h2>
+      <{{ newsletter_heading_tag }} class="crosley-footer__newsletter-heading">{{ section.settings.newsletter_heading | escape }}</{{ newsletter_heading_tag }}>
       <p>{{ section.settings.newsletter_text | escape }}</p>
       {% form 'customer', class: 'crosley-footer__form' %}
         <input type="hidden" name="contact[tags]" value="newsletter">
@@ -51,7 +53,7 @@
     margin-inline: auto;
   }
 
-  .crosley-footer h2,
+  .crosley-footer__newsletter-heading,
   .crosley-footer summary {
     margin: 0 0 20px;
     color: #383637;
@@ -196,6 +198,19 @@
   "settings": [
     { "type": "header", "content": "Newsletter" },
     { "type": "text", "id": "newsletter_heading", "label": "Newsletter heading", "default": "Newsletter" },
+    {
+      "type": "select",
+      "id": "newsletter_heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
+      ],
+      "default": "h2"
+    },
     { "type": "text", "id": "newsletter_text", "label": "Newsletter text", "default": "Subscribe to receive updates, access to exclusive deals, and more." },
     { "type": "header", "content": "Social links" },
     { "type": "url", "id": "instagram_url", "label": "Instagram URL" },
