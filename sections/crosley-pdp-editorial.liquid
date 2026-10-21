@@ -7,8 +7,28 @@
   assign second_media = product.media[2] | default: product.featured_media
   assign first_image = section.settings.first_image | default: first_media.preview_image
   assign second_image = section.settings.second_image | default: second_media.preview_image
+  assign first_eyebrow = product.metafields.custom.editorial_eyebrow_1.value | default: section.settings.first_eyebrow
+  assign first_heading = product.metafields.custom.editorial_heading_1.value | default: section.settings.first_heading
+  assign second_eyebrow = product.metafields.custom.editorial_eyebrow_2.value | default: section.settings.second_eyebrow
+  assign second_heading = product.metafields.custom.editorial_heading_2.value | default: section.settings.second_heading
   assign first_heading_tag = section.settings.first_heading_tag | default: 'h2'
   assign second_heading_tag = section.settings.second_heading_tag | default: 'h2'
+
+  if product.metafields.custom.editorial_text_1 != blank
+    capture first_text
+      echo product.metafields.custom.editorial_text_1 | metafield_tag
+    endcapture
+  else
+    assign first_text = section.settings.first_text
+  endif
+
+  if product.metafields.custom.editorial_text_2 != blank
+    capture second_text
+      echo product.metafields.custom.editorial_text_2 | metafield_tag
+    endcapture
+  else
+    assign second_text = section.settings.second_text
+  endif
 %}
 
 <section class="crosley-pdp-editorial">
@@ -16,26 +36,26 @@
     <article class="crosley-pdp-editorial__row">
       <div class="crosley-pdp-editorial__media">
         {% if first_image != blank %}
-          {{ first_image | image_url: width: 1400 | image_tag: widths: '480, 720, 960, 1200, 1400', sizes: '(min-width: 750px) 50vw, 100vw', loading: 'lazy', alt: section.settings.first_heading }}
+          {{ first_image | image_url: width: 1400 | image_tag: widths: '480, 720, 960, 1200, 1400', sizes: '(min-width: 750px) 50vw, 100vw', loading: 'lazy', alt: first_heading }}
         {% endif %}
       </div>
       <div class="crosley-pdp-editorial__content">
-        <p>{{ section.settings.first_eyebrow | escape }}</p>
-        <{{ first_heading_tag }} class="crosley-pdp-editorial__heading">{{ section.settings.first_heading | escape }}</{{ first_heading_tag }}>
-        <div class="rte">{{ section.settings.first_text }}</div>
+        <p>{{ first_eyebrow | escape }}</p>
+        <{{ first_heading_tag }} class="crosley-pdp-editorial__heading">{{ first_heading | escape }}</{{ first_heading_tag }}>
+        <div class="rte">{{ first_text }}</div>
       </div>
     </article>
 
     <article class="crosley-pdp-editorial__row crosley-pdp-editorial__row--reverse">
       <div class="crosley-pdp-editorial__media">
         {% if second_image != blank %}
-          {{ second_image | image_url: width: 1400 | image_tag: widths: '480, 720, 960, 1200, 1400', sizes: '(min-width: 750px) 50vw, 100vw', loading: 'lazy', alt: section.settings.second_heading }}
+          {{ second_image | image_url: width: 1400 | image_tag: widths: '480, 720, 960, 1200, 1400', sizes: '(min-width: 750px) 50vw, 100vw', loading: 'lazy', alt: second_heading }}
         {% endif %}
       </div>
       <div class="crosley-pdp-editorial__content">
-        <p>{{ section.settings.second_eyebrow | escape }}</p>
-        <{{ second_heading_tag }} class="crosley-pdp-editorial__heading">{{ section.settings.second_heading | escape }}</{{ second_heading_tag }}>
-        <div class="rte">{{ section.settings.second_text }}</div>
+        <p>{{ second_eyebrow | escape }}</p>
+        <{{ second_heading_tag }} class="crosley-pdp-editorial__heading">{{ second_heading | escape }}</{{ second_heading_tag }}>
+        <div class="rte">{{ second_text }}</div>
       </div>
     </article>
   </div>
