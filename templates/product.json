@@ -300,11 +300,11 @@
     "editorial": {
       "type": "crosley-pdp-editorial",
       "settings": {
-        "first_image": "shopify://shop_images/CP8005FLIB-TE-E2.jpg",
+        "first_image": "{{ product.metafields.custom.editorial_image_1.value }}",
         "first_eyebrow": "The materials",
         "first_heading": "Built to travel",
         "first_text": "<p>A two-wrapped case shell over a solid frame, with chrome corner guards and a built-in handle to play tunes on the shelf or on the road.</p>",
-        "second_image": "shopify://shop_images/CP8005FLIB-TE-W2.jpg",
+        "second_image": "{{ product.metafields.custom.editorial_image_2.value }}",
         "second_eyebrow": "Keeping it up",
         "second_heading": "Little upkeep, long life",
         "second_text": "<p>Wipe the case down with a dry cloth, keep the platter and stylus dust-free, and store it closed when you're not spinning records.</p>"
