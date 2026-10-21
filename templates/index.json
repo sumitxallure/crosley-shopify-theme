@@ -16,7 +16,6 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/crosley-hero-cd.jpg",
-            "fallback_image": "cd",
             "eyebrow": "The CD comeback, done right",
             "heading": "Find your next CD player",
             "button_label": "Shop now",
@@ -30,7 +29,6 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/crosley-home-hero.jpg",
-            "fallback_image": "c65",
             "eyebrow": "Designed to be seen. Built to be heard",
             "heading": "The C65",
             "button_label": "Shop",
@@ -53,7 +51,6 @@
       "type": "crosley-split-promo",
       "settings": {
         "image": "shopify://shop_images/crosley-contest.jpg",
-        "default_image": "contest",
         "image_position": "left",
         "eyebrow": "Custom Cruiser contest",
         "heading": "Win $2,500 for your high school",
@@ -68,7 +65,6 @@
       "type": "crosley-split-promo",
       "settings": {
         "image": "shopify://shop_images/crosley-audioengine.webp",
-        "default_image": "audioengine",
         "image_position": "right",
         "eyebrow": "",
         "heading": "Shop the Crosley x Audio Engine collection",
@@ -83,7 +79,6 @@
       "type": "crosley-split-promo",
       "settings": {
         "image": "shopify://shop_images/crosley-miller.jpg",
-        "default_image": "miller",
         "image_position": "left",
         "eyebrow": "",
         "heading": "Miller High Life x Crosley",

@@ -4,21 +4,7 @@
   Add multiple instances to highlight collaborations, products, or gift guides.
 {% endcomment %}
 
-{% liquid
-  case section.settings.default_image
-    when 'contest'
-      assign fallback_asset = 'crosley-contest.jpg'
-    when 'miller'
-      assign fallback_asset = 'crosley-miller.jpg'
-    when 'c65'
-      assign fallback_asset = 'crosley-c65-promo.webp'
-    when 'gift'
-      assign fallback_asset = 'crosley-gift-guide.jpg'
-    else
-      assign fallback_asset = 'crosley-audioengine.webp'
-  endcase
-  assign promo_alt = section.settings.image.alt | default: section.settings.heading
-%}
+{% assign promo_alt = section.settings.image.alt | default: section.settings.heading %}
 
 <section
   class="crosley-promo crosley-promo--image-{{ section.settings.image_position }}"
@@ -36,13 +22,7 @@
           alt: promo_alt
       }}
     {% else %}
-      <img
-        src="{{ fallback_asset | asset_url }}"
-        alt="{{ promo_alt | escape }}"
-        width="1600"
-        height="1200"
-        loading="lazy"
-      >
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'crosley-promo__placeholder' }}
     {% endif %}
   </div>
 
@@ -84,7 +64,8 @@
     overflow: hidden;
   }
 
-  .crosley-promo__media img {
+  .crosley-promo__media img,
+  .crosley-promo__media svg {
     display: block;
     width: 100%;
     height: 100%;
@@ -199,20 +180,6 @@
       "type": "image_picker",
       "id": "image",
       "label": "Image"
-    },
-    {
-      "type": "select",
-      "id": "default_image",
-      "label": "Bundled campaign image",
-      "info": "Used only when no custom image is selected.",
-      "options": [
-        { "value": "contest", "label": "Cruiser contest" },
-        { "value": "audioengine", "label": "Crosley x Audioengine" },
-        { "value": "miller", "label": "Miller High Life" },
-        { "value": "c65", "label": "C65" },
-        { "value": "gift", "label": "Gift guide" }
-      ],
-      "default": "audioengine"
     },
     {
       "type": "select",
