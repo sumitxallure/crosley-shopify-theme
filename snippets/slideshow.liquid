@@ -23,6 +23,8 @@
   @param {string} [icon_shape] - The shape of the icon background (none, circle, square), defaults to 'none'
   @param {string} [arrows_position] - The position of the arrows, defaults to 'bottom'
   @param {string} [attributes] - Additional attributes to add to the slideshow component
+  @param {number} [scroller_tabindex] - Optional keyboard tab index for an independently scrollable slideshow
+  @param {string} [scroller_label] - Accessible name for a focusable slideshow scroller
   @param {boolean} [header] - The title of the slideshow
 
   @example
@@ -115,8 +117,11 @@
       {{ slideshow_arrows }}
     {% endif %}
     <slideshow-slides
-      tabindex="-1"
+      tabindex="{% if scroller_tabindex != blank %}{{ scroller_tabindex }}{% else %}-1{% endif %}"
       ref="scroller"
+      {% if scroller_label != blank %}
+        aria-label="{{ scroller_label | escape }}"
+      {% endif %}
       {% if slideshow_gutters %}
         gutters="{{ slideshow_gutters }}"
       {% endif %}

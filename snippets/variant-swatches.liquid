@@ -34,9 +34,19 @@
       )
       calc(var(--product-swatches-padding-inline-end) + var(--focus-outline-offset) + var(--focus-outline-width));
 
+    overflow-list {
+      width: 100%;
+      min-width: 0;
+    }
+
     overflow-list::part(list) {
       gap: var(--gap-sm);
     }
+  }
+
+  swatches-variant-picker-component > form {
+    width: 100%;
+    min-width: 0;
   }
 
   swatches-variant-picker-component overflow-list[disabled='true'] {

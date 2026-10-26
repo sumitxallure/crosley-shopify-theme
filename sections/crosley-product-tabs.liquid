@@ -9,10 +9,14 @@
         {% for block in section.blocks %}
           {% assign tab_collection = block.settings.collection %}
           <button
+            id="CrosleyProductTab-{{ section.id }}-{{ forloop.index0 }}"
             type="button"
             class="crosley-product-tabs__tab{% if forloop.first %} is-active{% endif %}"
             data-tab-button="{{ forloop.index0 }}"
+            role="tab"
+            aria-controls="CrosleyProductPanel-{{ section.id }}-{{ forloop.index0 }}"
             aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
             {{ block.shopify_attributes }}
           >
             {{ block.settings.label | default: tab_collection.title | escape }}
@@ -33,8 +37,11 @@
       {% assign tab_collection = block.settings.collection %}
       {% assign tab_products = block.settings.products | default: tab_collection.products %}
       <div
+        id="CrosleyProductPanel-{{ section.id }}-{{ forloop.index0 }}"
         class="crosley-product-tabs__panel{% if forloop.first %} is-active{% endif %}"
         data-tab-panel="{{ forloop.index0 }}"
+        role="tabpanel"
+        aria-labelledby="CrosleyProductTab-{{ section.id }}-{{ forloop.index0 }}"
         {% unless forloop.first %}hidden{% endunless %}
       >
         <div class="crosley-product-tabs__products">
@@ -155,7 +162,7 @@
 
 {% stylesheet %}
   .crosley-product-tabs {
-    padding: clamp(40px, calc(29.29px + 2.7451vw), 82px) clamp(16px, calc(7.33px + 2.2222vw), 50px);
+    padding: clamp(48px, 3.5vw, 56px) var(--crosley-page-gutter) var(--crosley-section-space);
     text-align: center;
     background: #ffffff;
   }
@@ -179,7 +186,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-block-end: 64px;
+    margin-block-end: clamp(36px, 4.45vw, 64px);
     min-width: 0;
     overflow: hidden;
   }
@@ -227,6 +234,10 @@
     display: none;
   }
 
+  .crosley-product-tabs__dots span[hidden] {
+    display: none;
+  }
+
   .crosley-product-tabs__nav-arrows button {
     display: grid;
     width: 30px;
@@ -250,6 +261,10 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 24px;
     text-align: left;
+  }
+
+  .crosley-product-card {
+    min-width: 0;
   }
 
   .crosley-product-card__media {
@@ -381,13 +396,56 @@
     text-transform: uppercase;
   }
 
+  @media (min-width: 601px) and (max-width: 999px) {
+    .crosley-product-tabs__products {
+      display: flex;
+      gap: 24px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+
+    .crosley-product-tabs__products::-webkit-scrollbar {
+      display: none;
+    }
+
+    .crosley-product-card {
+      flex: 0 0 clamp(220px, 32vw, 300px);
+      scroll-snap-align: start;
+    }
+
+    .crosley-product-tabs__dots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-block: 24px 32px;
+    }
+
+    .crosley-product-tabs__dots span {
+      display: block;
+      width: 7px;
+      height: 7px;
+      background: #d0d0d0;
+      border-radius: 50%;
+    }
+
+    .crosley-product-tabs__dots span.is-active {
+      background: #383637;
+    }
+
+    .crosley-product-tabs__cta {
+      margin-block-start: 0;
+    }
+  }
+
   @media (max-width: 600px) {
     .crosley-product-tabs {
       padding-bottom: 40px;
     }
 
     .crosley-product-tabs__nav {
-      margin-block-end: 64px;
+      margin-block-end: 36px;
       width: 100%;
       padding-inline: 0;
     }
@@ -527,23 +585,27 @@
       let updateFrame;
       const updateActiveDot = () => {
         updateFrame = undefined;
-        const viewportCenter = products.scrollLeft + products.clientWidth / 2;
+        const maxScroll = Math.max(0, products.scrollWidth - products.clientWidth);
+        const scrollStops = cards
+          .map((card) => Math.min(maxScroll, Math.max(0, card.offsetLeft - products.offsetLeft)))
+          .filter((stop, index, stops) => index === 0 || Math.abs(stop - stops[index - 1]) > 2);
         let activeIndex = 0;
         let shortestDistance = Number.POSITIVE_INFINITY;
 
-        if (products.scrollWidth > products.clientWidth + 1) {
-          cards.forEach((card, index) => {
-            const cardCenter = card.offsetLeft - products.offsetLeft + card.offsetWidth / 2;
-            const distance = Math.abs(cardCenter - viewportCenter);
+        scrollStops.forEach((stop, index) => {
+          const distance = Math.abs(products.scrollLeft - stop);
 
-            if (distance < shortestDistance) {
-              shortestDistance = distance;
-              activeIndex = index;
-            }
-          });
-        }
+          if (distance < shortestDistance) {
+            shortestDistance = distance;
+            activeIndex = index;
+          }
+        });
 
-        dots.forEach((dot, index) => dot.classList.toggle('is-active', index === activeIndex));
+        dots.forEach((dot, index) => {
+          const reachable = index < scrollStops.length;
+          dot.hidden = !reachable;
+          dot.classList.toggle('is-active', reachable && index === activeIndex);
+        });
       };
 
       const queueDotUpdate = () => {
@@ -573,6 +635,7 @@
         const active = item.dataset.tabButton === activeIndex;
         item.classList.toggle('is-active', active);
         item.setAttribute('aria-selected', String(active));
+        item.tabIndex = active ? 0 : -1;
       });
       panels.forEach((panel) => {
         const active = panel.dataset.tabPanel === activeIndex;
@@ -581,6 +644,20 @@
         if (active) panel.updateProductDots?.();
       });
     }));
+
+    navList?.addEventListener('keydown', (event) => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      const currentIndex = buttons.indexOf(document.activeElement);
+      if (currentIndex < 0) return;
+      event.preventDefault();
+      const nextIndex = event.key === 'Home'
+        ? 0
+        : event.key === 'End'
+          ? buttons.length - 1
+          : (currentIndex + (event.key === 'ArrowRight' ? 1 : -1) + buttons.length) % buttons.length;
+      buttons[nextIndex]?.focus();
+      buttons[nextIndex]?.click();
+    });
   }
 
   document.querySelectorAll('[data-crosley-tabs]').forEach(initializeCrosleyTabs);

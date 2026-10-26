@@ -20,7 +20,6 @@ const sectionSelectors = [
   '.crosley-pdp-breadcrumbs',
   '.product-information--crosley-pdp',
   '.crosley-pdp-video',
-  '.crosley-pdp-marquee',
   '.crosley-pdp-editorial',
   '.crosley-pdp-reviews',
   '.product-recommendations--crosley-pdp',
@@ -132,7 +131,7 @@ for (const viewport of zoomViewports) {
     expect(await gridColumns('.crosley-pdp-collections__grid')).toBe(viewport.width <= 860 ? 1 : 3);
 
     if (viewport.width <= 860) {
-      await expect(page.locator('.crosley-benefits__grid')).toHaveCSS('display', 'flex');
+      expect(await gridColumns('.crosley-benefits__grid')).toBe(4);
       await expect(page.locator('.crosley-footer__inner')).toHaveCSS('display', 'block');
     } else {
       expect(await gridColumns('.crosley-social-gallery__grid')).toBe(5);
@@ -156,7 +155,7 @@ for (const viewport of zoomViewports) {
     expect(Math.abs(stickyMeasurements.left)).toBeLessThanOrEqual(1);
     expect(Math.abs(stickyMeasurements.width - viewport.width)).toBeLessThanOrEqual(1);
     expect(Math.abs(stickyMeasurements.paddingLeft - stickyMeasurements.paddingRight)).toBeLessThanOrEqual(1);
-    if (viewport.width <= 860) {
+    if (viewport.width < 750) {
       expect(stickyMeasurements.paddingLeft).toBeCloseTo(20, 0);
     } else {
       expect(stickyMeasurements.paddingLeft).toBeGreaterThanOrEqual(32);

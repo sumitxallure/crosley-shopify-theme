@@ -16,9 +16,12 @@
         assign heading_tag = block.settings.heading_tag | default: 'h1'
       %}
       <article
+        id="CrosleyHeroSlide-{{ section.id }}-{{ forloop.index0 }}"
         class="crosley-hero-slide crosley-hero-slide--{{ block.settings.content_position }}{% if forloop.first %} is-active{% endif %}"
         data-hero-slide
         data-block-id="{{ block.id }}"
+        role="tabpanel"
+        aria-labelledby="CrosleyHeroTab-{{ section.id }}-{{ forloop.index0 }}"
         aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
         {{ block.shopify_attributes }}
       >
@@ -62,11 +65,15 @@
     <div class="crosley-hero-slider__dots" role="tablist" aria-label="Hero slides">
       {% for block in section.blocks %}
         <button
+          id="CrosleyHeroTab-{{ section.id }}-{{ forloop.index0 }}"
           type="button"
           class="crosley-hero-slider__dot{% if forloop.first %} is-active{% endif %}"
           data-hero-dot="{{ forloop.index0 }}"
+          role="tab"
+          aria-controls="CrosleyHeroSlide-{{ section.id }}-{{ forloop.index0 }}"
           aria-label="Show slide {{ forloop.index }}"
           aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+          tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
         ></button>
       {% endfor %}
     </div>
@@ -76,8 +83,8 @@
 {% stylesheet %}
   .crosley-hero-slider {
     position: relative;
-    height: var(--hero-height);
-    overflow: visible;
+    height: clamp(440px, min(56vw, calc(100svh - 112px)), var(--hero-height));
+    overflow: hidden;
     color: #ffffff;
     background: #171f26;
   }
@@ -124,7 +131,7 @@
     width: 100%;
     align-items: center;
     margin-inline: 0;
-    padding: 0 40px 0 64px;
+    padding-inline: var(--crosley-page-gutter);
     pointer-events: none;
   }
 
@@ -153,7 +160,7 @@
 
   .crosley-hero-slide__copy--framed {
     padding: clamp(40px, calc(33.88px + 1.5686vw), 64px) 56px;
-    border: 1px solid rgb(255 255 255 / 70%);
+    border: 0;
   }
 
   .crosley-hero-slide__copy p {
@@ -217,13 +224,23 @@
     background: #ffffff;
   }
 
+  @media (min-width: 1000px) {
+    .crosley-hero-slider {
+      height: clamp(480px, min(52vw, 75svh), 640px);
+    }
+
+    .crosley-hero-slide__copy--framed {
+      width: min(100%, 624px);
+    }
+  }
+
   @media (max-width: 600px) {
     .crosley-hero-slider {
-      height: var(--hero-mobile-height);
+      height: clamp(400px, min(70svh, 130vw), var(--hero-mobile-height));
     }
 
     .crosley-hero-slide__content {
-      padding: 0 24px;
+      padding-inline: var(--crosley-page-gutter);
     }
 
     .crosley-hero-slide--center .crosley-hero-slide__content {
@@ -285,6 +302,7 @@
         const active = dotIndex === activeIndex;
         dot.classList.toggle('is-active', active);
         dot.setAttribute('aria-selected', String(active));
+        dot.tabIndex = active ? 0 : -1;
       });
     };
 
@@ -295,10 +313,26 @@
       }
     };
 
-    dots.forEach((dot) => dot.addEventListener('click', () => {
-      showSlide(Number(dot.dataset.heroDot));
-      startTimer();
-    }));
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        showSlide(Number(dot.dataset.heroDot));
+        startTimer();
+      });
+
+      dot.addEventListener('keydown', (event) => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        const currentIndex = Number(dot.dataset.heroDot);
+        const nextIndex = event.key === 'Home'
+          ? 0
+          : event.key === 'End'
+            ? dots.length - 1
+            : (currentIndex + (event.key === 'ArrowRight' ? 1 : -1) + dots.length) % dots.length;
+        showSlide(nextIndex);
+        dots[nextIndex]?.focus();
+        startTimer();
+      });
+    });
 
     document.addEventListener('shopify:block:select', (event) => {
       const index = slides.findIndex((slide) => slide.dataset.blockId === event.detail.blockId);

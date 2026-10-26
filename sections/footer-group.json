@@ -17,8 +17,7 @@
         "shop": {
           "type": "menu",
           "settings": {
-            "heading": "Shop",
-            "menu": "main-menu"
+            "heading": "Shop"
           }
         },
         "company": {
@@ -44,54 +43,14 @@
       "settings": {
         "newsletter_heading": "Newsletter",
         "newsletter_text": "Subscribe to receive updates, access to exclusive deals, and more.",
-        "instagram_url": "https://www.instagram.com/",
         "facebook_url": "https://www.facebook.com/",
-        "youtube_url": "https://www.youtube.com/"
-      }
-    },
-    "footer_utilities": {
-      "type": "footer-utilities",
-      "blocks": {
-        "copyright": {
-          "type": "footer-copyright",
-          "settings": {
-            "show_powered_by": false,
-            "font_size": "0.75rem",
-            "case": "none"
-          },
-          "blocks": {}
-        },
-        "policies": {
-          "type": "footer-policy-list",
-          "settings": {
-            "font_size": "0.75rem",
-            "case": "none"
-          },
-          "blocks": {}
-        },
-        "social": {
-          "type": "social-links",
-          "settings": {
-            "facebook_url": "https://www.facebook.com/",
-            "instagram_url": "https://www.instagram.com/",
-            "youtube_url": "https://www.youtube.com/",
-            "tiktok_url": "",
-            "twitter_url": "https://x.com/"
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": ["copyright", "policies", "social"],
-      "settings": {
-        "section_width": "page-width",
-        "gap": 24,
-        "divider_thickness": 1,
-        "divider_color": "#ededed",
-        "background_color": "#ffffff",
-        "padding-block-start": 20,
-        "padding-block-end": 32
+        "twitter_url": "https://x.com/",
+        "instagram_url": "https://www.instagram.com/",
+        "youtube_url": "https://www.youtube.com/",
+        "copyright_name": "Crosley Radio",
+        "show_powered_by": true
       }
     }
   },
-  "order": ["crosley_footer", "footer_utilities"]
+  "order": ["crosley_footer"]
 }

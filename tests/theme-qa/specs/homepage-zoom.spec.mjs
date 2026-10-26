@@ -93,7 +93,8 @@ for (const viewport of zoomViewports) {
     await expect(splitPromos).toHaveCount(3);
     for (const promo of await splitPromos.all()) {
       const box = await promo.boundingBox();
-      expect(box?.height).toBe(700);
+      expect(box?.height).toBeLessThanOrEqual(620);
+      expect(box?.height).toBeLessThanOrEqual(1000 - 96);
     }
 
     const parentDrivenWrappers = [
@@ -135,7 +136,7 @@ for (const viewport of zoomViewports) {
     for (const wrapper of [
       {
         selector: '.crosley-social-gallery__grid',
-        gutter: Math.min(160, Math.max(40, viewport.width * 0.0703))
+        gutter: Math.min(40, Math.max(16, viewport.width * 0.03125))
       },
       { selector: '.footer-utilities .utilities', gutter: 40 }
     ]) {

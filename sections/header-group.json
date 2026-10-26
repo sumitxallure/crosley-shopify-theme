@@ -113,7 +113,9 @@
         "home_inverse_logo": true,
         "text_color_transparent_home": "#ffffff",
         "enable_transparent_header_product": false,
-        "enable_transparent_header_collection": false
+        "enable_transparent_header_collection": true,
+        "collection_inverse_logo": true,
+        "text_color_transparent_collection": "#ffffff"
       }
     }
   },

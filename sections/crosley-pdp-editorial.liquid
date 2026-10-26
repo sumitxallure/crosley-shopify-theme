@@ -141,6 +141,13 @@
   .crosley-pdp-editorial__content .rte > :first-child { margin-block-start: 0; }
   .crosley-pdp-editorial__content .rte > :last-child { margin-block-end: 0; }
 
+  @media (min-width: 600px) and (max-width: 1199px) {
+    .crosley-pdp-editorial__media {
+      aspect-ratio: 4 / 3;
+      background: #fff;
+    }
+  }
+
   @media (max-width: 860px) {
     .crosley-pdp-editorial {
       padding: 24px 20px 32px;
@@ -152,7 +159,7 @@
     }
 
     .crosley-pdp-editorial__row + .crosley-pdp-editorial__row {
-      margin-block-start: 56px;
+      margin-block-start: 40px;
     }
 
     .crosley-pdp-editorial__row--reverse .crosley-pdp-editorial__media,

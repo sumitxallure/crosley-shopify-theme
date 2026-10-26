@@ -106,11 +106,13 @@
 
   .crosley-product-week__media {
     display: grid;
-    height: 369px;
+    width: 100%;
+    height: auto;
     min-width: 0;
+    aspect-ratio: 16 / 9;
     place-items: center;
     overflow: hidden;
-    background: #f5f5f4;
+    background: #fff;
   }
 
   .crosley-product-week__media img,
@@ -195,11 +197,6 @@
     .crosley-product-week__grid {
       grid-template-columns: minmax(0, 1fr);
       gap: 20px;
-    }
-
-    .crosley-product-week__media {
-      height: auto;
-      aspect-ratio: 16 / 11;
     }
 
     .crosley-product-week__content {

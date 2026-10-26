@@ -3,12 +3,17 @@ import { routes, viewportGroups } from '../config.mjs';
 import { openStorefrontPage } from '../helpers.mjs';
 
 test.describe('critical interaction states', () => {
-  test('mobile menu survives repeated open and close cycles', async ({ page }, testInfo) => {
-    test.skip(!viewportGroups.mobile.has(testInfo.project.name), 'Mobile-only behavior.');
+  test('compact menu survives repeated open and close cycles', async ({ page }, testInfo) => {
+    test.skip(
+      !viewportGroups.mobile.has(testInfo.project.name) && !viewportGroups.tablet.has(testInfo.project.name),
+      'Compact navigation behavior.'
+    );
     await openStorefrontPage(page, routes[0]);
 
     const trigger = page.locator('.header__icon--menu').first();
     const container = page.locator('.menu-drawer-container').first();
+
+    test.skip(!(await trigger.isVisible()), 'This breakpoint uses the full primary navigation.');
 
     await trigger.click();
     await expect(container).toHaveClass(/menu-open/);
@@ -50,8 +55,27 @@ test.describe('critical interaction states', () => {
     await openStorefrontPage(page, routes[0]);
 
     const recordPlayers = page.locator('.menu-list__link').filter({ hasText: 'Record Players' }).first();
+    const title = recordPlayers.locator('.menu-list__link-title');
+    await expect.poll(() => title.evaluate((element) => getComputedStyle(element, '::after').opacity)).toBe('0');
     await recordPlayers.hover();
+    await expect.poll(() => title.evaluate((element) => getComputedStyle(element, '::after').opacity)).toBe('1');
+    expect(await title.evaluate((element) => getComputedStyle(element, '::after').height)).toBe('2px');
     await expect(page.locator('.menu-list__submenu').first()).toBeVisible();
+  });
+
+  test('cart drawer opens modally with a visible page overlay', async ({ page }) => {
+    await openStorefrontPage(page, routes[0]);
+
+    await page.locator('[data-testid="cart-drawer-trigger"]').click();
+    const dialog = page.locator('#cart-drawer .cart-drawer__dialog');
+    await expect(dialog).toBeVisible();
+
+    const state = await dialog.evaluate((element) => ({
+      modal: element.matches(':modal'),
+      backdrop: getComputedStyle(element, '::backdrop').backgroundColor
+    }));
+    expect(state.modal).toBe(true);
+    expect(state.backdrop).toBe('rgba(23, 31, 38, 0.5)');
   });
 
   test('PDP quantity stays synchronized between the main form and sticky bar', async ({ page }, testInfo) => {

@@ -46,7 +46,7 @@
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
     gap: 4px;
-    padding: clamp(40px, calc(37.45px + 0.6536vw), 50px) clamp(16px, calc(7.33px + 2.2222vw), 50px) clamp(40px, calc(29.29px + 2.7451vw), 82px);
+    padding: clamp(40px, 3.5vw, 50px) var(--crosley-page-gutter) var(--crosley-section-space);
     background: #ffffff;
   }
 
@@ -60,7 +60,7 @@
   }
 
   .crosley-gift-mosaic__main {
-    height: 388px;
+    height: clamp(320px, 27vw, 420px);
   }
 
   .crosley-gift-mosaic img {
@@ -117,7 +117,7 @@
 
   .crosley-gift-mosaic__side {
     display: grid;
-    height: 388px;
+    height: clamp(320px, 27vw, 420px);
     grid-template-rows: repeat(2, minmax(0, 1fr));
     gap: 4px;
   }
@@ -141,11 +141,13 @@
     }
 
     .crosley-gift-mosaic__main {
-      height: 320px;
+      height: auto;
+      aspect-ratio: 4 / 3;
     }
 
     .crosley-gift-mosaic__side {
-      height: 200px;
+      height: auto;
+      aspect-ratio: 2 / 1;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       grid-template-rows: none;
     }

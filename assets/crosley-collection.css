@@ -101,8 +101,83 @@ body:has(.crosley-main-collection):has(#header-component[transparent])
   grid-template-columns: 200px minmax(0, 1fr) 170px 150px;
   align-items: center;
   min-height: 64px;
-  padding-inline: clamp(16px, calc(7.33px + 2.2222vw), 40px);
+  padding-inline: var(--crosley-page-gutter);
   background: rgb(var(--color-background-rgb));
+}
+
+.crosley-main-collection .crosley-active-filters {
+  grid-column: var(--full-width);
+  display: block;
+  padding-inline: var(--crosley-page-gutter);
+  background: rgb(var(--color-background-rgb));
+}
+
+.crosley-main-collection .crosley-active-filters:not(:has(facet-remove-component)) {
+  display: none;
+}
+
+.crosley-main-collection .crosley-active-filters form {
+  margin: 0;
+}
+
+.crosley-main-collection .crosley-active-filters .facets-remove {
+  gap: 8px;
+  margin: 0;
+  padding: 12px 0;
+}
+
+.crosley-main-collection .crosley-active-filters .facets-remove__pill {
+  display: inline-grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  max-inline-size: min(100%, 420px);
+  min-width: 93px;
+  min-height: 43px;
+  justify-content: start;
+  padding: 10px 14px;
+  border: 1px solid rgb(var(--color-foreground-rgb) / 0.22);
+  border-radius: 0;
+  background: rgb(var(--color-background-rgb));
+  color: #171f26;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 20px;
+  text-transform: none;
+  --close-icon-opacity: 1;
+  --icon-stroke-width: 1.4px;
+}
+
+.crosley-main-collection .crosley-active-filters .facets-remove__pill > .svg-wrapper {
+  order: -1;
+  width: 12px;
+  height: 12px;
+  color: #8c8c8c;
+}
+
+.crosley-main-collection .crosley-active-filters .facets-remove__pill > .svg-wrapper > svg {
+  width: 12px;
+  height: 12px;
+}
+
+.crosley-main-collection .crosley-active-filters .facets-remove__pill-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.crosley-main-collection .crosley-active-filters .facets__clear-all-link {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  padding-inline: 8px;
+  color: #171f26;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-transform: uppercase;
 }
 
 .crosley-main-collection .crosley-collection-toolbar::before,
@@ -304,7 +379,7 @@ body:has(.crosley-main-collection):has(#header-component[transparent])
 }
 
 .crosley-main-collection .main-collection-grid > div {
-  padding-inline: clamp(28px, calc(45vw - 505px), 200px);
+  padding-inline: var(--crosley-page-gutter);
 }
 
 .crosley-main-collection .product-grid[product-grid-view='default'] {
@@ -328,20 +403,6 @@ body:has(.crosley-main-collection):has(#header-component[transparent])
   .product-grid[product-grid-view='zoom-out']
   .product-grid-view-zoom-out--details {
   display: none;
-}
-
-.crosley-main-collection
-  .product-grid[product-grid-view='zoom-out']
-  .product-grid__card
-  > a[ref='productTitleLink'] {
-  display: contents;
-}
-
-.crosley-main-collection
-  .product-grid[product-grid-view='zoom-out']
-  .product-grid__card
-  > product-price {
-  display: flex;
 }
 
 .crosley-main-collection .product-grid__item,
@@ -408,6 +469,10 @@ body:has(.crosley-main-collection):has(#header-component[transparent])
   margin-block-start: 38px;
 }
 
+.crosley-main-collection .product-grid__card > a[ref='productTitleLink'] .text-block {
+  min-block-size: 2.5em;
+}
+
 .crosley-main-collection .product-grid__card:has(product-swatches) > a[ref='productTitleLink'] {
   margin-block-start: 14px;
 }
@@ -426,7 +491,7 @@ body:has(.crosley-main-collection):has(#header-component[transparent])
   color: #171f26;
   font-size: clamp(14px, calc(13.49px + 0.1307vw), 16px);
   font-weight: 700;
-  line-height: normal;
+  line-height: 1.25;
   text-transform: uppercase;
 }
 
@@ -448,12 +513,17 @@ body:has(.crosley-main-collection):has(#header-component[transparent])
 
 @media screen and (max-width: 989px) {
   .crosley-main-collection .crosley-collection-toolbar {
-    grid-template-columns: 160px minmax(0, 1fr) 150px 130px;
-    padding-inline: 28px;
+    grid-template-columns: 120px minmax(0, 1fr) 150px 130px;
+    padding-inline: var(--crosley-page-gutter);
   }
 
-  .crosley-main-collection .main-collection-grid > div {
-    padding-inline: 28px;
+  .crosley-main-collection .crosley-density__option--compact {
+    display: none;
+  }
+
+  .crosley-main-collection .product-grid[product-grid-view='crosley-three'] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px 20px;
   }
 
   .crosley-main-collection .product-grid[product-grid-view='default'] {
@@ -478,7 +548,7 @@ body:has(.crosley-main-collection):has(#header-component[transparent])
   .crosley-main-collection .crosley-collection-toolbar {
     grid-template-columns: 1fr 1fr auto;
     min-height: 48px;
-    padding-inline: 20px;
+    padding-inline: var(--crosley-page-gutter);
   }
 
   .crosley-main-collection .crosley-collection-toolbar__results {
@@ -580,18 +650,55 @@ body:has(.crosley-main-collection):has(#header-component[transparent])
   }
 
   .crosley-main-collection .main-collection-grid > div {
-    padding-inline: 16px;
+    padding-inline: var(--crosley-page-gutter);
   }
 
   .crosley-main-collection .product-grid[product-grid-view='default'],
   .crosley-main-collection .product-grid[product-grid-view='mobile-single'] {
     width: 100%;
-    padding-inline: 16px;
+    padding-inline: 0;
   }
 
   .crosley-main-collection .product-grid[product-grid-view='default'] {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 32px 16px;
+  }
+
+  .crosley-main-collection .product-grid__card > a[ref='productTitleLink'] .text-block {
+    min-block-size: 3.75em;
+  }
+
+  .crosley-main-collection
+    .product-grid[product-grid-view='mobile-single']
+    .product-grid__card
+    > a[ref='productTitleLink']
+    .text-block {
+    min-block-size: 2.5em;
+  }
+
+  .crosley-main-collection .crosley-active-filters {
+    overflow: hidden;
+  }
+
+  .crosley-main-collection .crosley-active-filters .facets-remove {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-padding-inline: var(--crosley-page-gutter);
+    scrollbar-width: none;
+  }
+
+  .crosley-main-collection .crosley-active-filters .facets-remove::-webkit-scrollbar {
+    display: none;
+  }
+
+  .crosley-main-collection .crosley-active-filters facet-remove-component {
+    flex: 0 0 auto;
+  }
+
+  .crosley-main-collection .crosley-active-filters .facets-remove__pill {
+    max-inline-size: min(82vw, 340px);
+    min-height: 38px;
+    padding: 8px 11px;
   }
 
   .crosley-main-collection

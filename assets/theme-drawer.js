@@ -157,6 +157,7 @@ export class ThemeDrawer extends Component {
     if (this.#usesModal) {
       lockScroll(panel);
       panel.showModal();
+      if (this.hasAttribute('trap-focus')) trapFocus(panel);
     } else {
       unlockScroll(panel);
       panel.show();
@@ -227,6 +228,7 @@ export class ThemeDrawer extends Component {
     if (this.#usesModal) {
       lockScroll(panel);
       panel.showModal();
+      if (this.hasAttribute('trap-focus')) trapFocus(panel);
     } else {
       panel.show();
       trapFocus(panel);
@@ -261,9 +263,11 @@ export class ThemeDrawer extends Component {
     // is ignored — stacking follows showModal() call order. Re-calling
     // showModal() moves this dialog to the top of the stack.
     if (this.#usesModal && panel.open) {
+      removeTrapFocus();
       lockScroll(panel);
       panel.close();
       panel.showModal();
+      if (this.hasAttribute('trap-focus')) trapFocus(panel);
     }
 
     const openClass =

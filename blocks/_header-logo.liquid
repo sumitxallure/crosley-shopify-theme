@@ -8,8 +8,6 @@
     assign use_inverse_logo = true
   elsif section.settings.enable_transparent_header_product and template.name == 'product' and section.settings.product_inverse_logo == true
     assign use_inverse_logo = true
-  elsif template.name == 'collection'
-    assign use_inverse_logo = true
   elsif section.settings.enable_transparent_header_collection and template.name == 'collection' and section.settings.collection_inverse_logo == true
     assign use_inverse_logo = true
   endif
@@ -97,14 +95,6 @@
           text_fallback: shop.name,
           style: inverse_logo_style
         %}
-      {% elsif template.name == 'collection' %}
-        <img
-          src="{{ 'crosley-logo-white.png' | asset_url }}"
-          class="header-logo__image header-logo__brand-fallback header-logo__brand-fallback--collection"
-          width="200"
-          height="24"
-          alt="{{ alt_text_fallback | escape }}"
-        >
       {% else %}
         <img
           src="{{ 'crosley-logo.svg' | asset_url }}"
@@ -176,21 +166,12 @@
     filter: invert(1);
   }
 
-  .header-logo__brand-fallback--collection {
-    width: 200px;
-    height: 24px;
-  }
-
   @media screen and (max-width: 749px) {
     .header-logo__brand-fallback {
       width: 170px;
       height: auto;
     }
 
-    .header-logo__brand-fallback--collection {
-      width: 200px;
-      height: 24px;
-    }
   }
 
   .header-logo__solid-header-image-container {

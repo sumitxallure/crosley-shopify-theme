@@ -75,8 +75,7 @@ for (const viewport of zoomViewports) {
       { selector: '.crosley-product-week__inner', parent: '.crosley-product-week' },
       {
         selector: '.crosley-social-gallery__grid',
-        parent: '.crosley-social-gallery',
-        gutter: Math.min(160, Math.max(40, viewport.width * 0.0703))
+        parent: '.crosley-social-gallery'
       },
       { selector: '.crosley-benefits__grid', parent: '.crosley-benefits' },
       { selector: '.crosley-footer__inner', parent: '.crosley-footer' }
@@ -104,10 +103,20 @@ for (const viewport of zoomViewports) {
 
     const gridColumns = async (selector) =>
       page.locator(selector).first().evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(' ').length);
-    expect(await gridColumns('.product-grid[product-grid-view="default"]')).toBe(viewport.width <= 989 ? 3 : 4);
+    const expectedProductColumns = viewport.width <= 989 ? 3 : 4;
+    expect(await gridColumns('.product-grid[product-grid-view="default"]')).toBe(expectedProductColumns);
     expect(await gridColumns('.crosley-product-week__grid')).toBe(2);
-    expect(await gridColumns('.crosley-social-gallery__grid')).toBe(5);
-    if (viewport.width <= 860) {
+    const productWeekMediaRatio = await page.locator('.crosley-product-week__media').evaluate((element) => {
+      const box = element.getBoundingClientRect();
+      return box.width / box.height;
+    });
+    expect(productWeekMediaRatio).toBeCloseTo(16 / 9, 2);
+    if (viewport.width <= 999) {
+      await expect(page.locator('.crosley-social-gallery__grid')).toHaveCSS('display', 'flex');
+    } else {
+      expect(await gridColumns('.crosley-social-gallery__grid')).toBe(5);
+    }
+    if (viewport.width <= 600) {
       await expect(page.locator('.crosley-benefits__grid')).toHaveCSS('display', 'flex');
     } else {
       expect(await gridColumns('.crosley-benefits__grid')).toBe(4);

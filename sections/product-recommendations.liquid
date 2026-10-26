@@ -155,6 +155,10 @@
       {% if section.settings.carousel_on_mobile and section.settings.layout_type != 'carousel' %}
         {% liquid
           assign mobile_carousel_gap = section.settings.columns_gap
+          assign show_mobile_dots = false
+          if section.settings.style_variant == 'crosley-pdp'
+            assign show_mobile_dots = true
+          endif
         %}
         <div
           class="
@@ -171,7 +175,8 @@
             ref: 'resourceListCarouselMobile',
             slides: slides,
             slide_count: recommendations.products.size,
-            settings: section.settings
+            settings: section.settings,
+            show_dots: show_mobile_dots
           %}
         </div>
       {% endif %}
@@ -639,26 +644,30 @@
     padding-inline: 0;
   }
 
-    .product-recommendations--crosley-pdp .product-card-gallery {
+  .product-recommendations--crosley-pdp quick-add-component {
+    display: none !important;
+  }
+
+  .product-recommendations--crosley-pdp .product-card-gallery {
     background: #f5f5f4;
   }
 
-    .product-recommendations--crosley-pdp product-swatches {
-      overflow: visible;
-    }
+  .product-recommendations--crosley-pdp product-swatches {
+    overflow: visible;
+  }
 
-    .product-recommendations--crosley-pdp .variant-option--swatches {
-      gap: 6px;
-    }
+  .product-recommendations--crosley-pdp .variant-option--swatches {
+    gap: 6px;
+  }
 
-    .product-recommendations--crosley-pdp .variant-option__button-label--has-swatch {
-      padding: 0;
-    }
+  .product-recommendations--crosley-pdp .variant-option__button-label--has-swatch {
+    padding: 0;
+  }
 
-    .product-recommendations--crosley-pdp .variant-option__button-label--has-swatch .swatch {
-      --variant-picker-swatch-width: 12px;
-      --variant-picker-swatch-height: 12px;
-    }
+  .product-recommendations--crosley-pdp .variant-option__button-label--has-swatch .swatch {
+    --variant-picker-swatch-width: 12px;
+    --variant-picker-swatch-height: 12px;
+  }
 
   @media (max-width: 860px) {
     .product-recommendations--crosley-pdp .section-resource-list {
@@ -704,6 +713,27 @@
 
     .product-recommendations--crosley-pdp .section-resource-list > .hidden--desktop .resource-list__carousel slideshow-slides {
       scroll-padding-inline: 20px;
+    }
+
+    .product-recommendations--crosley-pdp .resource-list__pagination {
+      min-height: 28px;
+      margin-block-start: 18px;
+      justify-content: center;
+      mix-blend-mode: normal;
+    }
+
+    .product-recommendations--crosley-pdp .resource-list__pagination .slideshow-controls__dots {
+      padding: 0;
+    }
+  }
+
+  @media (min-width: 750px) and (max-width: 860px) {
+    .product-recommendations--crosley-pdp .section-resource-list > .resource-list.hidden--mobile {
+      display: none !important;
+    }
+
+    .product-recommendations--crosley-pdp .section-resource-list > .resource-list.hidden--desktop {
+      display: block !important;
     }
   }
 {% endstylesheet %}

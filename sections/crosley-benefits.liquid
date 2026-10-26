@@ -30,7 +30,7 @@
 {% stylesheet %}
   .crosley-benefits {
     padding-block: clamp(40px, calc(37.45px + 0.6536vw), 50px);
-    padding-inline: clamp(40px, 4.43vw, 100px);
+    padding-inline: var(--crosley-page-gutter);
     text-align: center;
     background: #f5f5f4;
   }
@@ -80,37 +80,41 @@
     display: none;
   }
 
-  @media (max-width: 860px) {
+  @media (max-width: 999px) {
     .crosley-benefits {
-      overflow: hidden;
-      padding-inline: 0;
+      padding-inline: var(--crosley-page-gutter);
     }
 
     .crosley-benefits__grid {
-      display: flex;
-      width: 100%;
-      gap: 0;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-    }
-
-    .crosley-benefits__grid::-webkit-scrollbar {
-      display: none;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
     }
 
     .crosley-benefit {
-      flex: 0 0 100%;
-      padding-inline: 40px;
-      scroll-snap-align: center;
+      min-width: 0;
+    }
+
+    .crosley-benefit__icon {
+      width: 28px;
+      height: 28px;
+      margin-block-end: 16px;
+    }
+
+    .crosley-benefit h3 {
+      margin-block-end: 8px;
+      font-size: 13px;
+      line-height: 1.25;
+    }
+
+    .crosley-benefit p {
+      max-width: 150px;
+      margin-inline: auto;
+      font-size: 12px;
+      line-height: 1.45;
     }
 
     .crosley-benefits__dots {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 24px;
+      display: none;
     }
 
     .crosley-benefits__dots span {
@@ -125,6 +129,56 @@
       background: #383637;
     }
   }
+
+  @media (max-width: 600px) {
+    .crosley-benefits {
+      padding-block: 38px 30px;
+    }
+
+    .crosley-benefits__grid {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+
+    .crosley-benefits__grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    .crosley-benefit {
+      flex: 0 0 100%;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+
+    .crosley-benefit__icon {
+      width: 32px;
+      height: 32px;
+      margin-block-end: 14px;
+    }
+
+    .crosley-benefit h3 {
+      margin-block-end: 10px;
+      font-size: 14px;
+      line-height: normal;
+    }
+
+    .crosley-benefit p {
+      max-width: none;
+      font-size: clamp(12px, calc(11.235px + 0.1961vw), 15px);
+      line-height: 1.5;
+    }
+
+    .crosley-benefits__dots {
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      margin-block-start: 26px;
+    }
+  }
 {% endstylesheet %}
 
 {% javascript %}
@@ -134,10 +188,36 @@
     if (!scroller || !dots.length || scroller.dataset.initialized === 'true') return;
     scroller.dataset.initialized = 'true';
 
+    const mobileQuery = window.matchMedia('(max-width: 600px)');
+    let frame;
+    const updateDots = () => {
+      frame = undefined;
+      const pageWidth = Math.max(scroller.clientWidth, 1);
+      const activeIndex = mobileQuery.matches
+        ? Math.min(dots.length - 1, Math.max(0, Math.round(scroller.scrollLeft / pageWidth)))
+        : 0;
+
+      dots.forEach((dot, index) => dot.classList.toggle('is-active', index === activeIndex));
+    };
+
+    const queueDotUpdate = () => {
+      if (frame) cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(updateDots);
+    };
+
     scroller.addEventListener('scroll', () => {
-      const index = Math.round(scroller.scrollLeft / scroller.clientWidth);
-      dots.forEach((dot, dotIndex) => dot.classList.toggle('is-active', dotIndex === index));
+      queueDotUpdate();
     }, { passive: true });
+
+    mobileQuery.addEventListener('change', () => {
+      scroller.scrollTo({ left: 0, behavior: 'instant' });
+      dots.forEach((dot, index) => dot.classList.toggle('is-active', index === 0));
+      queueDotUpdate();
+    });
+
+    const resizeObserver = new ResizeObserver(queueDotUpdate);
+    resizeObserver.observe(scroller);
+    updateDots();
   }
 
   document.querySelectorAll('.crosley-benefits').forEach(initializeCrosleyBenefits);

@@ -31,13 +31,15 @@
         on:click="/removeFilter?form="
         on:keydown="/removeFilter?form="
       >
-        {%- if filter.min_value.value != null and filter.max_value.value != null %}
-          <bdi>{{ filter.min_value.value | money }}–{{ filter.max_value.value | money }}</bdi>
-        {%- elsif filter.min_value.value != null -%}
-          <bdi>{{ filter.min_value.value | money }}–{{ filter.range_max | money }}</bdi>
-        {%- elsif filter.max_value.value != null -%}
-          <bdi>{{ 0 | money }}–{{ filter.max_value.value | money }}</bdi>
-        {%- endif -%}
+        <span class="facets-remove__pill-label">
+          {%- if filter.min_value.value != null and filter.max_value.value != null %}
+            <bdi>{{ filter.min_value.value | money }}–{{ filter.max_value.value | money }}</bdi>
+          {%- elsif filter.min_value.value != null -%}
+            <bdi>{{ filter.min_value.value | money }}–{{ filter.range_max | money }}</bdi>
+          {%- elsif filter.max_value.value != null -%}
+            <bdi>{{ 0 | money }}–{{ filter.max_value.value | money }}</bdi>
+          {%- endif -%}
+        </span>
         <span class="svg-wrapper svg-wrapper--smaller">
           {{- 'icon-filters-close.svg' | inline_asset_content -}}
         </span>
@@ -65,11 +67,13 @@
             {% render 'swatch', swatch: value.swatch, mode: 'pill' %}
           {% endif %}
 
-          {% if filter.type == 'boolean' or show_filter_label %}
-            {{ filter.label | escape }}: {{ value.label | escape }}
-          {% else %}
-            {{ value.label | escape }}
-          {% endif %}
+          <span class="facets-remove__pill-label">
+            {% if filter.type == 'boolean' or show_filter_label %}
+              {{ filter.label | escape }}: {{ value.label | escape }}
+            {% else %}
+              {{ value.label | escape }}
+            {% endif %}
+          </span>
 
           <span class="svg-wrapper svg-wrapper--smaller">
             {{- 'icon-filters-close.svg' | inline_asset_content -}}

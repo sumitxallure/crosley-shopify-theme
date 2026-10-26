@@ -131,7 +131,7 @@
     box-shadow: -8px 0 32px rgb(0 0 0 / 15%);
   }
 
-  .cart-drawer__dialog::backdrop {
+  #cart-drawer .cart-drawer__dialog::backdrop {
     background: rgb(23 31 38 / 50%);
   }
 
@@ -165,15 +165,15 @@
 
   .cart-drawer__items .cart-items__table-row {
     grid-template-columns: 80px minmax(0, 1fr);
-    grid-template-rows: repeat(4, min-content) 1fr;
+    grid-template-rows: repeat(4, min-content) 24px min-content;
     grid-template-areas:
       'media details'
       'media variants'
       'media unit_price'
       'media quantity'
+      '. .'
       'error error';
     column-gap: 20px;
-    padding-block-end: 24px;
     border-block-end: 1px solid #ededed;
     margin-block-end: 24px;
   }
@@ -219,6 +219,10 @@
     letter-spacing: 0.03em;
     line-height: 1.25;
     text-transform: uppercase;
+  }
+
+  .cart-drawer__items .cart-items__media {
+    align-self: center;
   }
 
   .cart-drawer__items .cart-items__media-container {

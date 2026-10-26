@@ -49,8 +49,8 @@
   .crosley-promo {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    height: 700px;
-    min-height: 700px;
+    height: clamp(420px, min(48.6vw, calc(100svh - 96px)), 620px);
+    min-height: 0;
     color: var(--crosley-promo-text);
     background: var(--crosley-promo-bg);
   }
@@ -79,7 +79,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    padding: 0 80px;
+    padding-inline: clamp(32px, 5.55vw, 80px);
   }
 
   .crosley-promo__eyebrow {
@@ -130,6 +130,17 @@
     border-color: #171f26;
   }
 
+  @media (min-width: 601px) and (max-width: 899px) {
+    .crosley-promo {
+      height: clamp(420px, min(55vw, calc(100svh - 80px)), 520px);
+      min-height: 0;
+    }
+
+    .crosley-promo__content {
+      padding-inline: 32px;
+    }
+  }
+
   @media (max-width: 600px) {
     .crosley-promo {
       grid-template-columns: minmax(0, 1fr);
@@ -142,8 +153,9 @@
     }
 
     .crosley-promo__media {
-      min-height: 280px;
-      height: 280px;
+      min-height: 0;
+      height: auto;
+      aspect-ratio: 16 / 11;
       order: 1;
     }
 

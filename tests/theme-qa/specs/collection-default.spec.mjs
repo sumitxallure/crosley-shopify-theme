@@ -71,7 +71,8 @@ test.describe('default collection template', () => {
     await openStorefrontPage(page, collectionRoute);
 
     expect(new URL(page.url()).searchParams.has('view')).toBe(false);
-    await expect(page.locator('.crosley-plp-announcement')).toHaveCount(1);
+    await expect(page.locator('.announcement-bar')).toHaveCount(1);
+    await expect(page.locator('.crosley-plp-announcement')).toHaveCount(0);
     await expect(page.locator('.crosley-collection-hero')).toHaveCount(1);
     await expect(page.locator('.crosley-main-collection')).toHaveCount(1);
     await expect(page.locator('.crosley-product-week')).toHaveCount(1);
@@ -91,87 +92,33 @@ test.describe('default collection template', () => {
     expect(defaultPresentation).toEqual(alternatePresentation);
   });
 
-  test('matches the mobile Crosley announcement, header, and hero specification', async ({ page }, testInfo) => {
+  test('uses the shared homepage announcement and header on mobile', async ({ page }, testInfo) => {
     test.skip(!viewportGroups.mobile.has(testInfo.project.name), 'Mobile composition only.');
-    await openStorefrontPage(page, collectionRoute);
-    await page.evaluate(async () => document.fonts.ready);
+    const readHeader = async (path) => {
+      await page.goto(path, { waitUntil: 'domcontentloaded' });
+      await page.locator('#header-component').waitFor({ state: 'visible' });
+      return page.evaluate(() => {
+        const measure = (selector) => {
+          const bounds = document.querySelector(selector).getBoundingClientRect();
+          return { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height };
+        };
+        return {
+          announcement: measure('.announcement-bar'),
+          header: measure('#header-component .header__row--top'),
+          logo: measure('#header-component .header-logo__transparent-header-image-container .header-logo__image'),
+          customAnnouncements: document.querySelectorAll('.crosley-plp-announcement').length
+        };
+      });
+    };
 
-    await expect(page.locator('.header-logo__brand-fallback--collection')).toHaveAttribute(
-      'src',
-      /crosley-logo-white\.png/
-    );
+    const homepageHeader = await readHeader('/');
+    const collectionHeader = await readHeader(collectionRoute.path);
+    expect(collectionHeader).toEqual(homepageHeader);
+
     await expect(page.locator('.crosley-collection-hero__media img')).toHaveAttribute('src', /crosley-miller\.jpg/);
     await expect(page.locator('.crosley-collection-hero__description')).toHaveText(
       'Belt-drive turntables built for everyday listening, from entry-level cruisers to all-in-one media consoles.'
     );
-
-    const metrics = await page.evaluate(() => {
-      const measure = (selector) => {
-        const node = [...document.querySelectorAll(selector)].find((candidate) => {
-          const candidateBounds = candidate.getBoundingClientRect();
-          return candidateBounds.width > 0 && candidateBounds.height > 0;
-        });
-        const bounds = node.getBoundingClientRect();
-        const style = getComputedStyle(node);
-        return {
-          width: bounds.width,
-          height: bounds.height,
-          color: style.color,
-          backgroundColor: style.backgroundColor,
-          fontFamily: style.fontFamily,
-          fontSize: parseFloat(style.fontSize),
-          fontWeight: style.fontWeight,
-          lineHeight: style.lineHeight,
-          letterSpacing: style.letterSpacing,
-          textTransform: style.textTransform
-        };
-      };
-
-      return {
-        benefitBar: measure('.crosley-plp-announcement__benefits'),
-        benefitText: measure('.crosley-plp-announcement__benefit-mobile'),
-        promotion: measure('.crosley-plp-announcement__promotion'),
-        offer: measure('.crosley-plp-announcement__offer'),
-        countdownValue: measure('.crosley-plp-announcement__time strong'),
-        countdownLabel: measure('.crosley-plp-announcement__time small'),
-        header: measure('#header-component .header__columns'),
-        menu: measure('#header-component .menu-drawer-container'),
-        actionIcon: measure('#header-component .header__column--right svg'),
-        hero: measure('.crosley-collection-hero'),
-        heading: measure('.crosley-collection-hero h1'),
-        description: measure('.crosley-collection-hero__description')
-      };
-    });
-
-    expect(metrics.benefitBar.height).toBe(36);
-    expect(metrics.benefitBar.backgroundColor).toBe('rgb(56, 54, 55)');
-    expect(metrics.promotion.height).toBe(85);
-    expect(metrics.promotion.backgroundColor).toBe('rgb(23, 31, 38)');
-    expect(metrics.header.height).toBe(80);
-    expect(metrics.menu.width).toBe(20);
-    expect(metrics.menu.height).toBe(20);
-    expect(metrics.actionIcon.width).toBe(20);
-    expect(metrics.actionIcon.height).toBe(20);
-    expect(metrics.hero.height).toBe(260);
-
-    for (const textStyle of [
-      metrics.benefitText,
-      metrics.offer,
-      metrics.countdownValue,
-      metrics.countdownLabel,
-      metrics.heading,
-      metrics.description
-    ]) {
-      expect(textStyle.fontFamily).toContain('acumin-pro-condensed');
-    }
-    expect(metrics.benefitText.fontWeight).toBe('700');
-    expect(metrics.offer.fontWeight).toBe('700');
-    expect(metrics.countdownValue.fontSize).toBe(14);
-    expect(metrics.countdownLabel.fontSize).toBe(9);
-    expect(metrics.heading.fontWeight).toBe('700');
-    expect(metrics.heading.textTransform).toBe('uppercase');
-    expect(metrics.description.fontWeight).toBe('400');
-    expect(metrics.description.color).toBe('rgba(255, 255, 255, 0.85)');
   });
 
   test('keeps product links and the filter drawer operational', async ({ page }) => {
@@ -184,11 +131,24 @@ test.describe('default collection template', () => {
     await page.locator('.crosley-collection-toolbar__filter').click();
     const filterDialog = page.locator('#filters-drawer dialog');
     await expect(filterDialog).toHaveAttribute('open', '');
+
+    const closeButton = filterDialog.getByRole('button', { name: 'Close' });
+    await expect(closeButton).toBeFocused();
+    for (const label of ['Color', 'Feature', 'Price']) {
+      await page.keyboard.press('Tab');
+      await expect(filterDialog.getByText(label, { exact: true }).locator('xpath=ancestor::summary[1]')).toBeFocused();
+    }
+    await page.keyboard.press('Tab');
+    await expect(filterDialog.getByRole('button', { name: 'View Results', exact: true })).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(closeButton).toBeFocused();
+
     await page.keyboard.press('Escape');
     await expect(filterDialog).not.toHaveAttribute('open', '');
+    await expect(page.locator('.crosley-collection-toolbar__filter')).toBeFocused();
   });
 
-  test('applies and removes a color filter from the drawer', async ({ page }) => {
+  test('applies a color filter and removes it from the active-filter row', async ({ page }) => {
     await openStorefrontPage(page, collectionRoute);
 
     const initialCount = await page.locator('.product-grid__item').count();
@@ -216,10 +176,14 @@ test.describe('default collection template', () => {
     await drawer.getByRole('button', { name: 'View Results', exact: true }).click();
     await expect(drawer).not.toHaveAttribute('open', '');
 
-    await page.locator('.crosley-collection-toolbar__filter').click();
-    await expect(colorFilter).toBeChecked();
-    await colorFilter.uncheck({ force: true });
+    const activeFilters = page.locator('.crosley-active-filters');
+    const activeColor = activeFilters.locator('.facets-remove__pill');
+    await expect(activeColor).toContainText('Acorn');
+    await expect(activeColor).not.toContainText('Color:');
+    await expect(activeFilters.getByRole('button', { name: 'Clear all' })).toBeVisible();
+    await activeColor.click();
     await expect.poll(() => new URL(page.url()).searchParams.has(filterName)).toBe(false);
+    await expect(activeFilters.locator('facet-remove-component')).toHaveCount(0);
     await expect(resultsStatus).toHaveText(initialResultsText);
     await expect(page.locator('.product-grid__item')).toHaveCount(initialCount);
   });
@@ -261,6 +225,28 @@ test.describe('default collection template', () => {
 
     await expect.poll(() => new URL(page.url()).pathname).toBe(new URL(href, page.url()).pathname);
     await expect(page.locator('main')).toBeVisible();
+  });
+
+  test('keeps collection product media stable on image hover', async ({ page }, testInfo) => {
+    test.skip(!viewportGroups.desktop.has(testInfo.project.name), 'Hover behavior only applies to desktop pointers.');
+    await openStorefrontPage(page, collectionRoute);
+
+    const card = page
+      .locator('.product-grid__item')
+      .filter({ hasText: 'Zodiac Cruiser Plus Record Player' })
+      .first();
+    const gallery = card.locator('.card-gallery');
+    const mediaScroller = gallery.locator('slideshow-slides');
+    const activeImage = () =>
+      card.locator('slideshow-slide[aria-hidden="false"] .product-media__image').getAttribute('src');
+
+    await expect(mediaScroller).toHaveAttribute('tabindex', '0');
+    await expect(mediaScroller).toHaveAttribute('aria-label', 'Zodiac Cruiser Plus Record Player media gallery');
+    await expect(gallery).not.toHaveAttribute('on:pointerenter', '/previewImage');
+    const imageBeforeHover = await activeImage();
+    await gallery.hover();
+    await page.waitForTimeout(300);
+    expect(await activeImage()).toBe(imageBeforeHover);
   });
 
   test('overlays the desktop PLP with the standalone drawer geometry', async ({ page }, testInfo) => {
@@ -365,6 +351,13 @@ test.describe('default collection template', () => {
     const grid = page.locator('.crosley-main-collection .product-grid').first();
     await page.locator('.crosley-density--desktop input[name="grid"][value="crosley-three"]').check();
     await expect(grid).toHaveAttribute('product-grid-view', 'crosley-three');
+    const expectedColumns = page.viewportSize().width <= 989 ? 2 : 3;
+    await expect
+      .poll(() => grid.evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(' ').length))
+      .toBe(expectedColumns);
+    if (page.viewportSize().width <= 989) {
+      await expect(page.locator('.crosley-density__option--compact')).toBeHidden();
+    }
     expect(await page.evaluate(() => sessionStorage.getItem('product-grid-view-desktop'))).toBe('crosley-three');
     await page.reload({ waitUntil: 'domcontentloaded' });
     await expect(page.locator('.crosley-main-collection .product-grid').first()).toHaveAttribute(
@@ -372,6 +365,36 @@ test.describe('default collection template', () => {
       'crosley-three'
     );
     await expect(page.locator('.crosley-density--desktop input[name="grid"][value="crosley-three"]')).toBeChecked();
+
+    if (page.viewportSize().width > 989) {
+      await page.locator('.crosley-density--desktop input[name="grid"][value="zoom-out"]').check();
+      await expect(grid).toHaveAttribute('product-grid-view', 'zoom-out');
+      await expect(grid.locator('.card-gallery').first()).toBeVisible();
+      await expect(grid.locator('a[ref="productTitleLink"]').first()).toBeHidden();
+      await expect(grid.locator('product-price').first()).toBeHidden();
+    }
+  });
+
+  test('keeps desktop density counts stable at zoom-equivalent viewport widths', async ({ page }, testInfo) => {
+    test.skip(!viewportGroups.desktop.has(testInfo.project.name), 'Desktop density behavior only.');
+    await openStorefrontPage(page, collectionRoute);
+
+    const grid = page.locator('.crosley-main-collection .product-grid').first();
+    const densities = [
+      { value: 'crosley-three', columns: 3 },
+      { value: 'default', columns: 4 },
+      { value: 'zoom-out', columns: 6 }
+    ];
+
+    for (const width of [1440, 1920, 2400]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const density of densities) {
+        await page.locator(`.crosley-density--desktop input[name="grid"][value="${density.value}"]`).check();
+        await expect
+          .poll(() => grid.evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(' ').length))
+          .toBe(density.columns);
+      }
+    }
   });
 
   test('updates mobile product density and preserves the choice', async ({ page }, testInfo) => {

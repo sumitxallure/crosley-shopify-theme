@@ -10,7 +10,7 @@
 %}
 
 <div class="crosley-pdp-review-summary" {{ block.shopify_attributes }}>
-  <span class="crosley-pdp-review-summary__stars" aria-label="{{ rating | default: 0 }} out of 5 stars">
+  <span class="crosley-pdp-review-summary__stars" role="img" aria-label="{{ rating | default: 0 }} out of 5 stars">
     {% for star in (1..5) %}
       <svg{% if rating != blank and star <= rounded_rating %} class="is-filled"{% endif %} viewBox="0 0 20 20" aria-hidden="true">
         <path d="M10 1.5 12.6 7.1l6.1.7-4.6 4.1 1.3 6.1-5.4-3.2L4.6 18l1.3-6.1-4.6-4.1 6.1-.7L10 1.5Z" />

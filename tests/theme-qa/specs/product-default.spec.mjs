@@ -14,7 +14,6 @@ const sectionSelectors = [
   '.crosley-pdp-breadcrumbs',
   '.product-information--crosley-pdp',
   '.crosley-pdp-video',
-  '.crosley-pdp-marquee',
   '.crosley-pdp-editorial',
   '.crosley-pdp-reviews',
   '.product-recommendations--crosley-pdp',
@@ -342,9 +341,90 @@ test.describe('default product template', () => {
     await expect(recommendations).toHaveAttribute('data-recommendations-performed', 'true', { timeout: 15_000 });
     await expect(recommendations.locator('.product-card')).toHaveCount(8);
     await expect(recommendations.locator('product-swatches')).toHaveCount(8);
+    await expect(recommendations.locator('quick-add-component').first()).toBeHidden();
     const productLink = recommendations.locator('.product-card a[href*="/products/"]').first();
     const href = await productLink.getAttribute('href');
     expect(href).toContain('/products/');
+  });
+
+  test('uses recommendation dots and the intended sticky cart layout at each breakpoint', async ({ page }, testInfo) => {
+    await openStorefrontPage(page, productRoute);
+
+    const viewportWidth = testInfo.project.use.viewport.width;
+    const recommendations = page.locator('.product-recommendations--crosley-pdp');
+    await recommendations.scrollIntoViewIfNeeded();
+    await expect(recommendations).toHaveAttribute('data-recommendations-performed', 'true', { timeout: 15_000 });
+
+    const mobileCarousel = recommendations.locator('.section-resource-list > .resource-list.hidden--desktop');
+    const desktopGrid = recommendations.locator('.section-resource-list > .resource-list--grid');
+    const visibleDots = recommendations.locator('.resource-list__pagination:visible .slideshow-controls__dots button');
+
+    if (viewportWidth <= 860) {
+      await expect(mobileCarousel).toBeVisible();
+      await expect(desktopGrid).toBeHidden();
+      await expect(visibleDots).toHaveCount(4);
+      await expect(recommendations.locator('.resource-list__pagination:visible [aria-selected="true"]')).toHaveCount(1);
+      await visibleDots.nth(1).click();
+      await expect(visibleDots.nth(1)).toHaveAttribute('aria-selected', 'true');
+    } else {
+      await expect(desktopGrid).toBeVisible();
+      await expect(visibleDots).toHaveCount(0);
+    }
+
+    const stickyBar = page.locator('sticky-add-to-cart .sticky-add-to-cart__bar');
+    await stickyBar.evaluate((element) => element.setAttribute('data-stuck', 'true'));
+    await expect(stickyBar).toBeVisible();
+
+    if (viewportWidth < 750) {
+      await expect(stickyBar).toHaveCSS('display', 'flex');
+      await expect(stickyBar.locator('.sticky-add-to-cart__info')).toBeHidden();
+    } else {
+      await expect(stickyBar).toHaveCSS('display', 'grid');
+      await expect(stickyBar.locator('.sticky-add-to-cart__info')).toBeVisible();
+      await expect(stickyBar.locator('.sticky-add-to-cart__price')).toBeVisible();
+
+      if (viewportWidth === 768) {
+        const summary = await stickyBar.evaluate((element) => {
+          const measureNode = (node) => {
+            const box = node.getBoundingClientRect();
+            const style = getComputedStyle(node);
+            return {
+              x: box.x,
+              width: box.width,
+              height: box.height,
+              fontSize: style.fontSize,
+              fontWeight: style.fontWeight,
+              lineHeight: style.lineHeight,
+              objectFit: style.objectFit
+            };
+          };
+
+          const measure = (selector) => measureNode(element.querySelector(selector));
+
+          return {
+            bar: measureNode(element),
+            image: measure('.sticky-add-to-cart__image-img'),
+            title: measure('.sticky-add-to-cart__title'),
+            price: measure('.sticky-add-to-cart__price'),
+            quantity: measure('.quantity-selector'),
+            button: measure('.sticky-add-to-cart__button')
+          };
+        });
+
+        expect(summary.bar.height).toBeCloseTo(54, 0);
+        expect(summary.image.x).toBeCloseTo(24, 0);
+        expect(summary.image.width).toBeCloseTo(32, 0);
+        expect(summary.image.objectFit).toBe('contain');
+        expect(summary.title.x).toBeCloseTo(68, 0);
+        expect(summary.title.fontSize).toBe('13px');
+        expect(summary.title.fontWeight).toBe('700');
+        expect(summary.price.fontSize).toBe('11px');
+        expect(summary.price.fontWeight).toBe('700');
+        expect(summary.quantity.width).toBeCloseTo(88, 0);
+        expect(summary.button.width).toBeCloseTo(120, 0);
+        expect(summary.button.fontSize).toBe('14px');
+      }
+    }
   });
 
   test('keeps one active gallery dot on mobile', async ({ page }, testInfo) => {
@@ -360,5 +440,23 @@ test.describe('default product template', () => {
     expect(await activeDot.evaluate((button) => getComputedStyle(button, '::after').backgroundColor)).toBe(
       'rgb(0, 0, 0)'
     );
+  });
+
+  test('keeps the portrait-tablet gallery and purchase controls balanced', async ({ page }, testInfo) => {
+    const viewport = testInfo.project.use.viewport;
+    test.skip(viewport.width < 600 || viewport.width > 860, 'Portrait tablet layout only.');
+    await openStorefrontPage(page, productRoute);
+
+    const media = await page.locator('.product-information--crosley-pdp .product-information__media').boundingBox();
+    const quantity = await page
+      .locator('.product-information--crosley-pdp .product-form-buttons > .quantity-selector-wrapper')
+      .boundingBox();
+    const addToCart = await page
+      .locator('.product-information--crosley-pdp .product-form-buttons > span:has(add-to-cart-component)')
+      .boundingBox();
+
+    expect(media.width).toBeLessThanOrEqual(601);
+    expect(Math.abs(quantity.y - addToCart.y)).toBeLessThanOrEqual(1);
+    expect(Math.abs(quantity.height - addToCart.height)).toBeLessThanOrEqual(2);
   });
 });

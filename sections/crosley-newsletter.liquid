@@ -74,7 +74,7 @@
     position: relative;
     display: grid;
     grid-template-rows: minmax(0, 1fr);
-    height: 480px;
+    height: clamp(380px, 33.3vw, 480px);
     overflow: hidden;
     color: #ffffff;
     background: #171f26;
@@ -184,7 +184,7 @@
 
   @media (max-width: 600px) {
     .crosley-newsletter {
-      height: 345px;
+      height: min(380px, 92vw);
     }
 
     .crosley-newsletter__content {
