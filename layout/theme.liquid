@@ -14,10 +14,12 @@
       <link
         rel="icon"
         type="image/png"
+        sizes="32x32"
         href="{{ settings.favicon | image_url: width: 32, height: 32 }}"
       >
     {%- else -%}
-      <link rel="icon" type="image/svg+xml" href="{{ 'crosley-favicon.svg' | asset_url }}">
+      <link rel="icon" type="image/png" sizes="32x32" href="{{ 'crosley-favicon-32.png' | asset_url }}">
+      <link rel="shortcut icon" type="image/png" href="{{ 'crosley-favicon-32.png' | asset_url }}">
     {%- endif -%}
 
     {%- render 'view-transition-opt-in' -%}
