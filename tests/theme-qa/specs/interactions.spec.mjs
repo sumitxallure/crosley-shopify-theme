@@ -50,6 +50,30 @@ test.describe('critical interaction states', () => {
     await expect(page.locator(`[data-tab-panel="${index}"]`)).toBeVisible();
   });
 
+  test('PLP color swatches update the product image and variant price', async ({ page }) => {
+    await openStorefrontPage(page, routes[1]);
+
+    const card = page.locator('product-card').filter({
+      has: page.locator(
+        'swatches-variant-picker-component[data-product-handle="zodiac-cruiser-plus-record-player"]'
+      ),
+    });
+    const price = card.locator(`product-price [ref='priceContainer']`);
+    const productImage = card.locator('slideshow-slide[aria-hidden="false"] .product-media__image');
+    const blackSwatch = card.locator('input[data-variant-id="67783735836907"]');
+
+    await expect(card).toHaveCount(1);
+    await expect(price).toContainText('$109.00');
+    await expect(blackSwatch).toHaveCount(1);
+
+    const initialImage = await productImage.getAttribute('src');
+    await blackSwatch.check();
+
+    await expect(blackSwatch).toBeChecked();
+    await expect(price).toContainText('$120.00');
+    await expect.poll(() => productImage.getAttribute('src')).not.toBe(initialImage);
+  });
+
   test('desktop mega menu opens from the primary navigation', async ({ page }, testInfo) => {
     test.skip(!viewportGroups.desktop.has(testInfo.project.name), 'Pointer/desktop-only behavior.');
     await openStorefrontPage(page, routes[0]);

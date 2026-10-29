@@ -308,7 +308,7 @@ export class ProductCard extends ProductCardLink {
    * @param {Document} html - The parsed HTML document with updated variant data.
    */
   updatePrice(html) {
-    const priceContainer = this.querySelectorAll(`product-price [ref='priceContainer']`)[1];
+    const priceContainer = this.querySelector(`product-price [ref='priceContainer']`);
     const newPriceElement = html.querySelector(`product-price [ref='priceContainer']`);
 
     if (newPriceElement && priceContainer) {
